@@ -1,0 +1,21 @@
+ion-accordion {
+    margin: 0 auto;
+  }
+  
+  ion-accordion.accordion-expanding,
+  ion-accordion.accordion-expanded {
+    width: calc(100% - 32px);
+    margin: 16px auto;
+  }
+
+ 
+  .text-danger{
+    color: red;
+  }
+
+  .is-invalid {
+    border: 2px solid red;
+  }
+  .is-valid {
+    border: 2px solid green;
+  }

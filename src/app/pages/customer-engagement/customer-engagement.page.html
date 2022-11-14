@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title (click)="back()">
+      <div class="vertical-center-header">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Customer Engagement
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content" style="background-image: url(assets/images/background.png);">
+    <ion-segment #segment (ionChange)="segmentChanged($event)" mode="ios" scrollable value="polling">
+      <ion-segment-button value="broadcasting">
+        <ion-label>Broadcasting</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="polling">
+        <ion-label>Polling</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="responses">
+        <ion-label>Responses</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <div class="swiper-content">
+      <swiper #swiper (slideChange)="onSlideChange($event)" [config]="config" class="common-swiper">
+        <ng-template swiperSlide>
+          <ion-card>
+            <ion-card-title class="text-left"></ion-card-title>
+            <ion-card-content class="text-left">
+              <ion-row >
+                <ion-col>
+                  <div class="form-group">
+                    <textarea type="text" [(ngModel)]="msg" class="form-control" placeholder="Write Your Message"></textarea>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-button class="primary-btn add-poll-btn" (click)="getPollingBroadCastingApi()">Send</ion-button>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+        <!----------------------------------Polling------------------------------------------------>
+        <ng-template swiperSlide>
+          <ion-card>
+            <ion-card-title class="text-left">Response</ion-card-title>
+            <ion-card-content class="text-left">
+              <ion-row>
+                <ion-col>
+                  <label class="lable-radio" style="margin-left: 24px;"> Single
+                  <input type="radio" [(ngModel)]="question_type" class="form-control" value="single" (change)="onItemValueChange($event.target.value)">
+                  <span class="radio-checkmark"></span> </label>
+                  <!--<ion-checkbox color="primary" (change)="onItemValueChange($event.target.value)" name="question_type"  value="single" mode="ios"></ion-checkbox> Single-->
+                </ion-col>
+                <ion-col>
+                  <label class="lable-radio" style="margin-left: 24px;"> Multiple
+                    <input type="radio" [(ngModel)]="question_type" class="form-control" value="multiple" (change)="onItemValueChange($event.target.value)">
+                    <span class="radio-checkmark"></span> </label>
+                  <!--<ion-checkbox color="primary" (change)="onItemValueChange($event.target.value)" name="question_type" value="multiple" mode="ios"></ion-checkbox> Multiple-->
+                </ion-col>
+                <ion-col>
+                  <label class="lable-radio" style="margin-left: 24px;"> Opt-in
+                    <input type="radio" [(ngModel)]="question_type" class="form-control" value="opt-in" (change)="onItemValueChange($event.target.value)">
+                    <span class="radio-checkmark"></span> </label>
+                  <!--<ion-checkbox color="primary" (change)="onItemValueChange($event.target.value)" name="question_type" value="opt-in" mode="ios"></ion-checkbox> Opt-in-->
+                </ion-col>
+              </ion-row>
+              <ion-row >
+                <ion-col>
+                <div class="form-group">
+                  <label>Expiry Date</label>
+                  <input type="date" class="form-control" [min]="todayDateTime" [(ngModel)]="expire_time"  placeholder="Date"/>
+              
+                </div>
+                <div class="form-group">
+                  <label>Ask a question</label>
+                 
+                  <input type="text" id="question" [(ngModel)]="question"  class="form-control" placeholder="Ask a question"/>
+                  
+                </div>
+                <div class="form-group">
+                  
+                  <input type="text" placeholder="ADD" id="addquestion" [(ngModel)]="addquestion" style="width: 45%;"/>
+                  <ion-button (click)="addquestions()" class="primary-btn add-btn ml-9" style="width: 45%;height: 42px; background-color: #e81121;">
+                    <ion-icon name="add-circle"></ion-icon></ion-button>
+                </div>
+              </ion-col>
+              </ion-row>
+
+              <ion-row *ngFor="let showquestion of getquestion">
+                <ion-col>
+                  <p style="font-size: 18px;"><ion-icon name="ellipse-outline"></ion-icon> {{showquestion.option}}</p> 
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="mb-2 ml-2 mr-2">
+                <ion-button class="primary-btn" (click)="addPolling()" style="color:#fff;">Create poll</ion-button>
+              </ion-row>
+             
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+        <!----------------------------------End of Polling------------------------------------------------>
+        <ng-template swiperSlide>
+          <ion-card [attr.data-index]="i" *ngFor="let responsePoll of responseById;index as i">
+        
+           
+            <ion-card-title class="text-left"></ion-card-title>
+              <ion-card-content class="text-left">
+                <ion-row (click)="onButtonClick(i)"><b> {{responsePoll.question}}</b></ion-row> <br>
+                <div *ngIf="buttonClicked[i]">
+                <ion-row *ngFor="let option_data of responsePoll.options;index as j">
+                  
+                  <p style="margin-top: 10px;font-size: 16px;">{{option_data.option}} <b style="color: red"> ({{option_data.ans_result}})</b></p>
+
+                  <ion-progress-bar style="height: 20px;"
+                  value="{{(option_data.ans_result.replace('%', '')/100)}}"></ion-progress-bar>
+                  
+                </ion-row>
+          
+              </div>
+              </ion-card-content>
+
+           
+           
+          </ion-card>
+        </ng-template>
+      </swiper>
+    </div>
+  </div>
+</ion-content>

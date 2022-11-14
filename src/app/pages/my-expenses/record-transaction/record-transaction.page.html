@@ -1,0 +1,170 @@
+<ion-header>
+  <ion-toolbar>
+
+      <div class="vertical-center-header" (click)="back()">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Record Transaction
+      </div>
+
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content" style="background-image: url(assets/images/background.png);">
+    <ion-card>
+
+        <ion-row>
+          <ion-col size="4">
+            <label>Amt Paid</label>
+            <div class="form-group">
+
+             <input type="number" [(ngModel)]="amtPaid"  class="form-control" placeholder="" />
+            </div>
+          </ion-col>
+          <ion-col size="4">
+            <label>Currency</label>
+            <div class="form-group">
+<!--              <select class="form-control" (change)="selectCurrencyDropdown($event.target.value)">-->
+<!--                <option class="place-holder" *ngFor="let currencyDisplay of showCurrency" [ngValue]="currencyDisplay">-->
+<!--                  {{currencyDisplay}}</option>-->
+<!--              </select>-->
+
+                <select class="form-control"  (change)="selectCurrencyDropdown($event.target.value)">
+                  <option class="place-holder" *ngIf="selectedCurrency != 0" [ngValue]="selectedCurrency" selected >{{selectedCurrency}}</option>
+
+                  <option class="place-holder"  *ngFor="let cashCurrency of showCurrency"
+                          [ngValue]="cashCurrency">{{cashCurrency}}</option>
+                </select>
+
+            </div>
+          </ion-col>
+          <ion-col size="4">
+            <label>Handover Type</label>
+            <div class="form-group">
+
+
+              <input type="text" value="Cash" *ngIf="debit_transaction_by == 1" placeholder="Card"  [(ngModel)]="handoverType" disabled>
+              <input type="text" value="Card" *ngIf="debit_transaction_by == 2" placeholder="Cash" [(ngModel)]="handoverType" disabled>
+              <input type="text" value="Cash" *ngIf="debit_transaction_by != 1 && debit_transaction_by != 2" [(ngModel)]="handoverType" placeholder="Cash" disabled>
+
+              <!-- <select class="form-control" (change)="selectedHandoverType($event.target.value)" disabled>
+                <option [ngValue]="Cash">Cash</option>
+              </select> -->
+
+            </div>
+          </ion-col>
+
+
+          <!-- <ion-col>
+            <div class="form-group">
+              <label>Amt Paid</label><label style="margin-left: 28%;">Currency</label><label  style="margin-left: 4%;">Handover Type</label>
+            </div>
+            <div class="form-group">
+              <input type="text" [(ngModel)]="amtPaid" class="form-control" placeholder="" style="width: 100px;"/>&nbsp;
+              <select class="form-control" style="width: 109px;" (change)="selectCurrencyDropdown($event.target.value)">
+                <option class="place-holder" *ngFor="let currencyDisplay of showCurrency" [ngValue]="currencyDisplay">{{currencyDisplay}}</option>
+              </select>
+
+              <select class="form-control ml-2" style="width: 115px;" (change)="selectedHandoverType($event.target.value)" disabled>
+
+                <option [ngValue]="Cash">Cash</option>
+              </select>
+            </div>
+          </ion-col>-->
+
+
+        </ion-row>
+        <hr>
+
+
+
+      <div size="4">
+        <label>Select Category </label>
+        <div class="form-group">
+
+          <select class="form-control"  (change)="getSubcatgeory($event)">
+            <option *ngIf="editMode != true">--Select--</option>
+            <option *ngIf="editMode == true"  value="selected_category_id">{{selected_category_id}}</option>
+
+
+            <option *ngFor="let category of getAllCatergories" value="{{category.id}}">{{category.category}}</option>
+          </select>
+
+          <!--            <select class="form-control" *ngIf="editMode == true">-->
+          <!--              <option  value="selected_category_id" selected>{{selected_category_id}}</option>-->
+          <!--            </select>-->
+        </div>
+      </div>
+
+      <div size="4" >
+        <div class="form-group" *ngIf="subCategory">
+          <label>Select Sub Category</label>
+
+          <select class="form-control"  (change)="getSubcatgeoryId($event)">
+            <option *ngIf="editMode != true">--Select--</option>
+            <option class="place-holder" *ngIf="hideSubCat != false" [ngValue]="subCategory">{{subCategory}}</option>
+
+            <option class="place-holder"  *ngFor="let subCategory of subCategory"
+                    value="{{subCategory.id}}">{{subCategory.category}}</option>
+          </select>
+
+
+
+        </div>
+      </div>
+
+        <!-- <ion-list >
+          <ion-item *ngFor="let category of getAllCatergories" (click)="getSubcatgeory(category.id)">
+            <ion-label>{{category.category}}</ion-label>
+          </ion-item>
+       </ion-list>  -->
+
+        <!-- </ion-row> -->
+
+    </ion-card>
+    <ion-card>
+      <ion-row>
+        <ion-col>
+          <div class="form-group mt-2 mb-2">
+
+            <div class="d-flex">
+              <ion-button *ngIf="!debit_image" class="primary-btn add-file mr-20" style="color:#fff;width: 191px;" (click)="openGallery()">
+                <ion-icon name="add-outline" style="font-size: xx-large;"></ion-icon> Add Receipt File
+              </ion-button>
+              <ion-button class="primary-btn" *ngIf="debit_image" style="color:#fff;width:20%;" (click)="removeImage()">
+                <ion-icon name="trash-outline">Remove Image</ion-icon></ion-button>
+            </div>
+            <div style="text-align: center;" *ngIf="imageDisplay">
+              <img [src]="imageDisplay" style="width: 200px !important; height:200px">
+            </div>
+
+            <div style="text-align: center;" *ngIf="debit_image">
+              <img [src]="'https://tcil-sotc.travelexic.com/'+debit_image">
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label>Date:</label>
+            <input type="date" [(ngModel)]="selectedDate" [max]="todayDateTime" class="form-control"
+              placeholder="Date" />
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" [(ngModel)]="description" placeholder="Description"></textarea>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mb-2 ml-2 mr-2">
+        <ion-button class="primary-btn" style="color:#fff;" (click)="postRegularPayment()">done</ion-button>
+      </ion-row>
+
+
+    </ion-card>
+
+
+
+  </div>
+</ion-content>
+
+

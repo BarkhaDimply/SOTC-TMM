@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title (click)="back()">
+      <div class="vertical-center-header">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Notification
+      </div>
+    </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+<!--<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button ion-button menuToggle></ion-menu-button>
+    </ion-buttons>
+    <app-header></app-header>
+  </ion-toolbar>
+</ion-header>-->
+
+<ion-content [fullscreen]="true">
+  <div class="content" style="background-image: url(assets/images/background.png);min-height: 100%;">
+   
+
+    <div *ngIf="noNotification">
+      No Notification
+    </div>
+
+    <ion-row *ngFor="let notification of notificationHistory">
+
+
+
+      <!--<ion-card class="w-100" *ngIf="notification.key == 28" style="margin: 6px 16px;" [routerLink]="'/notification/review-feedback'">-->
+      <!-- <ion-card class="w-100" *ngIf="notification.key == 28" style="margin: 6px 16px;"
+      [queryParams]="{keyNotification: 28}" [routerLink]="'/tabs/my-expenses'"> -->
+      <ion-card class="w-100" *ngIf="notification.key == 28" style="margin: 6px 16px;" [routerLink]="'/tabs/my-expenses'">
+        <ion-card-content>
+          <b>{{notification.title}}</b>
+          <br> {{notification.message}}
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="w-100" *ngIf="notification.key == 27" style="margin: 6px 16px;"
+       [routerLink]="'/tabs/my-expenses'">
+        <ion-card-content>
+          <b>{{notification.title}}</b>
+          <br> {{notification.message}}
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="w-100" *ngIf="notification.key == 25"
+      (click)="notifyAlert(notification.title,notification.message,notification.transaction_id)" style="margin: 6px 16px;">
+       <ion-card-content>
+         <b>{{notification.title}}</b>
+         <br> {{notification.message}}
+       </ion-card-content>
+     </ion-card>
+
+     <ion-card class="w-100" *ngIf="notification.key == 26" [routerLink]="'/tabs/my-expenses'"  style="margin: 6px 16px;">
+      <ion-card-content>
+        <b>{{notification.title}}</b>
+        <br> {{notification.message}}
+      </ion-card-content>
+    </ion-card>
+
+    </ion-row>
+
+  </div>
+
+</ion-content>

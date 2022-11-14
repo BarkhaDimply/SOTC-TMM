@@ -1,0 +1,583 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+@import '~swiper/scss';
+@import '~swiper/scss/navigation';
+@import '~swiper/scss/pagination';
+@import '~swiper/scss/autoplay';
+@import '~@ionic/angular/css/ionic-swiper';
+@import "~swiper/css/effect-cards";
+
+.swiper .swiper-slide {
+  display: block !important;
+  text-align: left;
+}
+
+.common-swiper .swiper-slide {
+  height: 100px;
+}
+
+.common-swiper .swiper-slide-active {
+  height: 100% !important;
+}
+
+.back-arrow{
+    font-size: 20px;
+    margin-right: 10px;
+}
+.vertical-center-header{
+    display: flex;
+    align-items: center;
+}
+ion-header {
+    background: #fff;
+    box-shadow: 0px 0px 0px;
+}
+
+ion-toolbar:last-of-type {
+    --border-width: 1px !important;
+    box-shadow: 0px 0px 0px;
+}
+
+ion-card {
+
+     opacity: 0.9;
+    color: #000;
+}
+ion-col{
+    color: #000;
+}
+.primary-btn{
+    background-color: #2a9df4;
+    color: #fff !important;
+    font-weight: 600 !important;
+
+}
+
+.form-group input{
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  color: #888;
+}
+.form-group textarea{
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    color: #000;
+}
+.form-group select{
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    color: #888;
+}
+.error-message {
+    .error {
+        color: red;
+    }
+}
+
+.primary-btn {
+    border-radius: 7px;
+    background-color: #00539F;
+    background-image: none;
+    box-shadow: none;
+    font-size: 18px;
+    position: relative;
+    color: #00373D;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    --background-activated: #2a9df;
+    --background: #2a9df;
+    --background-focused: #2a9df;
+    --background-hover: #2a9df;
+    --box-shadow: none;
+    text-transform: capitalize;
+    height: 50px;
+    --padding-start: 0;
+    --padding-end: 0;
+    z-index: 9;
+}
+
+.secondary-btn {
+    border-radius: 7px;
+    background-color: #C2D61A;
+    background-image: none;
+    box-shadow: none;
+    font-size: 18px;
+    position: relative;
+    color: #00373D;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    --background-activated: #C2D61A;
+    --background: #C2D61A;
+    --background-focused: #C2D61A;
+    --background-hover: #C2D61A;
+    --box-shadow: none;
+    text-transform: capitalize;
+    height: 50px;
+    --padding-start: 0;
+    --padding-end: 0;
+    z-index: 9;
+}
+
+.btn-blue{
+    border-radius: 17px;
+    background-color: #00539F;
+    background-image: none;
+    color: #fff;
+    font-size: 12px;
+    position: relative;
+    text-align: center;
+    --background-activated: #00539F;
+    --background: #00539F;
+    --background-focused: #00539F;
+    --background-hover: #00539F;
+    --box-shadow: none;
+    --border-radius:20px;
+    text-transform: capitalize;
+    z-index: 9;
+    img{
+        width: 20px;
+    }
+}
+
+.btn-yellow{
+
+        border-radius: 17px;
+        background-color: orange;
+        background-image: none;
+
+        font-size: 10px;
+        position: relative;
+        color: black;
+        width: 80px;
+        text-align: center;
+        --background-activated: orange;
+        --background: orange;
+        --background-focused: orange;
+        --background-hover: orange;
+        --box-shadow: none;
+        --border-radius:20px;
+        text-transform: capitalize;
+        z-index: 9;
+
+}
+
+.btn-attendance-false{
+
+    border-radius: 17px;
+    background-color: #9a9e97;
+    background-image: none;
+
+    font-size: 10px;
+    position: relative;
+    color: black;
+    text-align: center;
+    --background-activated:   #9a9e97;
+    --background:   #9a9e97;
+    --background-focused:  #9a9e97;
+    --background-hover:  #9a9e97;
+    --box-shadow: none;
+    --border-radius:20px;
+    text-transform: capitalize;
+    width: 80px;
+    z-index: 9;
+
+}
+
+.btn-red{
+    border-radius: 17px;
+    background-color: #EA4C46;
+    background-image: none;
+    color: #fff;
+    font-size: 12px;
+    position: relative;
+
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    --background-activated: #EA4C46;
+    --background: #EA4C46;
+    --background-focused: #EA4C46;
+    --background-hover: #EA4C46;
+    --box-shadow: none;
+    --border-radius:20px;
+    text-transform: capitalize;
+    height: 30px;
+    --padding-start: 0;
+    --padding-end: 0;
+    z-index: 9;
+    img{
+        width: 20px;
+    }
+}
+
+hr{
+    border-width: 0;
+    box-sizing: content-box;
+    border: 1px white solid;
+    background: #ddd;
+    height: 2px;
+    margin-top: 17px;
+    position: relative;
+}
+.pb-0{
+    padding-bottom: 0px;
+}
+
+.content{
+
+    min-height: -webkit-fill-available;
+   // min-height: fill-available;
+    padding: 5px;
+
+ }
+ .w-100{
+     width: 100%;
+ }
+ .w-20{
+    width: 20%;
+}
+ .w-30{
+    width: 30%;
+}
+.w-45{
+    width: 45%;
+}
+.w-41{
+    width: 41%;
+}
+
+ .w-44{
+    width: 44%;
+}
+ .w-40{
+     width: 40%;
+ }
+ .w-50{
+    width: 50%;
+ }
+ .w-53{
+     width: 53%;
+ }
+ .w-60{
+     width: 60%;
+ }
+ .w-70{
+    width: 70%;
+}
+ .w-80{
+    width: 82%;
+}
+.w-90{
+    width: 82%;
+}
+ .w-82{
+    width: 82%;
+}
+.mt-1{
+    margin-top: 1%;
+}
+ .mt-2{
+     margin-top: 2%;
+ }
+ .mt-3{
+    margin-top: 3%;
+}
+ .mt-4{
+    margin-top: 4%;
+}
+ .mb-2{
+     margin-bottom: 2%;
+ }
+ .ml-1{
+    margin-left: 1%;
+}
+ .ml-2{
+     margin-left: 2%;
+ }
+ .ml-9{
+    margin-left: 9%;
+}
+ .mr-2{
+    margin-right: 2%;
+}
+.mr-3{
+    margin-right: 3%;
+
+}
+.mr-20{
+    margin-right: 20%;
+}
+ .text-center{
+     text-align: center;
+ }
+ .text-left{
+     text-align: left;
+ }
+ .text-right{
+    text-align: right;
+}
+.place-holder::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: red;
+    opacity: 1; /* Firefox */
+  }
+
+  .add-file{
+    height: 0%;
+    padding: 10px;
+    border-radius: 30px;
+    background-color: #e81121;
+}
+.add-btn .button-native{
+    background: #e81121 !important;
+    border-radius: 5px !important;
+}
+
+.opt select{ color: red !important; }
+
+ion-toggle {
+    --background: #b9bbbd;
+    --background-checked: #b9bbbd;
+
+    --handle-background: #00539F;
+    --handle-background-checked: #000;
+  }
+  .cat-img{
+    background-color: #d9d1d1;
+    width: 70px;
+    height: 70px;
+    border-radius: 32px;
+    margin: 7px;
+}
+.d-flex{
+    display: flex;
+}
+.searchbar-input-container.sc-ion-searchbar-ios {
+    height: 50px;
+}
+.btn-edit{
+    padding: 10px;
+    font-size: 20px;
+    color: #00539F;
+    text-align: left;
+}
+.btn-delete{
+    padding: 10px;
+    font-size: 20px;
+    color: #00539F;
+    text-align: right;
+}
+.text-bal{
+    text-align: left; font-size: 18px;
+}
+.text-amt{
+    color: #1d7c21;text-align: right;font-size: 16px;
+}
+.text-amt-debit{
+    color: red;text-align: right;font-size: 16px;
+}
+.btn-green-amt{
+   // background-color: #1d7c21 !important;
+    border-radius: 15px;
+   // padding: 16px;
+}
+
+ion-item::part(native) {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+
+}
+
+.img-member-name{
+    margin-left: 2px;
+}
+
+.alert-button.sc-ion-alert-ios {
+    background-color: #00539F;color: #fff;
+}
+/*.menu-back{
+    background-color: #00539F;
+}*/
+ion-fab-button button .button-inner { background-color: #00539F !important; }
+
+
+ion-toggle {
+    --background: #00539F;
+    --background-checked: #00539F;
+
+    --handle-background: #fff;
+    --handle-background-checked: #fff;
+    width: 62px;
+    height: 20px;
+  }
+
+
+/* Hide the browser's default radio button */
+.lable-radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Create a custom radio button */
+  .radio-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+  }
+
+  /* On mouse-over, add a grey background color */
+  .lable-radio:hover input ~ .radio-checkmark {
+    background-color: #ccc;
+  }
+
+  /* When the radio button is checked, add a blue background */
+  .lable-radio input:checked ~ .radio-checkmark {
+    background-color: #00539F;
+  }
+
+  /* Create the indicator (the dot/circle - hidden when not checked) */
+  .radio-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the indicator (dot/circle) when checked */
+  .lable-radio input:checked ~ .radio-checkmark:after {
+    display: block;
+  }
+
+  /* Style the indicator (dot/circle) */
+  .lable-radio .radio-checkmark:after {
+       top: 9px;
+      left: 9px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+  }
+  /********************************End of Radio button ********************************************/
+
+.header-bck{
+    background-color: #00539F;
+}
+
+.pad{
+    padding: 19px 0px;
+}
+
+input.largerCheckbox {
+    width: 25px;
+    height: 25px;
+
+}
+
+.checkbox-icon {
+    border-radius: 0px !important;
+}
+
+.mark_btn_red{
+    font-size: 11px;
+    border-radius: 50%;
+    width: 10%;
+    background-color: red;
+    height: 65%;
+}
+.mark_btn_green{
+    font-size: 11px;
+    border-radius: 50%;
+    width: 10%;
+    background-color: green;
+    height: 65%;
+
+}
+.scanner-btn{
+width: 13%;
+right: 2%;
+bottom: 125px;
+position: fixed;
+background-color: #00539F;
+color: #fff;
+padding: 10px;
+font-size: 31px;
+font-weight: bold;
+border-radius: 50%;}
+
+
+.font-size-exp{
+    width: 35px;
+}
+.head-b{
+    margin-left: 5%;color: #d93333;font-size: 16px;padding-top: 15px;
+}
+.row-exp{
+    border-bottom: 1px solid #c8cfc8;padding-bottom: 10px;
+}
+
+.my-custom-class{
+    margin-bottom: 60%;
+}
+
+.ml-3{
+    margin-left: 3%;
+}
+.mb-4{
+    margin-bottom: 4%;
+}
+
+
+ion-content{
+    --background: #fff url('assets/images/bg.jpg') no-repeat center center / cover;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  font-weight: 500;
+  line-height: 1.2;
+}

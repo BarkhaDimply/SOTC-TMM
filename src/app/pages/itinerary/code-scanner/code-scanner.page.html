@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title (click)="back()">
+      <div class="vertical-center-header">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> QR Code Scanner
+      </div>
+    </ion-title>
+   
+  </ion-toolbar>
+</ion-header>
+
+<ion-header>
+<ion-row>
+  <ion-col>
+    <ion-button expand="full" class="primary-btn mt-2"
+style="background-color: #00539F;color: #fff;border-radius: 11px;font-size: 18px;padding: 5px;"
+[routerLink]="'/tabs/itinerary/code-scanner/attendance-list'"
+[queryParams]="{placeId:placeId,type:1,day:day,city:city,locationId:locationID,place:place}">
+Go to Present Attendance List</ion-button>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col>
+    <ion-button expand="full" class="primary-btn mb-2"
+style="background-color: #00539F;color: #fff;border-radius: 11px;font-size: 18px;padding: 5px;"
+[routerLink]="'/tabs/itinerary/code-scanner/attendance-list'"
+[queryParams]="{placeId:placeId,type:0,day:day,city:city,locationId:locationID,place:place}">
+Go to Absent Attendance List </ion-button>
+  </ion-col>
+</ion-row>
+</ion-header>
+
+
+
+<ion-content
+  [fullscreen]="true"
+  [style.--background]="scanActive?'#00000000':'#ffffff'"
+>  
+
+  <ion-button expand="full" (click)="startScanner()" [hidden]="scanActive"></ion-button>
+  <div class="scan-box" [hidden]="!scanActive"></div>
+</ion-content>
+
+
+
+  <!-- <ion-row class="scan-button" [hidden]="!scanActive">
+    <ion-col class="ion-no-padding">
+      <ion-button expand="full" (click)="stopScanner()">Stop</ion-button>
+    </ion-col>
+  </ion-row> -->

@@ -1,0 +1,429 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button ion-button menuToggle></ion-menu-button>
+    </ion-buttons>
+    <app-header></app-header>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+    <ion-header>
+      <ion-toolbar>
+        <ion-title class="text-left" size="small">Hello, <br>{{manager_name}} </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-row>
+      <div class="scrolling-wrapper w-100">
+      <ion-card class="card-slide" style="margin: 10px -4px 24px 17px;padding-bottom: 20px; height: 200px;
+      width: 87%;" *ngFor="let showBalance of getCurrBalance; index as i;">
+        <ion-card-content style="padding: 5px;">
+          <ion-row>
+            <ion-col size="6" style="text-align: left">Expenses Details</ion-col>
+            <ion-col size="6" style="text-align: right"><img src="assets/images/cart-amt.png" style="width: 30px"/></ion-col>
+          
+          </ion-row>
+          
+          <ion-row *ngIf="toggleChecked != true"> 
+            <div class="w-100" style="font-size: 20px;text-align: center;">
+              <span>Card Amount: <b> {{ showBalance.balance_card }} {{showBalance.currency_name}} </b> </span>
+              <br>
+              <span *ngIf="showBalance.last_card_transaction_type == 'credit'" style="color:#696565;font-size:16px;">Last Transaction:<b> + {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}</b> </span> 
+              <span *ngIf="showBalance.last_card_transaction_type == 'debit'" style="color:#696565;font-size:16px;">Last Transaction:<b> - {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}</b> </span> 
+            </div>
+          </ion-row>
+          <ion-row *ngIf="toggleChecked == true"> 
+            <div class="w-100" style="font-size: 20px;text-align: center;">
+              <span>Cash Amount: <b> {{showBalance.balance_cash}} {{showBalance.currency_name}} </b> </span>
+              <br>
+              <span *ngIf="showBalance.last_cash_transaction_type == 'credit'" style="color:#696565;font-size:16px;">Last Transaction:<b> + {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}</b> </span> 
+              <span *ngIf="showBalance.last_cash_transaction_type == 'debit'" style="color:#696565;font-size:16px;">Last Transaction:<b> - {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}</b> </span> 
+            </div>
+          </ion-row>
+          <ion-row>
+            <div class="w-100" style="font-size: 18px;text-align: center;margin-top: 8%;">
+            <span (click)="toggleClicked(showBalance.id, showBalance.isChecked)" 
+             style="padding: 10px;background-color:#00539F;color:#fff;
+            border-radius: 20px;">View Balance</span> 
+            </div>
+          </ion-row>
+
+        </ion-card-content>
+      </ion-card>
+      </div>
+    </ion-row>
+
+    <!-------------------List all/Rejected---------------------->
+
+    <ion-segment #segment (ionChange)="segmentChanged($event)" class="mb-2 ml-2 mr-2" style="background: white;"
+    mode="ios" scrollable value="allTrans">
+      <ion-segment-button value="allTrans">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="rejected_trans">
+        <ion-label>Rejected</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+
+
+<!------------old code---------------------->
+    <!-- <ion-row>
+      <div class="scrolling-wrapper">
+      <ion-card class="card-slide" style="    margin: 10px -4px 24px 17px;
+      width: 87%;" *ngFor="let showBalance of getCurrBalance; index as i;">
+
+        <ion-card-content class="text-center" *ngIf="!showBalance.isCashAmount">
+          <ion-row>
+            <ion-col size="4" style="text-align: left;">
+              <img src="assets/images/cart-amt.png" />
+            </ion-col>
+            <ion-col size="8" style="text-align: right;">
+             Card <ion-toggle
+              [(ngModel)]="showBalance.isChecked" (ionChange)="toggleClicked(showBalance.id, showBalance.isChecked)"
+              value="toggleChecked"  color="primary"></ion-toggle> Cash
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12" style="text-align: left;">
+               <span style="font-size: 18px;"> Card Amount :</span> <b style="font-size: 20px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{showBalance.balance_card}} {{showBalance.currency_name}}</b> <br> <br>
+               
+              <div >
+                <span> last Transaction :</span>&nbsp;&nbsp;
+
+              <span *ngIf="showBalance.last_card_transaction_type == 'credit'" 
+               style="width:90px;background-color:#00539F;color:#fff;padding: 10px 18px;
+               border-radius: 16px;"> 
+               + {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}</span>
+
+               <span *ngIf="showBalance.last_card_transaction_type == 'debit'" 
+               style="background-color:#00539F;color:#fff;padding: 10px 18px;
+               border-radius: 16px;width:90px;"> 
+              - {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}</span> 
+               
+              <b *ngIf="showBalance.last_card_transaction_status == 3" 
+              style="color: #f10a0a;font-size: 16px;font-weight: 900;"> Deleted</b>
+              
+              </div>
+               <ion-button class="btn-green-amt">{{showBalance.balance_card}} {{showBalance.currency_name}}</ion-button>
+             
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+
+        <ion-card-content class="text-center" *ngIf="showBalance.isCashAmount">
+          <ion-row>
+            <ion-col size="4" style="text-align: left;">
+              <img src="assets/images/cart-amt.png" />
+            </ion-col>
+
+            <ion-col size="8" style="text-align: right;">
+              Card <ion-toggle
+              [(ngModel)]="showBalance.isChecked" (ionChange)="toggleClicked(showBalance.id, showBalance.isChecked)"
+               value="toggleChecked"></ion-toggle> Cash
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12" style="text-align: left;">
+               <span style="font-size: 18px;"> Cash Amount :</span> <b style="font-size: 20px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{showBalance.balance_cash}} {{showBalance.currency_name}}</b> <br> <br>
+               <span> last Transaction :</span>&nbsp;&nbsp;
+
+              <span *ngIf="showBalance.last_cash_transaction_type == 'credit'" 
+               style="width:90px;background-color:#00539F;color:#fff;padding: 10px 18px;
+               border-radius: 16px;"> 
+               + {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}</span>
+
+
+               <span *ngIf="showBalance.last_cash_transaction_type == 'debit'" 
+               style="background-color:#00539F;color:#fff;padding: 10px 18px;
+               border-radius: 16px;width:90px;"> 
+              - {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}</span> 
+              
+              <b *ngIf="showBalance.last_cash_transaction_status == 3" 
+              style="color: #f10a0a;font-size: 16px;font-weight: 900;"> Deleted</b>
+              
+
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+      </div>
+    </ion-row> -->
+<!------------old code---------------------->
+
+    <ion-card style="margin-top: 0px;">
+      <div *ngFor="let history of newTranscationList | keyvalue: asIsOrder">
+        
+        <div style="padding: 10px 0px 0px 10px;
+          font-size: 16px;
+          font-weight: 600;">
+          
+            <span style="margin-top: 10px;">{{history.key}}</span>
+          
+        </div> <hr>
+        <div class="d-flex" *ngFor="let historyDetails of history.value">
+          <div class="w-100 showSelecthide" *ngIf="historyDetails.show_transaction == 0">
+            <ion-row>
+              <ion-col size="2" style="padding-top: 10px;"> <img src="assets/images/money.png" style="width: 40px"></ion-col>
+              <ion-col size="6" class="text-bal" *ngIf="historyDetails.category == 'tm_transfer'">TM Transfer</ion-col>
+              <ion-col size="6" class="text-bal" *ngIf="historyDetails.category == 'misc_collection'">Misc Collection</ion-col>
+              <ion-col size="6" class="text-bal" *ngIf="historyDetails.category == 'atm_same_currency'">ATM Same Currency</ion-col>
+              <ion-col size="6" class="text-bal" *ngIf="historyDetails.category == 'atm_cross_currency'">ATM Cross Currency</ion-col>
+              <ion-col size="6" class="text-bal"
+              *ngIf="historyDetails.category != 'tm_transfer' && historyDetails.category != 'atm_cross_currency' && historyDetails.category != 'atm_same_currency' && historyDetails.category != 'misc_collection'">
+              {{historyDetails.category}} <br>
+              <p style="font-size: 14px;color: #696565;">Received on Card</p>
+              </ion-col>
+              
+              <ion-col size="4" style="text-align: right;">
+                <div *ngIf="historyDetails.show_transaction == 0 && historyDetails.submission_status == 0 &&
+                historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+                historyDetails.category != 'tm_transfer'" style="padding-bottom:5px;">
+                  <ion-icon name="create-outline" (click)="editTransaction(historyDetails)" style=" color: #075d0d;
+                  font-size: 28px;"></ion-icon>
+                  <ion-icon (click)="deleteTRansactionHistory(historyDetails)" name="trash-outline" style="color: orange;font-size: 28px;"></ion-icon>
+                </div>
+                <div>
+                <ion-col  class="text-amt-debit" *ngIf="historyDetails.transaction_type == 1">-{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+                <ion-col  class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  3 ">-{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+                <ion-col  class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  4">-{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+                <ion-col  class="text-amt" *ngIf="historyDetails.transaction_type == 2">+{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+                </div>
+
+              </ion-col>
+              <!-- <ion-col size="6" style="text-align: right;font-size: 20px;"><b>{{historyDetails.currency}}</b></ion-col> -->
+            </ion-row>
+            <!-- <ion-row>
+            
+              <ion-col size="6" class="text-bal" style="font-size: 14px;color: #696565;" *ngIf="historyDetails.transaction_type == 2 && historyDetails.transaction_by == 1">Received on Card </ion-col>
+              <ion-col size="6" class="text-bal" style="font-size: 14px;color: #696565;" *ngIf="historyDetails.transaction_type == 2 && historyDetails.transaction_by == 2">Received on Cash </ion-col>
+              <ion-col size="6" class="text-bal" style="font-size: 14px;color: #696565;" *ngIf="historyDetails.transaction_type == 1 && historyDetails.transaction_by == 1">Payment By Card </ion-col>
+              <ion-col size="6" class="text-bal" style="font-size: 14px;color: #696565;" *ngIf="historyDetails.transaction_type == 1 && historyDetails.transaction_by == 2">Payment By Cash </ion-col> 
+
+            <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type == 1">-{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+              <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  3 ">-{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+              <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  4">-{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+              <ion-col size="6" class="text-amt" *ngIf="historyDetails.transaction_type == 2">+{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></ion-col>
+            
+          
+            </ion-row> -->
+          </div>
+      
+
+        <!-- <ion-card class="w-90" *ngIf="historyDetails.submission_status == 3" style="background-color: #fcd6dd">
+            <ion-row *ngIf="historyDetails.show_transaction == 0 && historyDetails.category != 'tm_transfer' && historyDetails.category != 'BALANCE ADDED' ">
+              <ion-col size="6" style="color: #767b7f;" class="btn-edit" (click)="editTransaction(historyDetails)">Edit</ion-col>
+              <ion-col size="6" style="color: #767b7f;" class="btn-delete" (click)="deleteTRansactionHistory(historyDetails)">Delete</ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6" class="text-bal"><b>{{historyDetails.category}}</b></ion-col>
+              <ion-col size="6" style="text-align: right;font-size: 20px;"><b>{{historyDetails.currency}}</b></ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6" class="text-bal" style="font-size: 16px;" *ngIf="historyDetails.transaction_by == 1">Received on Card</ion-col>
+              <ion-col size="6" class="text-bal" style="font-size: 16px;" *ngIf="historyDetails.transaction_by == 2">Payment via Cash</ion-col>
+              <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type == 1">-{{historyDetails.transaction_amount}}</ion-col>
+              <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  3 ">-{{historyDetails.transaction_amount}}</ion-col>
+              <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  4">-{{historyDetails.transaction_amount}}</ion-col>
+              <ion-col size="6" class="text-amt" *ngIf="historyDetails.transaction_type == 2">+{{historyDetails.transaction_amount}}</ion-col>
+            </ion-row>
+          </ion-card>-->
+
+
+        <!-- <div class="w-10"  *ngIf="showSelecthide">
+
+            <ion-checkbox slot="start"  *ngIf="historyDetails.show_transaction == 0 && historyDetails.category != 'tm_transfer' && historyDetails.category != 'BALANCE ADDED' "
+            class="largerCheckbox" [(ngModel)]="historyDetails.isItemChecked" (ionChange)="verifyEvent(historyDetails.id)" style="margin: 68px 0px;">
+            </ion-checkbox>
+          </div>-->
+        </div>
+
+         <!-- <div *ngFor="let historyDetails of history.value">
+        <ion-fab class="mr-3" slot="fixed" style="bottom: 38px;position: fixed;right: 0;">
+        
+        <ion-fab-button *ngIf="hideSubmitButton && historyDetails.submission_status == 0 && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+        historyDetails.category != 'tm_transfer'"
+            style="font-size: 14px;border-radius: 2px; --box-shadow:none;    " (click)="addTransactionHistory()">Submit
+          
+          </ion-fab-button>
+        </ion-fab>
+        </div>  -->
+    
+
+
+
+        <div *ngFor="let historyDetails of history.value">
+
+          <ion-fab class="mr-3" slot="fixed" style="bottom: 81px;position: fixed;right: 0;">
+          
+           <ion-fab-button *ngIf="hideSubmitButton && historyDetails.submission_status == 0 && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+           historyDetails.category != 'tm_transfer'"
+              style="font-size: 14px;border-radius: 2px; --box-shadow:none;    "
+             (click)="addTransactionHistory()">Submit
+            </ion-fab-button>
+          </ion-fab>
+        </div>
+
+
+      </div>
+
+
+  </ion-card>
+
+    <!--<ion-row>
+      <div class="scrolling-wrapper">
+      <ion-card class="w-90 card-slide" *ngFor="let showBalance of getCurrBalance; index as i;">
+        <ion-toggle  [(ngModel)]="showBalance.isChecked" (ionChange)="toggleClicked(showBalance.id, showBalance.isChecked)" value="toggleChecked" class="mt-2 mr-2" color="primary" style="float: right;"></ion-toggle>
+
+        <ion-card-content class="text-center" *ngIf="!showBalance.isCashAmount">
+          Card Amount : <b>{{showBalance.balance_card}} {{showBalance.currency_name}}</b> <br>
+          last Transaction : {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}<br>
+          <ion-button class="btn-green-amt">{{showBalance.balance_card}} {{showBalance.currency_name}}</ion-button>
+        </ion-card-content>
+        <ion-card-content class="text-center" *ngIf="showBalance.isCashAmount">
+          Cash Amount : <b>{{showBalance.balance_cash}} {{showBalance.currency_name}}</b> <br>
+          last Transaction : {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}<br>
+          <ion-button class="btn-green-amt">{{showBalance.balance_cash}} {{showBalance.currency_name}}</ion-button>
+        </ion-card-content>
+      </ion-card>
+
+    </div>
+    </ion-row>-->
+
+    <!-- <ion-row class="mt-2">
+      <ion-button class="btn-blue" style="width: 100%" [routerLink]="'/tabs/my-expenses/transaction-history'">View Statement</ion-button>
+    </ion-row> -->
+
+    <!-- <ion-card>
+        <ion-header>
+          <ion-toolbar style="text-align: center;">
+            <b style="color: black;font-size: 18px;">Select Expense Type</b>
+          </ion-toolbar>
+        </ion-header>
+      
+        <ion-row><b class="head-b">Expense Tracking</b></ion-row>
+        
+        <ion-row class="mt-2 mb-2 row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/record-transaction'">
+            <img src="assets/images/money.png" class="font-size-exp"><br><p>Record Transaction</p></ion-col>
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/cross-currency-by-card'">
+            <img src="assets/images/credit-card.png" class="font-size-exp"><br>
+          <p>Payment by card</p></ion-col>
+        </ion-row>
+
+        <ion-row><b class="head-b">Withdrawal</b></ion-row>
+        
+        <ion-row class="mt-2 mb-2 row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/atm-withdrawalsame-currency'">
+            <img src="assets/images/atm-machine.png" class="font-size-exp"><br><p>ATM Withdrawal Same Currency</p></ion-col>
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/atm-withdrawal-cross-currency'">
+            <img src="assets/images/cross currency atm.png" class="font-size-exp"><br><p>ATM Withdrawal Cross Currency</p></ion-col>
+        </ion-row>
+
+        <ion-row>
+          <b class="head-b">Exchanges </b>
+        </ion-row>
+        <ion-row class="mt-2 mb-2 row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/currency-exchange'">
+            <img src="assets/images/exchange.png" class="font-size-exp"><br><p>Currency Exchange</p></ion-col>
+    
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/tm-transfer'">
+            <img src="assets/images/wallet.png" class="font-size-exp"><br>
+          <p>TM Transfer</p></ion-col>
+        </ion-row>
+    
+        <ion-row>
+          <b class="head-b">Collection</b>
+        </ion-row>
+        <ion-row class="mt-2 mb-2 row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/misc-collection'"> 
+            <img src="assets/images/Collection.png" class="font-size-exp">
+          <br>
+          <p>Misc. Collection</p></ion-col>
+        </ion-row>
+
+
+      </ion-card> -->
+  
+      <!----------------Transaction History ------------>
+
+      <ion-fab slot="fixed" style="bottom: 5px;right: 163px;position: fixed;">
+        <ion-fab-button (click)="setOpen(true)"  style="font-size: 38px;
+        border-radius: 50%;"><ion-icon name="add-outline"></ion-icon></ion-fab-button>
+      </ion-fab>
+    
+     
+
+</ion-content>
+
+<ion-modal [isOpen]="isModal" style="top: 17%;border-radius: 38px 38px 0px 0px;background-color: #fff;">
+  <ng-template>
+    
+    <div>
+      <div class="d-flex" style="border-bottom: 2px solid grey;padding: 10px;">
+        <ion-header  style="text-align: center;"> 
+          <h4>Select Expense Type</h4>
+          
+        </ion-header>
+        <ion-icon name="close-outline" (click)="setOpen(false)" 
+        style="padding: 14px;
+        font-size: 30px;
+        position: absolute;
+        z-index: 9999;
+        right: 0px;
+    "></ion-icon>
+      
+      </div>  
+    
+        <ion-row><b class="head-b">Expense Tracking</b></ion-row>
+        
+        <ion-row class=" row-exp" >
+          <ion-col size="6" style="text-align: center"   [routerLink]="'/tabs/my-expenses/record-transaction'">
+            <img src="assets/images/money.png" class="font-size-exp" (click)="setOpen(false)"><br>
+            <p (click)="setOpen(false)">Record Transaction</p></ion-col>
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/cross-currency-by-card'">
+            <img src="assets/images/credit-card.png" (click)="setOpen(false)" class="font-size-exp"><br>
+          <p (click)="setOpen(false)">Payment by card</p></ion-col>
+        </ion-row>
+
+        <ion-row><b class="head-b">Withdrawal</b></ion-row>
+        
+        <ion-row class=" row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/atm-withdrawalsame-currency'">
+            <img src="assets/images/atm-machine.png" class="font-size-exp" (click)="setOpen(false)"><br><p (click)="setOpen(false)">ATM Withdrawal Same Currency</p></ion-col>
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/atm-withdrawal-cross-currency'">
+            <img src="assets/images/cross currency atm.png" class="font-size-exp"><br><p>ATM Withdrawal Cross Currency</p></ion-col>
+        </ion-row>
+
+        <ion-row>
+           <b class="head-b">Exchanges </b>
+        </ion-row>
+        <ion-row class=" row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/currency-exchange'">
+            <img src="assets/images/exchange.png" (click)="setOpen(false)" class="font-size-exp"><br><p (click)="setOpen(false)">Currency Exchange</p></ion-col>
+    
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/tm-transfer'">
+            <img src="assets/images/wallet.png" (click)="setOpen(false)" class="font-size-exp"><br>
+          <p (click)="setOpen(false)">TM Transfer</p></ion-col>
+        </ion-row>
+    
+        <ion-row>
+          <b class="head-b">Collection</b>
+        </ion-row>
+        <ion-row class=" row-exp">
+          <ion-col size="6" style="text-align: center" [routerLink]="'/tabs/my-expenses/misc-collection'"> 
+            <img src="assets/images/Collection.png"  (click)="setOpen(false)" class="font-size-exp">
+           <!-- <ion-icon name="cash-outline" class="font-size-exp"></ion-icon>--> <br>
+          <p (click)="setOpen(false)">Misc. Collection</p></ion-col>
+        </ion-row>
+
+      </div>
+  </ng-template>
+</ion-modal>
+

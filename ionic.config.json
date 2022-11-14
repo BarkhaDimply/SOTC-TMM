@@ -1,0 +1,9 @@
+{
+  "name": "Tourmanager_sotc",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "eeae5a04"
+}

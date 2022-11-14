@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Trip</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content" style="background-image: url(assets/images/background.png);min-height: 100%;max-height: 100%;">
+
+
+    <ion-row>
+      <ion-card class="w-100" style="margin-bottom: 0px;" *ngFor="let myTrips of myTrip">
+        <ion-row>
+          <ion-col size="4"><p style="color: gray">{{myTrips.groupId}}</p>
+           <b>{{myTrips.groupName1}}</b>
+          </ion-col>
+          <ion-col size="8"><p style="color: gray">
+            Status:
+             <b *ngIf="myTrips.status == '1'" style="color: orange">Active</b>
+             <b *ngIf="myTrips.status == '2'" style="color: orange">Completed</b>
+             </p>
+              {{myTrips.detail}} <br></ion-col>
+        </ion-row>
+
+       
+      </ion-card>
+
+    </ion-row>
+
+  </div>
+
+</ion-content>

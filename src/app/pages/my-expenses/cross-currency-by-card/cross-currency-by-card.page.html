@@ -1,0 +1,176 @@
+<ion-header>
+  <ion-toolbar>
+
+
+      <div class="vertical-center-header" (click)="back()">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Payment by Card
+      </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content" style="background-image: url(assets/images/background.png);">
+    <ion-card>
+      <ion-row>
+        <ion-col>
+          <ion-col size="4">
+            <label>Amt deducted</label>
+            <div class="form-group">
+              <input type="number" [(ngModel)]="outgoingAmt"  class="form-control" placeholder=""/>
+            </div>
+          </ion-col>
+          <ion-col size="4">
+            <label>Currency</label>
+            <div class="form-group">
+<!--              <select class="form-control" (change)="getOutgoingCurrency($event.target.value)" [(ngModel)]="outgoing_selected_currency">-->
+<!--                <option *ngFor="let cardCurrency of showCardCurrency" [ngValue]="cardCurrency" class="place-holder">{{cardCurrency}}</option>-->
+<!--              </select>-->
+              <select class="form-control"  (change)="getOutgoingCurrency($event.target.value)">
+                <option class="place-holder" *ngIf="outgoing_selected_currency != 0" [ngValue]="outgoing_selected_currency" selected >{{outgoing_selected_currency}}</option>
+
+                <option class="place-holder"  *ngFor="let cashCurrency of showCardCurrency"
+                        [ngValue]="cashCurrency">{{cashCurrency}}</option>
+              </select>
+            </div>
+          </ion-col>
+          <ion-col size="4">
+            <label>Handover Type</label>
+            <div class="form-group">
+              <input type="text"   placeholder="Card"   disabled>
+<!--              <select class="form-control" disabled>-->
+<!--                <option >Card</option>-->
+<!--              </select>-->
+            </div>
+          </ion-col>
+
+          <ion-col size="4">
+            <label>Select Category </label>
+            <div class="form-group">
+
+            <select class="form-control"  (change)="getSubcatgeory($event)">
+              <option *ngIf="editMode != true">--Select--</option>
+              <option *ngIf="editMode == true"  value="selected_category_id">{{selected_category_id}}</option>
+
+
+              <option *ngFor="let category of getAllCatergories" value="{{category.id}}">{{category.category}}</option>
+            </select>
+
+<!--            <select class="form-control" *ngIf="editMode == true">-->
+<!--              <option  value="selected_category_id" selected>{{selected_category_id}}</option>-->
+<!--            </select>-->
+          </div>
+          </ion-col>
+
+          <ion-col size="4" >
+            <div class="form-group" *ngIf="subCategory">
+              <label>Select Sub Category</label>
+
+              <select class="form-control"  (change)="getSubcatgeoryId($event)">
+                <option *ngIf="editMode != true">--Select--</option>
+                <option class="place-holder" *ngIf="hideSubCat != false" [ngValue]="subCategory">{{subCategory}}</option>
+
+                <option class="place-holder"  *ngFor="let subCategory of subCategory"
+                        value="{{subCategory.id}}">{{subCategory.category}}</option>
+              </select>
+
+
+
+            </div>
+          </ion-col>
+
+
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col style="color:rgb(69, 75, 243);text-align: left;"> *Note: Amount to include all Transaction fees.</ion-col>
+      </ion-row>
+      <hr>
+
+        <ion-row>
+
+          <ion-col size="6">
+            <label>Amt Paid</label>
+            <div class="form-group">
+              <input type="number" [(ngModel)]="amtRecived_vendor" class="form-control" placeholder=""/>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <label>Currency</label>
+            <div class="form-group">
+
+              <select class="form-control" (change)="getRecivedCurrency($event.target.value)"
+              [(ngModel)]="amtRecived_selected_currency">
+                <option class="place-holder" *ngFor="let cardCurrency of showrecivedCashCurrency" [ngValue]="cardCurrency">
+                  {{cardCurrency}}</option>
+              </select>
+
+
+
+            </div>
+          </ion-col>
+          <!--<ion-col size="4">
+            <label>Handover Type</label>
+            <div class="form-group">
+             <select class="form-control" disabled>
+                <option>Card</option>
+              </select>
+            </div>
+          </ion-col>-->
+        </ion-row>
+
+        <div *ngIf="row" style="text-align: center;font-weight: bolder;font-size: 18px;">{{row}}</div>
+
+        <div *ngIf="autoCalculateVlaue" style="text-align: center;font-weight: bolder;font-size: 18px;">
+           1 {{outgoing_selected_currency}} = {{autoCalculateVlaue}} {{amtRecived_selected_currency}}</div>
+          <ion-row class="mb-2 ml-2 mr-2">
+            <ion-button class="primary-btn" style="color:#fff;" (click)="autoCalculateCurrency()">Auto Calculate</ion-button>
+          </ion-row>
+
+      </ion-card>
+
+
+    <ion-card style="margin-bottom: 4rem;">
+        <ion-row>
+          <ion-col>
+            <div class="form-group mt-2 mb-2">
+              <div class="d-flex">
+                <ion-button *ngIf="!debit_image" class="primary-btn add-file mr-20" style="color:#fff;width: 191px;" (click)="openGallery()">
+                  <ion-icon name="add-outline" style="font-size: xx-large;"></ion-icon> Add Receipt File
+                </ion-button>
+                <ion-button class="primary-btn" *ngIf="debit_image" style="color:#fff;width:20%;" (click)="removeImage()">
+                  <ion-icon name="trash-outline">Remove Image</ion-icon></ion-button>
+              </div>
+              <div style="text-align: center;" *ngIf="imageDisplay">
+                <img [src]="imageDisplay">
+              </div>
+
+              <div style="text-align: center;" *ngIf="debit_image">
+                <img [src]="'https://tcil-sotc.travelexic.com/'+debit_image">
+              </div>
+            </div>
+
+
+            <div class="form-group">
+                <label>Date:</label>
+                <input type="date"  [(ngModel)]="selectedDate" [max]="todayDateTime"  ssclass="form-control"  placeholder="DD-MM-YYYY"/>
+
+              </div>
+
+            <div class="form-group">
+              <textarea type="text" [(ngModel)]="description" class="form-control"  placeholder="Description"></textarea>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mb-2 ml-2 mr-2" >
+          <ion-button class="primary-btn" style="color:#fff;"
+           (click)="crossCurrencyByCard()">done</ion-button>
+        </ion-row>
+      </ion-card>
+
+
+  </div>
+</ion-content>
+

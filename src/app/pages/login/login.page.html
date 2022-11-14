@@ -1,0 +1,46 @@
+<ion-content>
+  <div class="content" style="background-image: url(assets/images/screen_tour_min.png)">
+
+    <div class="error-message">
+      <p *ngFor="let err of errorMessage" class="error">{{ err }}</p>
+    </div>
+    <div class="header-icon">
+      <img src="assets/images/profileicon.png" />
+    </div>
+    <form (ngSubmit)="demonstateSubmit()" [formGroup]="loginForm" class="login-form">
+
+
+      <div class="form-group">
+
+        <div class="d-flex" *ngIf="!OTP_box">
+        <input style="width: 20%;" [disabled]="loginForm.invalid" type="text" value="91" readonly placeholder="+91"> &nbsp;
+
+        <input formControlName="manager_number" [disabled]="loginForm.invalid" id="manager_number" placeholder="8888888888" type="text" autocapitalize="off">
+        </div>
+
+        <ng-container *ngFor="let validation of validationMessages.manager_number">
+          <div
+            *ngIf="loginForm.get('manager_number').hasError(validation.type) && (loginForm.get('manager_number').dirty || loginForm.get('manager_number').touched)"
+            class="error-message">
+            <span class="error">{{ validation.message}}</span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="form-group">
+
+        <input placeholder="OTP eg. 123456" type="number" autocapitalize="off" [(ngModel)]="otp" *ngIf="OTP_box" [ngModelOptions]="{standalone: true}" required>
+
+      </div>
+      <div class="form-group">
+        <ion-button [disabled]="loginForm.invalid" class="primary-btn" type="submit" *ngIf="!OTP_box">Submit</ion-button>
+        <ion-button (click)="verifyOtp()" class="secondary-btn" type="button" *ngIf="OTP_box">Submit</ion-button>
+      </div>
+
+
+    
+      
+   
+
+    </form>
+  </div>
+</ion-content>

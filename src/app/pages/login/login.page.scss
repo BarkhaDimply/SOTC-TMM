@@ -1,0 +1,29 @@
+.content{    
+    height: 100%;
+    background-size: cover;
+    background-attachment: scroll;
+    padding: 150px 40px;
+ }
+ .header-icon{
+     width: 100%;
+     text-align: center;
+     margin-bottom: 10px;
+     img{
+        
+         width: 70px;
+     }
+ }
+ .form-group input{
+    width: 100%;
+    background-color: #000;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border: 0px solid #888;
+    border-radius: 5px;
+    color: #fff;
+  }
+  .my-custom-class {
+    --backdrop-opacity: 0.2;
+    --background: linear-gradient(90deg, rgba(165, 255, 192, 1) 1%, rgba(0, 212, 255, 1) 100%);
+}

@@ -1,0 +1,63 @@
+
+.swiper-slide {
+ 
+    text-align: left;
+  }
+  .swiper-content {
+   
+    padding: 10px 0px;
+   
+  }
+  ion-avatar{
+    margin-right: 10px;
+  }
+  .phone-call-icon{
+    width: 35px !important;
+  }
+
+  .ribbon-vip{
+    .corner-ribbon {
+      width: 71px;
+    background: #f30505;
+    position: absolute;
+    top: 4px;
+    left: -19px;
+    text-align: center;
+    line-height: 25px;
+    letter-spacing: 1px;
+    color: #fff;
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+
+    .corner-ribbon1 {
+    width: 89px;
+    background: #f30505;
+    position: absolute;
+    top: 1px;
+    left: -29px;
+    text-align: center;
+    line-height: 25px;
+    letter-spacing: 1px;
+    color: #fff;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+
+
+  }
+  .room-cat {
+   // margin-top: -34px;
+    border: 1px solid red;
+    color: red;
+    font-weight: bold;
+    margin-right: 36px;
+  }
+  .room-cat1 {
+  //  margin-top: -34px;
+    border: 1px solid red;
+    color: red;
+    font-weight: bold;
+    margin-right: 90px;
+  }
+ 

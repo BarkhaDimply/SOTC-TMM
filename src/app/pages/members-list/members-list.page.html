@@ -1,0 +1,865 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button ion-button menuToggle></ion-menu-button>
+    </ion-buttons>
+    <app-header></app-header>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content">
+
+
+    <ion-row class="w-100">
+      <ion-col size="10">
+        <div *ngIf="searchRooming == true">&nbsp;</div>
+        <ion-searchbar [(ngModel)]="searchTerm" *ngIf="searchRooming != true" (ionChange)="setFilteredItems($event)">
+        </ion-searchbar>
+      </ion-col>
+      <ion-col size="2">
+        <!-- <div (click)="resetFilter()" *ngIf="isFilter" style="margin-top: 10px;">
+          <img src="assets/images/member-list/clear-filter.png" style="width: 76%;">
+        </div> -->
+        <div *ngIf="activeSegment != 'rooming'" style="margin-top: 10px;">
+          <img [queryParams]="{activeSegment:activeSegment}" [routerLink]="'/tabs/members-list/members-list-filter'" 
+          style="width: 76%;" src="assets/images/member-list/filter.png">
+        </div>
+        
+        <div *ngIf="activeSegment == 'rooming'" style="margin-top: 10px;">
+          <img (click)="isFilterOpen();isModal=true" style="width: 76%;" src="assets/images/member-list/filter.png">
+        </div>
+
+      </ion-col>
+    </ion-row>
+
+
+    <!-- <div class="d-flex mt-2 mb-2 mr-2"> 
+      <div *ngIf="searchRooming == true" class="w-80">&nbsp;</div>
+      <ion-searchbar class="w-80" [(ngModel)]="searchTerm" *ngIf="searchRooming != true" (ionChange)="setFilteredItems($event)"></ion-searchbar>
+      
+      <div (click)="resetFilter()" *ngIf="isFilter" style="margin-top: 10px;">
+        <img style="width: 41px;" src="assets/images/clear-filter.png">
+      </div>
+     
+
+      <span class="w-20" style="border-radius: 30px;background-color:#00539F;" *ngIf="!isFilter">
+        <ion-icon (click)="isFilterOpen();isModal=true" name="funnel" style="padding: 15px 17px;color:#fff;font-size:26px" >
+        </ion-icon>
+      </span>
+      <span class="w-20" style="border-radius: 30px;background-color:#ebef09;" *ngIf="isFilter">
+        <ion-icon (click)="isFilterOpen();isModal=true" name="funnel" style="padding: 15px 17px;color:#fff;font-size:26px" >
+        </ion-icon>
+      </span> 
+    </div> -->
+
+    <ion-segment #segment (ionChange)="segmentChanged($event)" mode="ios" scrollable value="airline">    
+      
+      <ion-segment-button value="airline">
+        <ion-label>Departure</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="arrival_departure">
+        <ion-label>Arrival</ion-label>
+      </ion-segment-button>
+      <!-- <ion-segment-button value="airline">
+        <ion-label>Airline</ion-label>
+      </ion-segment-button> -->
+      <ion-segment-button value="rooming">
+        <ion-label>Rooming</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <div class="swiper-content">
+      <swiper #swiper (slideChange)="onSlideChange($event)" [config]="config" class="common-swiper">
+   
+
+        <!--------------------Depature--------------------------->
+
+        <ng-template swiperSlide>
+          <ion-row class="w-100"><ion-col size="8"></ion-col></ion-row>
+        
+          <!-----------------Without using Filter------------------------>
+ 
+          <ion-row *ngIf="getFilterMemberListArrayDep.length == 0">
+            <ion-card class="w-100">
+              <ng-container *ngFor="let member of user.members_data">
+                <ion-item  style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+
+                  <div class="ribbon-vip">  
+                    <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+                  </div>
+
+                  <ion-avatar>
+                    <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+                  </ion-avatar>
+                  <ion-label>{{member.name}}
+                    <br>      
+                    <p *ngIf="member.family_members.length !== 0">
+                      Grouping with {{member.family_members.length}} others
+
+                    </p>
+                  </ion-label> 
+
+                  <div *ngIf="member.show_status != 'true'" (click)="noShowAlertConfirmtoGroups(member.parent_id,member.name)">
+                    <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+                  </div>
+                  <div *ngIf="member.show_status == 'true'">
+                    <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+                  </div>&nbsp;
+
+                  <a href="tel:{{member.phone}}">
+                    <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+                </ion-item>
+
+                <ion-item *ngIf="member.isFamily && member.family_members.length > 0">
+                  <ion-list class="w-100">
+
+                    <ion-item *ngFor="let familyMembers of member.family_members">
+
+                      <ion-col size="2">
+                        <ion-avatar>
+                          <img class="img-member-name"
+                            [src]="'https://ui-avatars.com/api/?name='+familyMembers.name" />
+                        </ion-avatar>
+                      </ion-col>
+                      <ion-col size="7">
+                        <ion-label>{{familyMembers.name}}</ion-label>
+
+                      </ion-col>
+                      <ion-col size="2">
+                        <div style="margin-left: 11px;" *ngIf="familyMembers.show_status != true"
+                          (click)="noShowAlertConfirmtoGroups('','',familyMembers.member_id,familyMembers.name)">
+                          <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+                        </div>
+                        <div style="margin-left: 11px;" *ngIf="familyMembers.show_status == true">
+                          <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+                        </div>
+
+                      </ion-col>
+                      <ion-col size="1">
+
+                      </ion-col>
+
+                    </ion-item>
+
+                  </ion-list>
+                </ion-item>
+              </ng-container>
+            </ion-card>
+          </ion-row>
+
+          <!-----------------With using Filter------------------------>
+
+      
+          <ion-row *ngIf="getFilterMemberListArrayDep.length > 0">
+
+
+              <!-- <ion-button class="primary-btn" *ngIf="getFilterMemberListArray.length != 0" style="color:#fff;">Total
+                {{getFilterMemberListArray.length}}</ion-button>
+              <ion-button class="primary-btn" *ngIf="getFilterMemberListArray.length == 0" style="color:#fff;">No Data Available
+              </ion-button> -->
+
+            <ion-card class="w-100"> 
+              <ng-container *ngFor="let memberArr of getFilterMemberListArrayDep">
+
+                <div *ngFor="let member of memberArr">
+
+                   <ion-item style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+
+                    <div class="ribbon-vip">
+                      <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+                    </div>
+
+                    <ion-avatar>
+                      <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+                    </ion-avatar>
+
+                    <ion-label>{{member.name}}
+                      <br>  
+                       <p *ngIf="member.family_members.length > 0">
+                        Grouping with {{member.family_members.length}} others 
+  
+                      </p> 
+                    </ion-label>
+
+                    <div *ngIf="member.show_status != 'true'"
+                    (click)="noShowAlertConfirmtoGroups(member.parent_id,member.name,'','')">
+                    <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+                    </div>
+                    <div *ngIf="member.show_status == 'true'">
+                      <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+                    </div>&nbsp;
+
+
+                    <a href="tel:{{member.phone}}">
+                      <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+                  </ion-item>
+                   <ion-item *ngFor="let member_family of member.family_members"> 
+                        <ion-avatar>
+                          <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member_family.name" />
+                        </ion-avatar>
+
+                        <ion-label>{{member_family.name}}</ion-label>
+
+                        <div *ngIf="member_family.show_status != true"
+                          (click)="noShowAlertConfirmtoGroups('','',member_family.member_id,member_family.name)">
+                          <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+                        </div>
+                        <div *ngIf="member_family.show_status == true">
+                          <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+                        </div>
+                    
+                   </ion-item> 
+               
+                  </div>
+               
+              </ng-container>
+            </ion-card>
+          </ion-row>
+
+          <!-- <ion-row *ngIf="isFilter">
+            <ion-card class="w-100">
+              <ng-container *ngFor="let member of data_member">
+                <ion-item style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+
+                  <div class="ribbon-vip">
+                    <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+                  </div>
+
+                  <ion-avatar>
+                    <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+                  </ion-avatar>
+                  <ion-label>{{member.name}}
+                    <br>
+             
+                 
+                  </ion-label>
+
+
+                  <a href="tel:{{member.phone}}">
+                    <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+                </ion-item>
+                 <ion-item *ngIf="member.mem_length > 0">
+              
+                 
+
+                    
+                      <ion-avatar>
+                        <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.mem_name" />
+                      </ion-avatar>
+
+                      <ion-label>{{member.mem_name}}</ion-label>
+
+                      <div *ngIf="member.mem_show_status == 'false'"
+                        (click)="noShowAlertConfirmtoGroups(member.mem_member_id,member.mem_name)">
+                        <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+                      </div>
+                      <div *ngIf="member.mem_show_status == 'true'">
+                        <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+                      </div>
+
+
+                   
+                  
+                </ion-item>
+              </ng-container>
+            </ion-card>
+
+          </ion-row> -->
+
+        </ng-template>
+
+
+        <!-- <ng-template swiperSlide>
+          <ion-row *ngIf="!isFilter">
+            <ion-card class="w-100">
+              <ng-container *ngFor="let member of user.members_data">
+                <div class="ribbon-vip">
+
+                  <ion-item  *ngFor="let flight of member.flight">
+                    <div *ngIf="member.vip === true" class="corner-ribbon">VIP</div>
+                    <ion-avatar>
+                    <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name"/>
+                    </ion-avatar>
+                    <ion-label>{{member.name}}
+                      <br> <span *ngIf="member.flight != ''">{{flight.dep_code}}-{{flight.arr_code}} </span>
+                    </ion-label>
+                    <ion-card-content class="text-right" *ngIf="member.flight != ''"><b>{{flight.ticket}}</b><br>
+                      <b style="color:#00539F" *ngIf="member.flight != ''">{{flight.dep_time}}-{{flight.arr_time}}</b></ion-card-content>
+                  </ion-item>
+                </div>
+          
+              </ng-container>
+            </ion-card>
+          </ion-row>
+          <ion-row *ngIf="isFilter">
+            <ion-card class="w-100">
+              <ng-container *ngFor="let member of data_member">
+                <div class="ribbon-vip">
+                  <ion-item> 
+                    <div *ngIf="member.vip === true" class="corner-ribbon">VIP</div>
+                    <ion-avatar>
+                    <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name"/>
+                    </ion-avatar>
+                    <ion-label> {{member.name}} 
+                      <br> <span *ngIf="member.flights != ''">{{member.item.dep_code}}-{{member.item.arr_code}} </span>
+                    </ion-label>
+                    <ion-card-content class="text-right" *ngIf="member.flight != ''"><b>{{member.item.ticket}}</b><br>
+                      <b style="color:#00539F" *ngIf="member.flight != ''">{{member.item.dep_time}}-{{member.item.arr_time}}</b></ion-card-content>
+                  </ion-item>
+
+                  <ion-item  *ngFor="let flight of member.flight">
+                    <div *ngIf="member.vip === true" class="corner-ribbon">VIP</div>
+                    <ion-avatar>
+                    <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name"/>
+                    </ion-avatar>
+                    <ion-label>{{member.name}}
+                      <br> <span *ngIf="member.flight != ''">{{flight.dep_code}}-{{flight.arr_code}} </span>
+                    </ion-label>
+                    <ion-card-content class="text-right" *ngIf="member.flight != ''"><b>{{flight.ticket}}</b><br>
+                      <b style="color:#00539F" *ngIf="member.flight != ''">{{flight.dep_time}}-{{flight.arr_time}}</b></ion-card-content>
+                  </ion-item> 
+                </div>
+          
+              </ng-container>
+            </ion-card>
+          </ion-row>
+
+          <ion-row *ngIf="!isFilter">
+            <ion-card class="w-100">
+            <ng-container *ngFor="let member of user.members_data">
+          
+              <div class="ribbon-vip"> 
+
+                <ion-item *ngIf="member.hub === selectedHub">
+                  <div *ngIf="member.vip === true" class="corner-ribbon">VIP</div>
+                  <ion-avatar>
+                  <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name"/>
+                  </ion-avatar>
+                  <ion-label >{{member.name}}
+                    <br><span *ngIf="member.flight != ''">{{member.flight[0].dep_code}}-{{member.flight[0].arr_code}}</span>
+                  </ion-label>
+                  <ion-card-content class="text-right" *ngIf="member.flight != ''"><b>{{member.flight[0].ticket}}</b><br>
+                    <b style="color:#00539F" *ngIf="member.flight != ''">{{member.flight[0].dep_time}}-{{member.flight[0].arr_time}}</b></ion-card-content>
+                </ion-item>
+              </div>
+           
+              <div class="ribbon-vip">
+                <ion-item *ngIf="member.hub === selectedHub">
+                  <div *ngIf="member.vip === true" class="corner-ribbon">VIP</div>
+                  <ion-avatar>
+                  <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name"/>
+                  </ion-avatar>
+                  <ion-label>{{member.name}}
+                    <br><span *ngIf="member.flight != ''">{{member.flight[1].dep_code}}-{{member.flight[1].arr_code}}</span>
+                  </ion-label>
+                  <ion-card-content class="text-right" *ngIf="member.flight != ''"><b>{{member.flight[1].ticket}}</b><br>
+                    <b style="color:#00539F" *ngIf="member.flight != ''">{{member.flight[1].dep_time}}-{{member.flight[1].arr_time}}</b></ion-card-content>
+                </ion-item>
+              </div>
+
+            </ng-container>
+            </ion-card>
+            </ion-row>
+        </ng-template> -->
+
+        
+          <!--------------------Arrival--------------------------->
+          <ng-template swiperSlide>
+            <ion-row class="w-100">
+              <ion-col size="8"></ion-col>
+              <!--   <ion-col size="4"
+              style="
+            background-color:#00539F;color: #fff;padding: 4px;text-align: center;border-radius: 5px;">
+            Total: {{totalMembers}}/{{totalMembers}}</ion-col>-->
+            </ion-row>
+  
+            <!-----------------Without using Filter------------------------>
+            <ion-row *ngIf="getFilterMemberListArray.length == 0">
+              <ion-card class="w-100">
+                <ng-container *ngFor="let member of user.members_data">
+                  <ion-item style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+  
+                    <div class="ribbon-vip">
+                      <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+                    </div>
+  
+                    <ion-avatar>
+                      <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+                    </ion-avatar>
+                    <ion-label>{{member.name}}
+                      <br>
+                      <p *ngIf="member.family_members.length !== 0">
+                        Grouping with {{member.family_members.length}} others
+  
+                      </p>
+                    </ion-label>
+  
+  
+                    <a href="tel:{{member.phone}}">
+                      <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+                  </ion-item>
+                  <ion-item *ngIf="member.isFamily && member.family_members.length > 0">
+                    <ion-list class="w-100">
+                      <ion-item *ngFor="let familyMembers of member.family_members">
+                        <ion-avatar>
+                          <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+familyMembers.name" />
+                        </ion-avatar>
+                        <ion-label>{{familyMembers.name}}</ion-label>
+                      </ion-item>
+                    </ion-list>
+                  </ion-item>
+                </ng-container>
+              </ion-card>
+            </ion-row>
+           <!-----------------With using Filter------------------------>
+            <ion-row *ngIf="getFilterMemberListArray.length > 0">
+              <!-- <ion-button class="primary-btn" *ngIf="getFilterMemberList.length != 0" style="color:#fff;">Total
+                {{getFilterMemberList.length}}</ion-button>
+              <ion-button class="primary-btn" *ngIf="getFilterMemberList.length == 0" style="color:#fff;">No Data Available
+              </ion-button> -->
+
+
+              <ion-card class="w-100">
+                <ng-container *ngFor="let memberArr of getFilterMemberListArray">
+             
+                  <div *ngFor="let member of memberArr">
+
+                    <ion-item style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+    
+                      <div class="ribbon-vip">
+                        <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+                      </div>
+    
+                      <ion-avatar>
+                        <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+                      </ion-avatar>
+                      <ion-label>{{member.name}}
+                        <br>
+                        <p *ngIf="member.family_members.length > 0">
+                          Grouping with {{member.family_members.length}} others
+    
+                        </p>
+                      </ion-label>
+    
+    
+                      <a href="tel:{{member.phone}}">
+                        <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+                    </ion-item>
+
+                    <ion-item *ngFor="let member_family of member.family_members"> 
+                  
+                      <ion-list class="w-100">
+    
+                        <ion-item>
+                          <ion-avatar>
+                            <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member_family.name" />
+                          </ion-avatar>
+    
+                          <ion-label>{{member_family.name}}</ion-label>
+    
+                          <!-- <div style="margin-right: 30px;" *ngIf="member.mem_show_status == 'false'"
+                            (click)="noShowAlertConfirmtoGroups(member.mem_member_id,member.mem_name)">
+                            <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+                          </div>
+                          <div style="margin-right: 30px;" *ngIf="member.mem_show_status == 'true'">
+                            <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+                          </div> -->
+    
+    
+                        </ion-item>
+    
+                      </ion-list>
+                    </ion-item>
+
+                  </div>  
+
+                </ng-container>
+              </ion-card>
+  
+            </ion-row>
+
+            
+          </ng-template>
+        
+        <!--------------------Rooming--------------------------->
+
+
+
+        <ng-template swiperSlide>
+          <ion-row class="mb-2 ml-2 mr-2">
+            <ion-button class="primary-btn" *ngIf="roomLength != 0" style="color:#fff;">Total Reserve Room
+              {{roomLength}}</ion-button>
+            <ion-button class="primary-btn" *ngIf="roomLength == 0" style="color:#fff;">Rooming is not created yet
+            </ion-button>
+          </ion-row>
+
+          <div *ngIf="!isFilter">
+
+
+            <ion-row [attr.data-index]="i" *ngFor="let rms1 of totalDataRoomFilter;let i = index">
+              <ion-card class="w-100" *ngIf="totalDataRoomFilter">
+
+                <div class="w-100 d-flex">
+                  <div class="w-60">
+                    <ion-card-content class="text-left">
+
+                      <b> {{rms1.hotel_name}} <br></b>
+                      <b style="color: red;">{{rms1.room_cat}}</b>
+                    </ion-card-content>
+                  </div>
+                  <div class="w-40">
+                    <ion-card-content class="text-right">
+                      <b> Room Id <br></b>
+                      <b class="text-left" style="font-size: 28px;color: red;">{{rms1.roomno}}</b>
+
+
+                    </ion-card-content>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <ion-card-content class="text-left w-82">Checkin:<br> <b>{{rms1.check_in}}</b></ion-card-content>
+                  <ion-card-content class="text-left w-40" style="padding-left: 6px;">Checkout:<br>
+                    <b>{{rms1.check_out}}</b></ion-card-content>
+                </div>
+                <ng-container *ngFor="let pax of rms1.paxDetails">
+
+                  <ion-item>
+                    <ion-icon (click)="presentAlert(pax.special_remark);" name="information-circle-outline"
+                      style="font-size: 28px;"></ion-icon>
+
+                    <ion-label> {{pax.name}}</ion-label>
+                    <ion-card-content class="text-right"><b>{{pax.meal_pref}}</b></ion-card-content>
+
+                  </ion-item>
+
+                </ng-container>
+              </ion-card>
+            </ion-row>
+
+
+
+            <div *ngIf="totalDataRoomFilter.length == 0">
+              <ion-row [attr.data-index]="i" *ngFor="let rms of totalDataRoom;let i = index">
+                <ion-card class="w-100" *ngIf="rms.length > 0">
+
+                  <div class="w-100 d-flex">
+                    <div class="w-60">
+                      <ion-card-content class="text-left">
+
+                        <b> {{rms[0].hotel_name}} <br></b>
+                        <b style="color: red;">{{rms[0].room_cat}}</b>
+                      </ion-card-content>
+                    </div>
+                    <div class="w-40">
+                      <ion-card-content class="text-right">
+                        <b> Room Id <br></b>
+                        <b class="text-left" style="font-size: 28px;color: red;">{{rms[0].roomno}}</b>
+
+
+                      </ion-card-content>
+                    </div>
+                  </div>
+
+                  <div class="d-flex">
+                    <ion-card-content class="text-left w-82">Checkin:<br> <b>{{rms[0].check_in}}</b></ion-card-content>
+                    <ion-card-content class="text-left w-40" style="padding-left: 6px;">Checkout:<br>
+                      <b>{{rms[0].check_out}}</b></ion-card-content>
+                  </div>
+
+
+                  <ng-container *ngFor="let pax of rms[0].paxDetails">
+
+                    <ion-item>
+                      <ion-icon (click)="presentAlert(pax.special_remark);" name="information-circle-outline"
+                        style="font-size: 28px;"></ion-icon>
+
+                      <ion-label> {{pax.name}}</ion-label>
+                      <ion-card-content class="text-right"><b>{{pax.meal_pref}}</b></ion-card-content>
+
+                    </ion-item>
+
+                  </ng-container>
+
+
+                </ion-card>
+              </ion-row>
+            </div>
+
+          </div>
+
+          <div *ngIf="isFilter">
+
+            <ion-row [attr.data-index]="i" *ngFor="let rms of totalDataRoom;let i = index">
+              <!-- <div *ngIf="key2">
+
+          </div> -->
+              <ion-card class="w-100">
+                <div class="w-100 d-flex">
+                  <div class="w-60">
+                    <ion-card-content class="text-left">
+                      <b> {{rms.hotel_name}} <br></b>
+                      <b style="color: red;"> {{rms.room_cat}}</b>
+                    </ion-card-content>
+                  </div>
+                  <div class="w-40">
+                    <ion-card-content class="text-right">
+                      <b> Room Id <br></b>
+                      <b class="text-left" style="font-size: 28px;color: red;"> {{rms.roomno}}</b>
+                    </ion-card-content>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <ion-card-content class="text-left w-82">Checkin:<br> <b>{{rms.check_in}}</b></ion-card-content>
+                  <ion-card-content class="text-left w-40" style="padding-left: 6px;">Checkout:<br>
+                    <b>{{rms.check_out}}</b></ion-card-content>
+                </div>
+
+                <ng-container *ngFor="let pax of rms.paxDetails">
+                  <ion-item>
+                    <ion-icon (click)="presentAlert(pax.special_remark);" name="information-circle-outline"
+                      style="font-size: 28px;"></ion-icon>
+                    <ion-label> {{pax.name}}</ion-label>
+                    <ion-card-content class="text-right"><b>{{pax.meal_pref}}</b></ion-card-content>
+                  </ion-item>
+
+                </ng-container>
+
+              </ion-card>
+            </ion-row>
+
+
+            <!-- <ion-row [attr.data-index]="i" *ngFor="let rms of totalDataRoom;let i = index">
+              <ion-card class="w-100"  *ngIf="rms.length > 0">
+  
+                <div class="w-100 d-flex">
+                  <div class="w-60">
+                    <ion-card-content class="text-left">
+                    <b>  {{rms[0].hotel_name}} <br></b>
+                      <b style="color: red;"> {{rms[0].room_cat}}</b>
+                    </ion-card-content>
+                  </div>
+                  <div class="w-40">
+                    <ion-card-content class="text-right">
+                    <b>  Room Id <br></b>
+                    <b class="text-left" style="font-size: 28px;color: red;"> {{rms[0].roomno}}</b>
+  
+  
+                    </ion-card-content>
+                  </div>
+                </div>
+  
+                <div class="d-flex">
+                  <ion-card-content class="text-left w-82">Checkin:<br> <b>{{rms[0].check_in}}</b></ion-card-content>
+                  <ion-card-content class="text-left w-40" style="padding-left: 6px;">Checkout:<br> <b>{{rms[0].check_out}}</b></ion-card-content>
+                </div>
+  
+  
+                <ng-container *ngFor="let pax of rms[0].paxDetails">
+  
+                    <ion-item >
+                      <ion-icon (click)="presentAlert(pax.special_remark);" name="information-circle-outline"  style="font-size: 28px;"></ion-icon>
+  
+                          <ion-label> {{pax.name}}</ion-label>
+                         <ion-card-content class="text-right"><b>{{pax.meal_pref}}</b></ion-card-content>
+  
+                    </ion-item>
+  
+                </ng-container>
+  
+  
+              </ion-card>
+            </ion-row> -->
+
+          </div>
+        </ng-template>
+
+      </swiper>
+    </div>
+  </div>
+</ion-content>
+
+
+
+<ion-modal [isOpen]="isModal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="header-bck">
+        <ion-title>Member List</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-row class="mt-2">
+        <ion-col size="6"><b style="font-size: 24px;margin: 10px 20px;">Filter</b>
+
+        </ion-col>
+        <ion-col size="6" style="text-align: right;">
+          <ion-icon class="mr-3" name="close-circle-outline" (click)="isModal=false" style="font-size: 32px;">
+          </ion-icon>
+        </ion-col>
+
+
+      </ion-row>
+      <ion-card style="box-shadow: 2px 2px 10px;
+      padding: 15px 10px;">
+      
+       
+
+       <!----------------------------Arrival----------------------------->
+        <div *ngIf="isArrivalFilter || isAirline">
+          <div class="w-100 d-flex form-group">
+            <ion-col size="4">
+              <label class="lable-radio"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; By Sector
+                <input type="radio" name="radio" class="form-control" value="bySector"
+                  (change)="onItemChange($event.target.value)">
+                <span class="radio-checkmark"></span></label>
+            </ion-col>
+            <ion-col size="3">
+              <label class="lable-radio"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; By Date
+                <input type="radio" name="radio" class="form-control" value="byDate"
+                  (change)="onItemChange($event.target.value)">
+                <span class="radio-checkmark"></span></label>
+            </ion-col>
+            <!-- <ion-col size="4" *ngIf="isAirline == true"> -->
+            <ion-col size="5">
+              <label class="lable-radio"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; By Flight Name
+                <input type="radio" name="radio" class="form-control" value="byFlightName"
+                  (change)="onItemChange($event.target.value)">
+                <span class="radio-checkmark"></span></label>
+            </ion-col>
+
+          </div>
+          <hr>
+          <div class="w-100 d-flex form-group" style="display: inline-block;" *ngIf="getFlightCode.length > 0">
+
+            <ion-button class="ml-2" *ngFor="let flCode of getFlightCode"
+              [color]="(filterFlightCode === flCode)? 'success':'light'" (click)="getSelectedFlCode($event)">
+              <div>{{flCode}}</div>
+            </ion-button>
+
+          </div>
+
+          <div class="w-100 d-flex form-group" style="display: inline-block;" *ngIf="getFlightDates.length > 0">
+
+            <ion-button class="ml-2" *ngFor="let flDate of getFlightDates"
+              [color]="(filterFlightDate === flDate)? 'success':'light'" (click)="getSelectedFlDate($event)">
+              <div>{{flDate}}</div>
+            </ion-button>
+
+            <div *ngIf="filterTimeShow">
+              <hr>
+              <ion-button class="ml-2" *ngFor="let flTime of getFlightTime"
+                [color]="(filterFlightTime === flTime)? 'success':'light'" (click)="getSelectedFlTime($event)">
+                <div>{{flTime}}</div>
+              </ion-button>
+            </div>
+          </div>
+
+          <div class="w-100 d-flex form-group" style="display: inline-block;" *ngIf="getFlightName.length > 0">
+            <ion-button class="ml-2" *ngFor="let flName of getFlightName"
+              [color]="(filterFlightName === flName)? 'success':'light'" (click)="getSelectedFlName($event)">
+              <div>{{flName}}</div>
+            </ion-button>
+          </div>
+
+        </div>
+
+
+        <!----------------Rooming Filter-------------------->
+        <div *ngIf="isRoomingFilter">
+
+          <label><b>Location Name</b></label>
+          <div class="row">
+            <div class="d-flex">
+              <div class="form-control mt-2 ml-2" *ngFor="let member of user.itinerary"
+                style="background-color: #eceaea;padding: 10px 20px;border-radius: 22px;"
+                (click)="getHotelLocationName(member.locationName,member.locationID)"
+                [ngStyle]="{'background-color':getHoltelLocation === member.locationName? '#ebef09' : '#eceaea'}">
+                {{member.locationName}}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="showLocationDiv==true">
+
+            <hr>
+            <label><b>Hotel List</b></label>
+            <div class="row">
+              <div class="d-flex">
+
+                <div class="form-control mt-2 ml-2" *ngFor="let roomNameFilter of getHotelNameFilter"
+                  (click)="getHotelNameFil($event)"
+                  style="background-color: #eceaea;padding: 10px 20px;border-radius: 22px;"
+                  [ngStyle]="{'background-color':getHoltelName === roomNameFilter? '#ebef09' : '#eceaea'}">
+                  <div class="d-flex">{{roomNameFilter}}</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div *ngIf="showsharingDiv==true">
+            <hr>
+
+            <label><b>Sharing</b></label>
+            <div class="row">
+              <div class="d-flex w-50">
+                <div class="form-control mt-2 ml-1" *ngFor="let roomNameFilterCat of getRoomCat">
+                  <div (click)="getRoomCategoryName($event)"
+                    style="background-color: #eceaea;padding:8px 13px;border-radius: 22px;"
+                    [ngStyle]="{'background-color':getselectedRoomCategory === roomNameFilterCat? '#ebef09' : '#eceaea'}">
+                    <div class="d-flex">{{roomNameFilterCat}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- <div class="form-group">
+         <div class="mt-2">
+          <div class="form-control w-50 mt-2" style="background-color: #eceaea;padding: 10px 20px;
+              border-radius: 22px;" *ngFor="let rooming of getHotelNames" (click)="getHotelName($event)" 
+              [ngStyle]="{'background-color':getHoltelName === rooming? 'green' : '#eceaea'}">{{rooming}}
+            </div>
+
+           <div class="form-control w-50 mt-2" *ngFor="let roomNameFilter of getHotelNameFilter">
+           <div (click)="getHotelName($event)" style="background-color: #eceaea;padding: 10px 20px;
+           border-radius: 22px;"
+           [ngStyle]="{'background-color':getHoltelName === roomNameFilter? 'green' : '#eceaea'}">{{roomNameFilter}}</div> 
+           </div> 
+
+         </div>
+       
+        </div>
+      </div> -->
+
+        <!-- <div class="mt-2 form-group" *ngIf="isRoomingFilter">
+          <label> Sharingaaa </label><br>
+            <div style="display: inline-flex;">
+              <div class="form-control w-30 mt-2" style="background-color: #eceaea;
+                padding: 10px 20px;text-align: center; margin-right: 5px;
+                border-radius: 22px;" *ngFor="let roomCat of getRoomCategory"
+                (click)="getRoomCategoryName($event)" [ngStyle]="{'background-color':getselectedRoomCategory === roomCat? 'green' : '#eceaea'}">{{roomCat}}
+              </div>
+            </div>
+         </div>
+          <label> Sharing sss</label><br>
+          <div class="form-control w-20 mt-2" *ngFor="let roomNameFilterCat of getRoomCat">
+            <div (click)="getRoomCategoryName($event)" style="background-color: #eceaea;padding:10px 20px;border-radius: 22px;"
+                  [ngStyle]="{'background-color':getselectedRoomCategory === roomNameFilterCat? 'green' : '#eceaea'}">
+            <div class="d-flex">{{roomNameFilterCat}}</div>
+          </div> 
+          </div>  -->
+
+        <!----------------Rooming Filter-------------------->
+
+        <ion-row class="mt-2 mb-2 ml-2 mr-2">
+          <ion-button class="primary-btn" style="color:#fff;" (click)="filterElements();isModal=false">Apply Filter
+          </ion-button>
+        </ion-row>
+      </ion-card>
+    </ion-content>
+
+
+  </ng-template>
+</ion-modal>

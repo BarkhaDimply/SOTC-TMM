@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title (click)="backScanner()">
+      <div class="vertical-center-header">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Attendance List
+      </div>
+    </ion-title>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content" style="background-image: url(assets/images/background.png);min-height: 100%;">
+
+    <!-- <ion-row class="mb-2 ml-2 mr-2 scanner-btn d-flex">
+       <ion-button 
+      class="primary-btn" style="color:#fff;" (click)="backScanner()"> Back To Scan</ion-button>
+    </ion-row>  -->
+
+    <!-- <ion-button [routerLink]="['/tabs/itinerary/code-scanner']"  class="primary-btn" style="color:#fff;"
+       (click)="backScanner()"> Back To Scan</ion-button>
+     -->
+ 
+    <div *ngIf="presentListLength>0">
+      <ion-row *ngFor="let fetchDataPresentObj of fetchDataPresent">
+           <!---------present list------------>
+       
+          <ion-card class="w-100 d-flex" style="margin: 6px 16px;" *ngIf="fetchDataPresentObj.attendance_status == true">
+            <ion-card-content class="w-100 d-flex" style="padding-top: 0px;padding-bottom: 0px;">
+              <input type="checkbox" *ngIf="fetchDataPresentObj.attendance_status == true" checked>
+              <ion-avatar class="" *ngIf="fetchDataPresentObj.name!=''">
+                <img class="img-member-name" style="margin-left: 6px;width: 30px;height: 30px;margin-top: 17px;"
+                [src]="'https://ui-avatars.com/api/?name='+fetchDataPresentObj.name"/>
+              </ion-avatar> 
+              <b style="margin-top: 17px;">{{fetchDataPresentObj.name}}<p style="color: red;font-weight: 600;" *ngIf="fetchDataPresentObj.primaryTrveller !='' ">({{fetchDataPresentObj.relation}}  of &nbsp;  {{fetchDataPresentObj.primaryTrveller}})</p></b>
+
+            </ion-card-content>
+          </ion-card>
+       
+   <!---------absent list------------>
+       
+          <ion-card class="w-100 d-flex" style="margin: 6px 16px;" *ngIf="fetchDataPresentObj.attendance_status == false">
+            <ion-card-content class="w-100 d-flex" style="padding-top: 0px;padding-bottom: 0px;">
+              <input type="checkbox" *ngIf="fetchDataPresentObj.primaryTrveller ==''" (click)="updateAttendanceById(fetchDataPresentObj.name,fetchDataPresentObj.postId)">
+              <input type="checkbox" *ngIf="fetchDataPresentObj.primaryTrveller !=''" (click)="updateAttendanceById(fetchDataPresentObj.name,fetchDataPresentObj.bookId)">
+              <ion-avatar class="" *ngIf="fetchDataPresentObj.name!=''">
+                <img class="img-member-name" style="margin-left: 6px;width: 30px;height: 30px;margin-top: 17px;"
+                [src]="'https://ui-avatars.com/api/?name='+fetchDataPresentObj.name"/>
+              </ion-avatar> 
+              <b style="margin-top: 17px;">{{fetchDataPresentObj.name}}<p style="color: red;font-weight: 600;" *ngIf="fetchDataPresentObj.primaryTrveller !='' ">({{fetchDataPresentObj.relation}}  of &nbsp; {{fetchDataPresentObj.primaryTrveller}})</p></b>
+
+            </ion-card-content>
+          </ion-card>
+      
+      </ion-row>
+    </div>
+
+
+<!------------------------------------------------------------------------------------------------------------------>
+
+<div *ngIf="memberDataLength>0">
+  <ion-row *ngFor="let fetchDataPresentObj of memberData">
+       <!---------present list------------>
+   
+      <ion-card class="w-100 d-flex" style="margin: 6px 16px;">
+        <ion-card-content class="w-100 d-flex" style="padding-top: 0px;padding-bottom: 0px;">
+           
+          <input type="checkbox" *ngIf="fetchDataPresentObj.attendance == 0"
+           (click)="updateAttendanceById(fetchDataPresentObj.member_name,fetchDataPresentObj.postIDNEW1)">
+          <input type="checkbox" *ngIf="fetchDataPresentObj.msg == 'Attendance taken'" checked>
+
+          <ion-avatar class="" *ngIf="fetchDataPresentObj.member_name!=''">
+            <img class="img-member-name" style="margin-left: 6px;width: 30px;height: 30px;margin-top: 17px;"
+            [src]="'https://ui-avatars.com/api/?name='+fetchDataPresentObj.member_name"/>
+          </ion-avatar> 
+          <b style="margin-top: 17px;">{{fetchDataPresentObj.member_name}}</b>
+        </ion-card-content>
+      </ion-card>
+  </ion-row>
+</div>
+
+    <!-- <ion-row *ngFor="let fetchAttendanceobj of fetchData">
+      
+      <ion-card class="w-100 d-flex" style="margin: 6px 16px;" *ngIf="fetchAttendanceobj.attendance_status == 1">
+        <ion-card-content class="w-100 d-flex" style="padding-top: 0px;
+        padding-bottom: 0px;">
+
+          <input *ngIf="fetchAttendanceobj.attendance_status == 1" type="checkbox" checked name="" value="">
+          <input *ngIf="fetchAttendanceobj.attendance_status == 0" (click)="updateAttendanceById(fetchAttendanceobj.traveler_name,fetchAttendanceobj.id)" type="checkbox">
+          
+          <ion-avatar class="" *ngIf="fetchAttendanceobj.traveler_name!=''">
+            <img class="img-member-name" style="margin-left: 6px;
+            width: 30px;
+            height: 30px;
+            margin-top: 17px;"
+            [src]="'https://ui-avatars.com/api/?name='+fetchAttendanceobj.traveler_name"/>
+             </ion-avatar>
+             <b style="margin-top: 17px;">{{fetchAttendanceobj.traveler_name}}</b>
+        </ion-card-content>
+      </ion-card>
+    
+    </ion-row> -->
+
+   
+   
+
+    
+
+  </div>
+
+</ion-content>

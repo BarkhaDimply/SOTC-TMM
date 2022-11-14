@@ -1,0 +1,38 @@
+<ion-app>
+  <ion-split-pane contentId="menu-content" when="false">
+    <ion-menu contentId="menu-content" class="app-sidemenu" *ngIf="menuVisible">
+      <ion-header>
+        <ion-toolbar color="danger">
+          <ion-title class="menu-back">
+            <div class="menu">
+              <img src="assets/images/sotc-logo.png" style="height:40px;width:170px" class="logo" />MENU
+            </div>
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list class="sidemenu">
+          <ion-menu-toggle autoHide="false">
+            <ion-item [routerLink]="'/customer-engagement'" style="padding-left: 0.5rem">
+              <img src="assets/images/engagement_tools_red.png" /> Customer Engagement
+            </ion-item>
+            <ion-item [routerLink]="'/stock-inventory-management'" style="padding-left: 0.5rem">
+              <img src="assets/images/stock_invent_red.png" /> Stock Inventory Management
+            </ion-item>
+            <ion-item [routerLink]="'/trip'" style="padding-left: 0.5rem">
+              <img src="assets/images/stock_invent_red.png" /> My Trip
+            </ion-item>
+            <ion-item [routerLink]="'/notification'" style="padding-left: 0.5rem">
+              <img src="assets/images/notification.png" /> Notification
+            </ion-item>
+            <ion-item (click)="logout()" style="padding-left: 0.5rem">
+              <img src="assets/images/logout.png" />
+              Logout
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="menu-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

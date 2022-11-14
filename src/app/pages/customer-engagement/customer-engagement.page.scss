@@ -1,0 +1,27 @@
+
+.swiper .swiper-slide {
+    height: 600px !important;
+    overflow: auto;
+  }
+  .swiper-content {
+   
+    padding: 10px 0px;
+   
+  }
+  .text-left{
+      text-align: left;
+  }
+  ion-row{
+      width: 100%;
+  }
+  ion-card-title{
+      padding: 15px 0px 0px 20px;
+  }
+  .add-btn{
+      position: relative;
+      margin-top: -10px;
+      border-radius: 5px;
+  }
+  .add-poll-btn{
+    color: #fff;
+      }

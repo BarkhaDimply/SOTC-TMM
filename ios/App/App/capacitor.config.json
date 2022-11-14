@@ -1,0 +1,19 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Tourmanager_sotc",
+	"webDir": "www",
+	"bundledWebRuntime": false,
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		},
+		"PushNotifications": {
+			"defaultSound": true,
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		}
+	}
+}

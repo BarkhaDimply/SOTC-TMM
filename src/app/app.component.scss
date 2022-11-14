@@ -1,0 +1,21 @@
+ion-menu {
+    img {
+        width: 42px;
+        margin-right: 10px;
+        position: relative;
+       
+    }
+
+    .menu {
+        display: flex;
+        align-items: center;
+    }
+    ion-title{
+        padding:4px;
+    }
+}
+.sidemenu{
+    img {
+        width: 28px;       
+    }
+}

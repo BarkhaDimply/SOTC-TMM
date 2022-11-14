@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Transaction Review Feedback</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-fab slot="fixed" style="bottom: 38px;position: fixed;right: 0;">
+    <ion-fab-button style="font-size: 38px;border-radius: 50%; --box-shadow:none;border: 1px solid #3880ff;" (click)="addTransactionHistory()">
+      <ion-icon name="enter-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <div class="content" style="background-image: url(assets/images/background.png);min-height: 100%;">
+    <div *ngFor="let history of newTranscationList | keyvalue: asIsOrder">
+      <div style="width: 100%;display: inline-flex;" 
+      *ngIf="history.show_transaction == 0 && history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection' ">
+        <hr style="width:30%; height: 1px;   background-color: blue; margin-left: 0;">
+        <span style="margin-top: 10px;">{{history.key}}</span> 
+         <hr style="width:30%; height: 1px;   background-color: blue;">
+      </div>
+   
+      <!--<div style="width: 98%;" *ngIf="showSelectReview">
+        <ion-label style="float: right;background-color: #00539F;padding: 10px;border-radius: 10px;color: #fff;">
+        <ion-checkbox style="border-radius: 0px;" slot="start" [(ngModel)]="checkParent" [indeterminate]="indeterminateState"
+        (click)="checkCheckbox($event)"></ion-checkbox><strong> Select All</strong></ion-label>
+      </div>
+      <br><br><br>-->
+    
+      <div class="d-flex" *ngFor="let historyDetails of history.value">
+
+       <!--<ion-card class="w-100" style="margin-bottom: 0px !important;"
+        *ngIf="historyDetails.submission_status == 3 && historyDetails.show_transaction == 0" 
+       style="background-color: #fcd6dd">-->
+
+        <ion-card class="w-100" style="margin-bottom: 0px !important;"
+         *ngIf="historyDetails.show_transaction == 0 && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+         historyDetails.category != 'tm_transfer' && (historyDetails.submission_status == 0 || historyDetails.submission_status == 3)" style="background-color: #fcd6dd">
+            
+          <div style="border-bottom: 1px solid grey">
+           <!-- <ion-row *ngIf="historyDetails.show_transaction == 0 && historyDetails.category != 'tm_transfer' && historyDetails.category != 'BALANCE ADDED' "> -->
+              <ion-row> 
+              
+              
+              <ion-col size="6" style="color: #767b7f;" class="btn-edit" (click)="editTransaction(historyDetails)">Edit</ion-col>
+              <ion-col size="6" style="color: #767b7f;" class="btn-delete" (click)="deleteTRansactionHistory(historyDetails)">Delete</ion-col>
+            </ion-row>
+          </div>
+            <div class="mt-3" (click)="editReviewTransaction(historyDetails)"
+        [routerLink]="'/notification/review-feedback/review-transaction-details'">
+                <ion-row>
+                  <ion-col size="6" class="text-bal"><b>{{historyDetails.category}}</b></ion-col>
+                  <ion-col size="6" style="text-align: right;font-size: 20px;"><b>{{historyDetails.currency}}</b></ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="6" class="text-bal" style="font-size: 16px;" *ngIf="historyDetails.transaction_by == 1">Received on Card</ion-col>
+                  <ion-col size="6" class="text-bal" style="font-size: 16px;" *ngIf="historyDetails.transaction_by == 2">Payment via Cash</ion-col>
+                  <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type == 1">-{{historyDetails.transaction_amount}}</ion-col>
+                  <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  3 ">-{{historyDetails.transaction_amount}}</ion-col>
+                  <ion-col size="6" class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  4">-{{historyDetails.transaction_amount}}</ion-col>
+                  <ion-col size="6" class="text-amt" *ngIf="historyDetails.transaction_type == 2">+{{historyDetails.transaction_amount}}</ion-col>
+                </ion-row>
+            </div>
+          </ion-card>
+    
+    
+       <!-- <div class="w-10"  *ngIf="showSelecthideReview">
+         
+          <ion-checkbox slot="start"  *ngIf="historyDetails.show_transaction == 0 && historyDetails.category != 'tm_transfer' && historyDetails.category != 'BALANCE ADDED' "
+           class="largerCheckbox" [(ngModel)]="historyDetails.isItemChecked" (ionChange)="verifyEvent(historyDetails.id)" style="margin: 68px 0px;">
+          </ion-checkbox>
+        </div>-->
+    </div>
+  
+
+
+    </div>
+  </div>
+</ion-content>
