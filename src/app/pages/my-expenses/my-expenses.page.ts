@@ -81,12 +81,14 @@ export class MyExpensesPage implements OnInit{
     private router: Router,
   ) {
     this.user = this.auth.user;
-    
-   // this.transctionHistory=[];
+
+    console.log("const::::");
+
   }
-  ngOnInit(){  
+  ngOnInit(){
     
-   // this.getTransactions();
+    console.log("ngOnlnit::::");
+
     this.showCurrentBalance();
     setTimeout(() => {
       this.swiper.swiperRef.slideTo(0);
@@ -100,59 +102,48 @@ export class MyExpensesPage implements OnInit{
 
     this.manager_name=localStorage.getItem("manager_name");
 
-    this.actRoute.queryParams.subscribe(params => {
+    this.actRoute.queryParams.subscribe(params => { 
+
+      console.log("params 1111::::",params);
 
       if (this.router.getCurrentNavigation().extras.state) {
         
         this.getNotiKey = this.router.getCurrentNavigation().extras.state.details;
         
       }
-       console.log("aaaaaa",this.getNotiKey);
+      console.log("getNotiKey:::" ,  this.getNotiKey);
 
-      if(this.getNotiKey == '28'){
+      if(this.getNotiKey == '28'){  console.log("innn 28");
         this.activeSegment = "allTrans";
         this.getTransactions();
-        this.refRejected();
-        console.log("doneref");
+      //  this.refRejected();
        
+      }else if(this.getNotiKey == '27'){
+        this.activeSegment = 'rejected_trans';
+        this.getRejectedTransactions();
+      }else{
+        this.getTransactions();
       }
 
-     // this.transctionHistory=[];
-     console.log("doneref");
-      this.refRejected();
-      this.getTransactions();
+     // this.refRejected();
+      //this.getTransactions();
       this.showCurrentBalance();
 
-      if(params.filter=='new'){
+      if(params.filter=='new'){ console.log("parms filter in::::");
         this.getRejectedTransactions();
+      
         this.showCurrentBalance();
       }
     });
 
-    // this.actRoute.queryParams.subscribe(async (params) => {
-    //   this.keyReview = params.keyNotification
-    //   if(this.keyReview == '28'){
-    //   this.activeSegment = 'rejected_trans';
-    //   this.getRejectedTransactions();
-    //  }else{
-    //   this.activeSegment = 'allTrans';
-    //   this.getTransactions();
-    //  }
 
-    //  });
-  
-
-
+    console.log("tabs::::",this.activeSegment);
 
   }
 
   refRejected(){
-
-   
-      console.log("doneREj");
       this.rejectedTransctionHistory = [];
       this.getRejectedTransactions();
-
   }
 
   doRefresh(event) {
@@ -164,9 +155,7 @@ export class MyExpensesPage implements OnInit{
       event.target.complete();
     }, 2000);}
   refressfunc(){
-    this.transctionHistory=[];
-   
-     console.log("done")
+      this.transctionHistory=[];
       this.getTransactions();
       this.showCurrentBalance();
   }
@@ -237,7 +226,6 @@ export class MyExpensesPage implements OnInit{
 
   getCurrencyCODE() {
     this.apiService.getCurrencyCodes().subscribe((result:any) => {
-      //console.log("CODE::::",result);
       localStorage.setItem('currency_code',JSON.stringify(result));
     });
   }
@@ -248,6 +236,8 @@ export class MyExpensesPage implements OnInit{
 
   getTransactions(){
 
+    console.log("getTransactions in::::");
+
 
     this.apiServices.getAllTransctionHistoryByTime().subscribe((result:any) => {
       this.transctionHistory = [];
@@ -257,8 +247,6 @@ export class MyExpensesPage implements OnInit{
           this.transctionHistory.push({transKey:key,transValue:value});
 
       });
-
-      console.log("get trans::",this.transctionHistory);
 
 
       // plus button hide function
@@ -425,6 +413,7 @@ async deleteTRansactionHistory(details:any) {
 
             if(result.message == 'Success'){
 
+
               this.globalService.presentToast('Transaction deleted successfully');
 
               this.refressfunc();
@@ -437,7 +426,7 @@ async deleteTRansactionHistory(details:any) {
     ]
   });
 
-  await alert.present();
+ // await alert.present();
 
 }
 
@@ -454,7 +443,7 @@ checkCheckbox() {
 }
 
 verifyEvent(id:any) {
-  //console.log("id-----",id);
+
   //this.selectedTrasactionIds.push(id);
 
  // localStorage.setItem("selectedTrasactionIds", this.selectedTrasactionIds);
@@ -478,11 +467,6 @@ verifyEvent(id:any) {
 
 async addTransactionHistory(){
 
-
-
-
-
-
   this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
 
   var transValue:any=[];
@@ -495,20 +479,16 @@ async addTransactionHistory(){
 
       if(item.category != 'BALANCE ADDED' && item.category != 'tm_transfer' && item.show_transaction == 0 && item.submission_status == 0){
         transValue.push(item.id);
-
-      //  console.log("id---------id",item.id);
         this.hideSubmitButton=false;
       }
 
     });
     // && item.submission_status == 0 && item.show_transaction == 0
 
-    console.log("sdsada",this.getAllTrasactionId);
-
   });
 
   if(transValue.length == 0){
-    console.log(transValue)
+  
     const alert = await this.alertController.create({
       cssClass: '',
       message: 'No transaction found to submit',
@@ -596,11 +576,10 @@ onSlideChange(event) {
 
 getRejectedTransactions(){
 
- // this.transctionHistory=[];
+  console.log("getRejectedTransactions in::::");
 
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
     this.rejectedTransctionHistory =[];
-    console.log("rejected Trans11:::",result.data);
 
   //  if(result.data.length>0){+
       Object.entries(result.data).forEach(
@@ -614,8 +593,6 @@ getRejectedTransactions(){
     //}
 
 
-
-    console.log("rejected Trans:::",this.rejectedTransctionHistory);
 
     // plus button hide function
     this.transctionHistory.forEach(itms=>{
@@ -646,8 +623,6 @@ addTransactionHistoryReview(){
 
       });
 
-      //console.log("transValue:::",transValue);
-
           //if(item.category != 'BALANCE ADDED' && item.category != 'misc_collection' && item.category != 'tm_transfer' && item.show_transaction == 0){
           //transValue.push(item.id)
           //}
@@ -661,7 +636,6 @@ addTransactionHistoryReview(){
   //params.transaction_ids = JSON.stringify(this.selectedTrasactionIds);
   params.transaction_ids = JSON.stringify(transValue);
 
-  console.log("params:::",params);
 
   this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
 
@@ -690,7 +664,9 @@ addTransactionHistoryReview(){
       await alert.present();
 
        this.refressfunc();
-       this.refRejected();
+       //this.refRejected();
+
+       return this.router.navigate(['/tabs/itinerary']);
       }
   });
 

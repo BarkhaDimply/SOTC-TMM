@@ -32,7 +32,7 @@ export class NotificationPage implements OnInit {
 
   ngOnInit() {
     this.getNorification();
-    console.log('notifi');
+   
    
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id');
@@ -60,7 +60,7 @@ export class NotificationPage implements OnInit {
      // this.globalService.dismissLoading();
 
       this.notificationHistory = result.data;
-      console.log("notification::::",result);
+     
 
       if(result.data == ''){
 

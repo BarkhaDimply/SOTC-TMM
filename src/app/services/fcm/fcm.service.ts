@@ -64,10 +64,6 @@ export class FcmService {
       async (notification: PushNotificationActionPerformed) => {
         const data = notification.notification.data;
 
-        console.log('Action performed data:::: ' + JSON.stringify(data.key));
-
-        console.log('Action performed: ' + JSON.stringify(notification.notification));
-
         if(data.key == '27'){
           this.router.navigateByUrl('/tabs/my-expenses');
         }else if(data.key == '25'){
@@ -75,16 +71,16 @@ export class FcmService {
         }else if(data.key == '26'){
           this.router.navigateByUrl('/notification');
         }else if(data.key == '28'){
-          this.router.navigateByUrl('/tabs/my-expenses');
-        //   let navigationExtras: NavigationExtras = {
-        //     state: {
-        //       details:28
-        //     }
-        //   };
+         // this.router.navigateByUrl('/tabs/my-expenses');
+          let navigationExtras: NavigationExtras = {
+            state: {
+              details:28
+            }
+          };
          
-        //   console.log("fcm::::",JSON.stringify(navigationExtras));
+          console.log("fcm::::",JSON.stringify(navigationExtras));
 
-        // this.router.navigate(['/tabs/my-expenses'], navigationExtras);   
+        this.router.navigate(['/tabs/my-expenses'], navigationExtras);   
         }else{
           this.router.navigateByUrl('/notification');
         }

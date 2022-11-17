@@ -137,24 +137,21 @@ export class ReviewTransactionDetailsPage implements OnInit {
                 if(result.message == 'Success'){
                   this.apiServices.getAllTransctionHistoryByTime().subscribe(async (result:any) => {
 
-                    //console.log("leng::",this.getEditReviewValue.id.length);
+                    let navigationExtras: NavigationExtras = {
+                      state: {
+                        details:27
+                      }
+                    };
+                    console.log("nnnnn",navigationExtras);
+                    this.router.navigate(['/tabs/my-expenses'], navigationExtras);   
 
-                    // if(this.getEditReviewValue.id.length == 1){
-                    //   const alert = await this.alertController.create({
-                    //     message: 'Your transactions have been deleted and auto-submitted for approval.',
-                    //     mode: 'ios',
-                    //     buttons: ['OK']
-                
-                    //   });
-                
-                    //   await alert.present();
-                    // }
-                    window.location.reload();
+                   
+                   // window.location.reload();
          
          
          
                   });
-                  return this.router.navigate(['/tabs/my-expenses']);
+                 // return this.router.navigate(['/tabs/my-expenses']);
                 }
               })
             }
