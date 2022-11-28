@@ -54,7 +54,7 @@ export class MembersListPage {
   filterFlightCode: string = ""
   filterFlightDate:any;
   filterFlightName: string = ""
-  isFilter: boolean = false;
+  isFilter: boolean;
   getHoltelLocation: string = "";
   getHoltelName: string = "";
   getselectedRoomCategory: string = "";
@@ -103,6 +103,8 @@ export class MembersListPage {
   }
 
   ngOnInit() {  
+
+    this.getIsFilter= localStorage.getItem("isFilterSet");
 
     this.auth.getUserStatus.subscribe(val => {
       if (val !== '0') {
@@ -489,6 +491,9 @@ export class MembersListPage {
 
   resetFilter(){ 
 
+    localStorage.removeItem("isFilterSet");
+
+
     this.isFilter = false;
     this.getHoltelLocation = "";
     this.getHoltelName = "";
@@ -521,8 +526,11 @@ export class MembersListPage {
 
 
   filterElements() {
-    this.isFilter = true;
-  
+
+
+
+   
+  //  this.isFilter = true;
 
     localStorage.removeItem('filterByDate');
     localStorage.removeItem('filterBySector');

@@ -46,7 +46,7 @@ export class MembersListFilterPage implements OnInit {
     this.actRoute.queryParams.subscribe(async (params) => {
       this.keyReview = params.activeSegment
 
-      console.log("aaa",this.keyReview);
+      
 
     if(this.keyReview == 'airline' || this.keyReview == '' || typeof this.keyReview == 'undefined'){ 
       this.activeSegment = 'dep';
@@ -62,6 +62,8 @@ export class MembersListFilterPage implements OnInit {
 
     this.getFlightData();
 
+   
+
     
   }
 
@@ -74,7 +76,7 @@ export class MembersListFilterPage implements OnInit {
 
     var getFlightCodeV: any = [];
 
-    this.user.members_data.forEach((element) => {   
+    this.user.members_data.forEach((element) => {     console.log("aaa:::",element);
  
       if(element.flight != ''){
         var flCode = ""
@@ -175,6 +177,8 @@ export class MembersListFilterPage implements OnInit {
   }
 
   filterElementsNew() { 
+
+    localStorage.setItem('isFilterSet', 'Yes');
     
     this.getDateFilter = localStorage.getItem("Flight_date");
     this.getTimeFilter = localStorage.getItem("Flight_time");

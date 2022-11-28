@@ -4,6 +4,7 @@ import { identity } from 'rxjs';
 import { UserModel } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
+import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 
 @Component({
   selector: 'app-itinerary',
@@ -29,6 +30,9 @@ export class ItineraryPage implements OnInit{
     console.log("user::",this.user.itinerary.length);
   }
   ngOnInit(): void {
+
+    this.checkPermission();
+
     this.auth.getUserStatus.subscribe(val => {
       if (val !== '0') {
         this.user = this.auth.user;
@@ -43,6 +47,49 @@ export class ItineraryPage implements OnInit{
   
 
   }
+
+
+  async checkPermission() {  
+    //return new Promise(async (resolve, reject) => {
+      const status = await BarcodeScanner.checkPermission({ force: true });
+      console.log("checkPermission status:::",JSON.stringify(status));
+
+
+      if (status.granted) {return true;
+      }else if (status.denied) {return false;
+      }else if (status.neverAsked) {
+        const c = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          message: 'Please give permission for camera to use expense module',
+          mode: 'ios',
+          buttons: ['OK']
+      
+        });
+      
+        await c.present();
+
+        if (!c) {return false;}
+      }else if (status.restricted || status.unknown) {return false;
+      }else{
+        BarcodeScanner.checkPermission();
+        
+        // const alert = await this.alertController.create({
+        //   cssClass: 'my-custom-class',
+        //   message: 'Please give permission for camera to use expense module',
+        //   mode: 'ios',
+        //   buttons: ['OK']
+      
+        // });
+      
+        // await alert.present();
+        // BarcodeScanner.openAppSettings();
+      }
+    
+    //});
+  }
+
+
+
 
   doRefresh(event) {
     console.log('Begin async operation');

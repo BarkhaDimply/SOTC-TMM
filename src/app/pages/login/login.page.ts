@@ -88,20 +88,17 @@ export class LoginPage implements OnInit {
     console.log(request);
 
     this.auth.loginManager(request).subscribe(async (result: any) => {
-      if (result?.status === true) {
+
+      if(result.status == true){
         this.OTP_box = true;
         localStorage.setItem('manager_id', result.manager_id);
         localStorage.setItem('manager_name', result.manager_name)
         this.loginResponse = result;
-
-      } /*else if(result?.status === false){
-        alert(result.errors);
-
-      }*/else {
+      }else{
         this.serverMessage = result.error;
         const alert = await this.alertController.create({
           cssClass: 'my-custom-class',
-          message: result.errors,
+          message: 'Invalid User',
           mode: 'ios',
           buttons: ['OK']
       
@@ -109,10 +106,31 @@ export class LoginPage implements OnInit {
       
         await alert.present();
         this.loginForm.reset();
-      //  window.location.reload();
+      }
+
+
+      // if (result?.status === true) {
+      //   this.OTP_box = true;
+      //   localStorage.setItem('manager_id', result.manager_id);
+      //   localStorage.setItem('manager_name', result.manager_name)
+      //   this.loginResponse = result;
+
+      // } else {
+      //   this.serverMessage = result.error;
+      //   const alert = await this.alertController.create({
+      //     cssClass: 'my-custom-class',
+      //     message: result.errors,
+      //     mode: 'ios',
+      //     buttons: ['OK']
+      
+      //   });
+      
+      //   await alert.present();
+      //   this.loginForm.reset();
+     
         
        
-      } 
+      // } 
     });
   }
 

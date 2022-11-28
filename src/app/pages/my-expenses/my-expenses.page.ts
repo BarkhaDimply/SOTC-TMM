@@ -68,6 +68,9 @@ export class MyExpensesPage implements OnInit{
   errorMsgReject: boolean;
   componentRef!: ComponentRef < MyExpensesPage > ;
   getNotiKey: any;
+  lengthOfVal: any;
+  valueGetLength: any;
+  
   constructor(
     private auth: AuthService,
     private apiService: ApiService,
@@ -102,7 +105,7 @@ export class MyExpensesPage implements OnInit{
 
     this.manager_name=localStorage.getItem("manager_name");
 
-    this.actRoute.queryParams.subscribe(params => { 
+    this.actRoute.queryParams.subscribe(async params => { 
 
       console.log("params 1111::::",params);
 
@@ -119,8 +122,31 @@ export class MyExpensesPage implements OnInit{
       //  this.refRejected();
        
       }else if(this.getNotiKey == '27'){
+
         this.activeSegment = 'rejected_trans';
         this.getRejectedTransactions();
+
+        //this.valueGetLength = localStorage.getItem('lengthOfVal');
+        
+        //console.log("aaaaaaaaaa444:::",this.valueGetLength);
+
+        // if(this.valueGetLength == 0 || this.valueGetLength == '' || this.valueGetLength == 1){
+
+        //   const alert = await this.alertController.create({
+        //     cssClass: '',
+        //     message: 'Your transactions have been deleted and auto-submitted for approval.',
+        //     mode: 'ios',
+        //     buttons: ['OK']
+    
+        //   });
+         
+        //   await alert.present();
+        //   localStorage.removeItem('lengthOfVal');
+     
+        // }
+      
+        
+
       }else{
         this.getTransactions();
       }
@@ -386,7 +412,7 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
 });
 }
 
-async deleteTRansactionHistory(details:any) {
+async deleteTRansactionHistory(details:any) {  
   const alert = await this.alertController.create({
     cssClass: '',
     header: 'Delete Transaction!',
@@ -409,16 +435,17 @@ async deleteTRansactionHistory(details:any) {
           console.log('Confirm Okay');
           //this.globalService.presentLoading();
           this.apiServices.deleteTransactionHistory(details.id).subscribe((result:any) =>{
-            //this.globalService.dismissLoading();
+
 
             if(result.message == 'Success'){
 
-
-              this.globalService.presentToast('Transaction deleted successfully');
+              this.globalService.presentToast('Transaction deleted successfully 111');
 
               this.refressfunc();
               this.refRejected();
-              // window.location.reload();
+
+              
+                
             }
           });
         }
@@ -576,23 +603,25 @@ onSlideChange(event) {
 
 getRejectedTransactions(){
 
-  console.log("getRejectedTransactions in::::");
-
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
     this.rejectedTransctionHistory =[];
-
+   
   //  if(result.data.length>0){+
       Object.entries(result.data).forEach(
         ([key, value]) => {
+          this.lengthOfVal = value;
+          
+          localStorage.setItem('lengthOfVal',this.lengthOfVal.length);
+
+          console.log("sssssssssss:::",this.lengthOfVal.length);
+
           this.rejectedTransctionHistory.push({transKey:key,transValue:value})
 
       });
-    // }else{
-
-    //   this.errorMsgReject = false;
-    //}
 
 
+
+   
 
     // plus button hide function
     this.transctionHistory.forEach(itms=>{
@@ -603,7 +632,7 @@ getRejectedTransactions(){
 
     });
 
-  });
+  });  
 }
 
 

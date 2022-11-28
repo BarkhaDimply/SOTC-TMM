@@ -96,30 +96,34 @@
         </div>
       </div>
 
-      <div size="4" >
-        <div class="form-group" *ngIf="subCategory">
+<!-- 
+      <div size="4" *ngIf="subCategoryEdit == ''"> 
+        <div class="form-group">
+          <label>Select Sub Category New</label>
+          <select class="form-control"  (change)="getSubcatgeoryId($event)">
+            <option class="place-holder"  *ngFor="let subCategoryOBJ of subCategory" value="{{subCategoryOBJ.id}}">{{subCategoryOBJ.category}}</option>
+          </select>
+        </div>
+      </div> -->
+
+
+      <div size="4"> 
+       
+
+        <div class="form-group" *ngIf="subCategory != ''">
           <label>Select Sub Category</label>
 
           <select class="form-control"  (change)="getSubcatgeoryId($event)">
             <option *ngIf="editMode != true">--Select--</option>
             <option class="place-holder" *ngIf="hideSubCat != false" [ngValue]="subCategory">{{subCategory}}</option>
 
-            <option class="place-holder"  *ngFor="let subCategory of subCategory"
-                    value="{{subCategory.id}}">{{subCategory.category}}</option>
+            <option class="place-holder"  *ngFor="let subCategoryOBJ of subCategory" value="{{subCategoryOBJ.id}}">{{subCategoryOBJ.category}}</option>
           </select>
-
-
 
         </div>
       </div>
 
-        <!-- <ion-list >
-          <ion-item *ngFor="let category of getAllCatergories" (click)="getSubcatgeory(category.id)">
-            <ion-label>{{category.category}}</ion-label>
-          </ion-item>
-       </ion-list>  -->
-
-        <!-- </ion-row> -->
+     
 
     </ion-card>
     <ion-card>
@@ -127,7 +131,10 @@
         <ion-col>
           <div class="form-group mt-2 mb-2">
 
-            <div class="d-flex">
+          
+
+            <div class="d-flex">  
+
               <ion-button *ngIf="!debit_image" class="primary-btn add-file mr-20" style="color:#fff;width: 191px;" (click)="openGallery()">
                 <ion-icon name="add-outline" style="font-size: xx-large;"></ion-icon> Add Receipt File
               </ion-button>
@@ -135,7 +142,7 @@
                 <ion-icon name="trash-outline">Remove Image</ion-icon></ion-button>
             </div>
             <div style="text-align: center;" *ngIf="imageDisplay">
-              <img [src]="imageDisplay" style="width: 200px !important; height:200px">
+              <img [src]="imageDisplay">
             </div>
 
             <div style="text-align: center;" *ngIf="debit_image">

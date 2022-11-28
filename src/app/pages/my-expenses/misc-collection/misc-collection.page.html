@@ -21,11 +21,17 @@
             </div>
           </ion-col>
           <ion-col size="4">
-            <label>Currency</label>
-            <div class="form-group">
+            <label>Currency</label> 
+
+            <div class="form-group" *ngIf="currencyFromDropdown != ''">
+              <input readonly [(ngModel)]="currencyFromDropdown" class="form-control">
+            </div>
+
+            <div class="form-group" *ngIf="currencyFromDropdown == ''"> 
               <select class="form-control" (change)="selectCurrencyDropdown($event.target.value)" [(ngModel)]="currencyFromDropdown">
-                  <option *ngFor="let currencyDisplay of showrecivedCashCurrency"  [ngValue]="currencyDisplay">{{currencyDisplay}}</option>
+                <option  *ngFor="let currencyDisplay of showrecivedCashCurrency"  [ngValue]="currencyDisplay">{{currencyDisplay}}</option>
               </select>
+
               <!-- <select class="form-control" (change)="selectCurrencyDropdown($event.target.value)" [(ngModel)]="currencyFromDropdown">
                 <option *ngFor="let currencyDisplay of showCashCurrency" [ngValue]="currencyDisplay">{{currencyDisplay}}</option>
               </select> -->
@@ -50,11 +56,15 @@
           <ion-col>
             <div class="form-group">
               <label>Date of Transaction</label>
-              <input type="date"  [(ngModel)]="selectedDate" class="form-control"  [max]="todayDateTime" placeholder="DD-MM-YYYY"/>
+              <input *ngIf="selectedDate != 0" readonly type="date"  [(ngModel)]="selectedDate" class="form-control"  [max]="todayDateTime" placeholder="DD-MM-YYYY"/>
+            
+
+              <input *ngIf="selectedDate == 0" type="date"  [(ngModel)]="selectedDate" class="form-control"  [max]="todayDateTime" placeholder="DD-MM-YYYY"/>
+            
             </div>
             <div class="form-group">
               <label>Description</label>
-              <textarea type="text" [(ngModel)]="description" class="form-control"   placeholder="Description"></textarea>
+              <textarea type="text" [(ngModel)]="description" class="form-control"  placeholder="Description"></textarea>
 
             </div>
           </ion-col>

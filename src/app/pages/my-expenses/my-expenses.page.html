@@ -371,15 +371,18 @@
 
      
         <ion-card style="margin-top: 0px;padding-bottom: 5rem;">
-
+       
 
           <div *ngFor="let history of rejectedTransctionHistory">
+
             <div style="width: 100%;display: inline-flex;"
                  *ngIf="history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection' ">
             </div>
 
 
             <div class="d-flex" *ngFor="let historyDetails of history.transValue">
+
+    
 
               <ion-card class="w-100"
                         [ngStyle]="{'background-color':historyDetails.refId == 0 ? '#f9e9e9' : 'rgb(220 247 220)'}"

@@ -18,7 +18,8 @@ export class RecordTransactionPage implements OnInit {
   selectedCurrency: string = "";
   handoverType: string = ""
   getAllCatergories: any = "";
-  subCategory:any;
+  subCategory: any = [];
+  subCategoryEdit:string = "";
 
   selected_category_id: any = "";
   selected_subcategory_id: any = "";
@@ -85,20 +86,27 @@ export class RecordTransactionPage implements OnInit {
           this.apiService.getCategoriesFromServer().subscribe((result: any) => {
             this.getAllCatergories = result.categories;
 
+            
+
             this.getAllCatergories.forEach(element => {
               this.Category_id = element.id;
               if (this.getEditValue.category == this.Category_id) {
                 this.selected_category_id = element.category;
 
                 element.sub_category.forEach(ele => {
-                  if (this.getEditValue.sub_category == ele.id) {
+                  if(this.getEditValue.sub_category == ele.id) {
+
+ console.log("cat ele::",ele);
+
+
                     this.subCategory = ele.category;
                     this.subCategoryId = ele.id;
                   }
                 });
               }
             });
-          });
+          }); 
+
           this.selectedDate = this.getEditValue.date;
         }
       });
@@ -106,8 +114,8 @@ export class RecordTransactionPage implements OnInit {
     this.apiService.getCategoriesFromServer().subscribe((result: any) => {
       this.getAllCatergories = result.categories;
 
-      //console.log("cat::",this.getAllCatergories);
-    });
+     
+    });     
     if (this.expenseData) {
       this.expenseData.forEach(element => {
         if(element.balance_cash > 0){
@@ -285,7 +293,7 @@ export class RecordTransactionPage implements OnInit {
       params.token = this.token;
       params.mode = "edit";
       //this.imgPath = this.debit_image
-      params.image  = this.getEditValue.debit_image;
+      params.image  = this.imgPath;
       params.image_type = false;
     } else {
       params.token = "";
@@ -306,10 +314,11 @@ export class RecordTransactionPage implements OnInit {
       params.image_type = '';
     }
 
+    console.log("params:::: ",params);
+
 
     this.apiService.postCurrencyExchange(params).subscribe(async (result: any) => {
 
-      console.log("aaaa",result);
 
       if (result.status == 'true') {
         const alert = await this.alertController.create({
@@ -362,6 +371,7 @@ export class RecordTransactionPage implements OnInit {
       // height: 200,
     });
 
+    console.log("aaaaaaaaaaaa:::",image);
 
     if (image) {
       this.imageDisplay = image.dataUrl;

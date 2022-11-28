@@ -52,7 +52,7 @@ export class MiscCollectionPage implements OnInit {
          this.selectedDate = this.getEditValue.date;
          this.description = this.getEditValue.description;
         }
-        console.log("getEditValue:::::", this.getEditValue);
+        console.log("getEditValue 111:::::", this.getEditValue);
       });
     }
 

@@ -11,14 +11,14 @@
   <div class="content">
 
 
-    <ion-row class="w-100">
+    <ion-row class="w-100"> 
       <ion-col size="10">
         <div *ngIf="searchRooming == true">&nbsp;</div>
         <ion-searchbar [(ngModel)]="searchTerm" *ngIf="searchRooming != true" (ionChange)="setFilteredItems($event)">
         </ion-searchbar>
       </ion-col>
       <ion-col size="2">
-        <!-- <div (click)="resetFilter()" *ngIf="isFilter" style="margin-top: 10px;">
+        <!-- <div (click)="resetFilter()" *ngIf="getIsFilter == 'Yes'" style="margin-top: 10px;">
           <img src="assets/images/member-list/clear-filter.png" style="width: 76%;">
         </div> -->
         <div *ngIf="activeSegment != 'rooming'" style="margin-top: 10px;">

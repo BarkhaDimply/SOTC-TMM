@@ -70,32 +70,32 @@ export class CodeScannerPage implements OnInit {
     this.scanActive = true;
   }
 
-  async checkPermission() {
+  async checkPermission() {  
     //return new Promise(async (resolve, reject) => {
       const status = await BarcodeScanner.checkPermission({ force: true });
-      if (status.granted) {
+      console.log("checkPermission status:::",JSON.stringify(status));
+
+
+      if (status.granted) {return true;
+      }else if (status.denied) {return false;
+      }else if (status.neverAsked) {
+        const c = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          message: 'Please give permission for camera to use expense module',
+          mode: 'ios',
+          buttons: ['OK']
       
-        return true;
-      }
-    
-      if (status.denied) {
+        });
       
-        return false;
-      }
-    
-    
-    
-      if (status.neverAsked) {
-       
-        const c = confirm('We need your permission to use your camera to be able to scan barcodes');
-        if (!c) {
-          return false;
-        }
-      }
-    
-      if (status.restricted || status.unknown) {
- 
-        return false;
+        await c.present();
+        if (!c) {return false;}
+      }else if (status.restricted || status.unknown) {return false;
+      }else{
+        //BarcodeScanner.openAppSettings();
+
+        BarcodeScanner.checkPermission();
+
+        //return false;
       }
     
     //});
@@ -103,6 +103,8 @@ export class CodeScannerPage implements OnInit {
 
   async startScanner() {
     const allowed = await this.checkPermission();
+   
+    console.log("checkPermission:::",allowed);
    
     if (allowed) {
       this.scanActive = true;
@@ -225,8 +227,17 @@ export class CodeScannerPage implements OnInit {
       } else {
         alert('NO DATA FOUND!');
       }
-    } else {
-      alert('NOT ALLOWED!');
+     } else { 
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        message: 'Please give permission for camera to use expense module',
+        mode: 'ios',
+        buttons: ['OK']
+    
+      });
+    
+      await alert.present();
+      BarcodeScanner.openAppSettings();
     }
   }
 

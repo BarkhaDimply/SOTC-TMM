@@ -17,6 +17,7 @@ export class ReviewTransactionDetailsPage implements OnInit {
   newTranscationList:any;
   reviewTransctionHistory: any;
   getEditReviewValue: any = [];
+  valueGetLength: any;
 
 
   constructor(
@@ -135,6 +136,8 @@ export class ReviewTransactionDetailsPage implements OnInit {
                 //this.globalService.dismissLoading();
 
                 if(result.message == 'Success'){
+
+
                   this.apiServices.getAllTransctionHistoryByTime().subscribe(async (result:any) => {
 
                     let navigationExtras: NavigationExtras = {
@@ -142,13 +145,9 @@ export class ReviewTransactionDetailsPage implements OnInit {
                         details:27
                       }
                     };
-                    console.log("nnnnn",navigationExtras);
+                    
                     this.router.navigate(['/tabs/my-expenses'], navigationExtras);   
 
-                   
-                   // window.location.reload();
-         
-         
          
                   });
                  // return this.router.navigate(['/tabs/my-expenses']);
