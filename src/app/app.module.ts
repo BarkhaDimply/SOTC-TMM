@@ -22,26 +22,24 @@ import { IonicStorageModule } from '@ionic/storage'
 
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [
-    BrowserModule,
-    IonicStorageModule.forRoot(),
-    HttpClientModule,
-    IonicModule.forRoot(),
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-    AngularFireDatabaseModule,
-    AppRoutingModule,
-    
-  ],
-  providers: [ { provide: AngularFireModule},
-    ZBar,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Network
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        IonicStorageModule.forRoot(),
+        HttpClientModule,
+        IonicModule.forRoot(),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireAuthModule,
+        AngularFirestoreModule,
+        AngularFireStorageModule,
+        AngularFireDatabaseModule,
+        AppRoutingModule,
+    ],
+    providers: [{ provide: AngularFireModule },
+        ZBar,
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        Network
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

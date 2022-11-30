@@ -5,7 +5,7 @@ import { GlobalService } from 'src/app/services/global/global.service';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-record-transaction',
@@ -39,7 +39,7 @@ export class RecordTransactionPage implements OnInit {
   sub_category_id: any;
   subCategoryId: any;
   token: any;
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   debit_image: any;
   base64textString: any;
   getCurrBalance: any;
@@ -53,7 +53,7 @@ export class RecordTransactionPage implements OnInit {
     private alertCtrl: AlertController, private router: Router,
     private globalService: GlobalService, private alertController: AlertController,
     private actRoute: ActivatedRoute,
-    private fomrBuilder: FormBuilder) {
+    private fomrBuilder: UntypedFormBuilder) {
 
     this.expenseData = JSON.parse(localStorage.getItem("expensesData"));
     let dateVar = new Date();

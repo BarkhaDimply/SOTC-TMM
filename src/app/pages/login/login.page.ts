@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -15,7 +15,7 @@ import { ApiService } from 'src/app/services/api/api.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   errorMessage: any;
   serverMessage = [];
   myDeviceToken: string;
@@ -42,7 +42,7 @@ export class LoginPage implements OnInit {
     private navController: NavController,
     private auth: AuthService,
     private alertController: AlertController,
-    private fomrBuilder: FormBuilder,
+    private fomrBuilder: UntypedFormBuilder,
     private fcmService: FcmService,
     private platform : Platform,
     private apiServices:ApiService,

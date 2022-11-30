@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import { GlobalService } from 'src/app/services/global/global.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 
 @Component({
@@ -49,7 +49,7 @@ export class CartonDetailsPage implements OnInit {
   balLeft: Number;
   CountBal: any;
   scanActive: boolean;
-  cartonForm: FormGroup;
+  cartonForm: UntypedFormGroup;
   itemsNew:  any[] = [];
   roomTitle: any;
 
@@ -58,7 +58,7 @@ export class CartonDetailsPage implements OnInit {
     private globalService: GlobalService,
     private router: Router,
     private actRoute: ActivatedRoute, private alertController: AlertController,
-    private fomrBuilder: FormBuilder, private location: Location) {
+    private fomrBuilder: UntypedFormBuilder, private location: Location) {
       this.actRoute.queryParams.subscribe(params => {
         if (this.router.getCurrentNavigation().extras.state) {
   
