@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError  } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { from, Observable, throwError  } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { GlobalService } from '../global/global.service';
 import { ApiResponse, handleError } from '../utils';
@@ -9,13 +9,22 @@ import { currencyExchange, rooming, showCurrentBalance,getCategories, getAllTour
          transactionHistory, transactionFetch, deleteTranscationHistory, updateNoShowStatus,historyNotification, tourManagerActiveGroup, sendSubmission, sendPolling, getPollingResponse, getPollingBroadcaste, getfetchstock, getAttendanceListData, getAttendanceById, updatestockData, tmStatusUpdate, getAttendancePresent, getTransactionDeatilsByTime, getRejectedTransactionDeatilsByTime, getFlightDataBySector, getFcmToken
 } from '../variables';
 
+import { OfflineManagerService } from '../offlineManager/offline-manager.service';
+import { NetworkService, ConnectionStatus } from '../network/network.service';
+import { Storage } from '@ionic/storage';
+
+const API_STORAGE_KEY = 'AIzaSyATuK2tzjGc_y1Gn6XLwR5T-nCX3DeYRHE';
+const API_URL = 'https://tcil-sotc.travelexic.com/api/webservices/';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   [x: string]: any;
 
-  constructor(private http: HttpClient,private auth: AuthService, private globalService: GlobalService) {
+  constructor(private http: HttpClient,private auth: AuthService, private globalService: GlobalService,
+     private networkService: NetworkService, 
+    private storage: Storage, private offlineManager: OfflineManagerService) {
 
    }
 
@@ -437,6 +446,48 @@ export class ApiService {
     );
   }
 
+  /***************offline mode******************************* */
 
+  getUsers(forceRefresh: boolean = false): Observable<any[]> {
+    if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline || !forceRefresh) {
+      // Return the cached data from Storage
+      return from(this.getLocalData('users'));
+    } else {
+      // Just to get some "random" data
+      let page = Math.floor(Math.random() * Math.floor(6));
+
+      // Return real API data and store it locally
+      return this.http.get(`${API_URL}/users?per_page=2&page=${page}`).pipe(
+        map(res => res['data']),
+        tap(res => {
+          this.setLocalData('users', res);
+        })
+      )
+    }
+  }
+
+  updateUser(user, data): Observable<any> {
+    let url = `${API_URL}/users/${user}`;
+    if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline) {
+      return from(this.offlineManager.storeRequest(url, 'PUT', data));
+    } else {
+      return this.http.put(url, data).pipe(
+        catchError(err => {
+          this.offlineManager.storeRequest(url, 'PUT', data);
+          throw new Error(err);
+        })
+      );
+    }
+  }
+
+  // Save result of API requests
+  private setLocalData(key, data) {
+    this.storage.set(`${API_STORAGE_KEY}-${key}`, data);
+  }
+
+  // Get cached API result
+  private getLocalData(key) {
+    return this.storage.get(`${API_STORAGE_KEY}-${key}`);
+  }
+  
 }
-

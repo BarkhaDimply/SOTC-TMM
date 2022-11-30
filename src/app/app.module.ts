@@ -16,12 +16,17 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 import { ZBar } from '@ionic-native/zbar/ngx';
 
+import { Network } from '@ionic-native/network/ngx';
+
+import { IonicStorageModule } from '@ionic/storage'
+
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
+    IonicStorageModule.forRoot(),
     HttpClientModule,
     IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -34,7 +39,8 @@ import { ZBar } from '@ionic-native/zbar/ngx';
   ],
   providers: [ { provide: AngularFireModule},
     ZBar,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Network
   ],
   bootstrap: [AppComponent],
 })
