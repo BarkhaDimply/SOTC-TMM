@@ -250,6 +250,17 @@ export class MembersListPage {
   }
 
   rooming() {
+
+    if(localStorage.getItem("listOfRooming") != ''){
+    
+      this.totalDataRoom = localStorage.getItem("listOfRooming");
+  
+      this.totalDataRoom = JSON.parse(this.totalDataRoom);
+  
+      console.log("total data room ::::", this.totalDataRoom);
+
+    }
+
     //this.globalServices.presentLoading();
     var d = JSON.parse(localStorage.getItem('active_group'));
 
@@ -320,6 +331,12 @@ export class MembersListPage {
           hotelName.push(itemCat.hotel_name)
         })
       });
+
+      console.log("total data room 22 ::::", this.totalDataRoom);
+
+      localStorage.setItem("listOfRooming", JSON.stringify(this.totalDataRoom));
+
+
       this.getRoomCategory = roomCategory.filter((c: any, index: any) => {
         return roomCategory.indexOf(c) === index;
       });

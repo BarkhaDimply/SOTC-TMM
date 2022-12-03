@@ -316,6 +316,10 @@ export class RecordTransactionPage implements OnInit {
 
     console.log("params:::: ",params);
 
+    localStorage.setItem("addRecordTransaction",params);
+
+    
+
 
     this.apiService.postCurrencyExchange(params).subscribe(async (result: any) => {
 
@@ -330,9 +334,6 @@ export class RecordTransactionPage implements OnInit {
         });
 
         await alert.present();
-
-
-
 
         return this.router.navigate(['/tabs/my-expenses']);
 

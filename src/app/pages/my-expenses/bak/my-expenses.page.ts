@@ -7,6 +7,8 @@ import { GlobalService } from 'src/app/services/global/global.service';
 import { Location } from '@angular/common';
 import { NavigationExtras } from '@angular/router';
 import { SwiperComponent } from 'swiper/angular';
+import Swiper from 'swiper';
+
 
 @Component({
   selector: 'app-my-expenses',

@@ -91,12 +91,13 @@ export class TabsPage implements OnInit{
       await alert.present();}
   }
 
-  async setOpen() {
+  setOpen() { 
     this.getDataByTabs();
     console.log("hlo moto");
 
 
     };
+    
 
   }
 

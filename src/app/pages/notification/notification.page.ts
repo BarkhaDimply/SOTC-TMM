@@ -3,9 +3,6 @@ import { AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { Location } from '@angular/common';
-
-
-
 import { ActivatedRoute } from '@angular/router';
 
 import { Plugins } from '@capacitor/core';
@@ -55,13 +52,22 @@ export class NotificationPage implements OnInit {
 
   getNorification(){
 
+    if(localStorage.getItem("listOfRejectedTransaction") != ''){
+    
+      this.notificationHistory = localStorage.getItem("listOfNotification");
+  
+      this.notificationHistory = JSON.parse(this.notificationHistory);
+  
+    }
+
    // this.globalService.presentLoading();
     this.apiServices.getHistoryNotification().subscribe((result:any) => {
      // this.globalService.dismissLoading();
 
       this.notificationHistory = result.data;
-     
 
+      localStorage.setItem("listOfNotification", JSON.stringify(this.notificationHistory));
+       
       if(result.data == ''){
 
         this.noNotification = true;

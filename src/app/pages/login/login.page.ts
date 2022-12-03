@@ -73,6 +73,7 @@ export class LoginPage implements OnInit {
   demonstateSubmit() {
     this.errorMessage = [];
     this.serverMessage = [];
+
     if (!this.loginForm.valid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -94,6 +95,7 @@ export class LoginPage implements OnInit {
         localStorage.setItem('manager_id', result.manager_id);
         localStorage.setItem('manager_name', result.manager_name)
         this.loginResponse = result;
+        
       }else{
         this.serverMessage = result.error;
         const alert = await this.alertController.create({

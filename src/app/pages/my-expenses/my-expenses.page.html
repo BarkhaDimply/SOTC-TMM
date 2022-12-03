@@ -88,10 +88,10 @@
 
   <!-------------------List all/Rejected---------------------->
 
+
  
   <ion-segment #segment (ionChange)="segmentChanged($event.target.value)"
-  class="mb-4 ml-2 mr-2" style="background: white;"
-    mode="ios" scrollable value={{activeSegment}}>
+  class="mb-4 ml-2 mr-2" style="background: white;" mode="ios" scrollable value={{activeSegment}}>
     <ion-segment-button value="allTrans">
       <ion-label>All</ion-label>
     </ion-segment-button>
@@ -196,9 +196,9 @@
     <swiper #swiper (slideChange)="onSlideChange($event)" [config]="config" class="common-swiper">
    
       <ng-template swiperSlide>
+        <ion-card style="margin-top: 0px;padding-bottom: 5rem">
        
-          <ion-card style="margin-top: 0px;padding-bottom: 5rem" >
-            
+          <!-- <ion-card style="margin-top: 0px;padding-bottom: 5rem" *ngIf="activeSegment == 'allTrans'"> -->
 
             <!--<div *ngFor="let history of newTranscationList | keyvalue: asIsOrder"> -->
 
@@ -217,13 +217,17 @@
                 </div> -->
 
 
-            <div *ngFor="let history of transctionHistory">
+            <div *ngFor="let historyAll of transctionHistory">
+
+              <div *ngIf="historyAll.transValue.length > 0">
+
+
               <div style="padding: 10px 0px 0px 10px;font-size: 16px;font-weight: 600;">
-                <span style="margin-top: 10px;">{{history.transKey}}</span>
+                <span style="margin-top: 10px;">{{historyAll.transKey}}</span>
               </div>
               <hr>
 
-              <div class="d-flex" *ngFor="let historyDetails of history.transValue">
+              <div class="d-flex" *ngFor="let historyDetails of historyAll.transValue">
                 <div class="w-100 showSelecthide"
                 [ngStyle]="{'background-color':historyDetails.refId == 0 ? '2px solid #ff000061' : '#d8d1d1'}"
                 *ngIf="historyDetails.show_transaction == 0">
@@ -344,7 +348,7 @@
                   </div>-->
               </div>
 
-              <div *ngFor="let historyDetails of history.transValue">
+              <div *ngFor="let historyDetails of historyAll.transValue">
 
                 <ion-fab class="mr-3" slot="fixed"
                   style="bottom: 20px;position: fixed;right: 3px;">
@@ -357,32 +361,29 @@
                 </ion-fab>
               </div>
             </div>
+
+            </div>
               <!---------------------- submit button --------------------------- -->
           
-          
-          </ion-card>  
+            </ion-card>
        
       </ng-template>
    
 
       <!------------------------------Rejected List----------------------------------------->
 
-      <ng-template swiperSlide>
-
-     
+      <ng-template swiperSlide> 
         <ion-card style="margin-top: 0px;padding-bottom: 5rem;">
-       
 
-          <div *ngFor="let history of rejectedTransctionHistory">
+          <div *ngFor="let history of rejectedTransctionHistory"> 
 
-            <div style="width: 100%;display: inline-flex;"
+            <div *ngIf="history.transValue.length > 0">
+
+              <div style="width: 100%;display: inline-flex;"
                  *ngIf="history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection' ">
-            </div>
+              </div>
 
-
-            <div class="d-flex" *ngFor="let historyDetails of history.transValue">
-
-    
+              <div class="d-flex" *ngFor="let historyDetails of history.transValue">
 
               <ion-card class="w-100"
                         [ngStyle]="{'background-color':historyDetails.refId == 0 ? '#f9e9e9' : 'rgb(220 247 220)'}"
@@ -468,25 +469,28 @@
                 </div>
               </ion-card>
 
+              </div>
+
             </div>
           </div>
 
-        </ion-card>
+          </ion-card>
 
-        <div *ngFor="let history of transctionHistory">
-          <div *ngFor="let historyDetails of history.transValue">
+          <div *ngFor="let history of transctionHistory">
+            <div *ngFor="let historyDetails of history.transValue">
 
-            <ion-fab *ngIf=" (historyDetails.submission_status == 3 && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
-            historyDetails.category != 'tm_transfer'" class="mr-3" slot="fixed"
-                     style="bottom: 30px;position: fixed;right: 8px;">
+              <ion-fab *ngIf=" (historyDetails.submission_status == 3 && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+              historyDetails.category != 'tm_transfer'" class="mr-3" slot="fixed"
+                      style="bottom: 30px;position: fixed;right: 8px;">
 
-              <ion-fab-button style="font-size: 14px; --box-shadow:none;" (click)="addTransactionHistoryReview()">Submit
-              </ion-fab-button>
-            </ion-fab>
+                <ion-fab-button style="font-size: 14px; --box-shadow:none;" (click)="addTransactionHistoryReview()">Submit
+                </ion-fab-button>
+              </ion-fab>
+            </div>
+
           </div>
-
-        </div>
       </ng-template>
+
     </swiper>
 
 

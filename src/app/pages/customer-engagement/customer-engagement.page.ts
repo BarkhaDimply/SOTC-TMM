@@ -240,12 +240,21 @@ export class CustomerEngagementPage implements OnInit {
 
 
   getPollingResponsesByGroupID(){
+
+    if(localStorage.getItem("listOfRooming") != ''){
+    
+      this.responseById = localStorage.getItem("listOfPollingResponse");
+  
+      this.responseById = JSON.parse(this.responseById);
+
+    }
   
     //this.globalService.presentLoading();
     this.apiServices.getPollingResponseById().subscribe((result:any) => {
     //this.globalService.dismissLoading();
     this.responseById = result.data;
-    console.log("resp::::",this.responseById);
+
+    localStorage.setItem("listOfPollingResponse", JSON.stringify(this.responseById));
     });
    
   }

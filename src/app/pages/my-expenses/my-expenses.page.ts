@@ -9,6 +9,11 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SwiperComponent } from 'swiper/angular';
 import { SwiperOptions } from 'swiper';
 import { element } from 'protractor';
+import { SwiperModule } from 'swiper/angular';
+import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
+
+SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom]);
+
 
 @Component({
   selector: 'app-my-expenses',
@@ -70,6 +75,9 @@ export class MyExpensesPage implements OnInit{
   getNotiKey: any;
   lengthOfVal: any;
   valueGetLength: any;
+  lengthOfValAll: any;
+  lengthOfValRejc:any;
+  
   
   constructor(
     private auth: AuthService,
@@ -85,12 +93,10 @@ export class MyExpensesPage implements OnInit{
   ) {
     this.user = this.auth.user;
 
-    console.log("const::::");
-
   }
+  
   ngOnInit(){
-    
-    console.log("ngOnlnit::::");
+  
 
     this.showCurrentBalance();
     setTimeout(() => {
@@ -98,30 +104,27 @@ export class MyExpensesPage implements OnInit{
     },200);
 
 
-    this.getRejectedTransactions();
+   // this.getRejectedTransactions();
 
     localStorage.removeItem('edit_clicked');
     this.getCurrencyCODE();
 
     this.manager_name=localStorage.getItem("manager_name");
 
-    this.actRoute.queryParams.subscribe(async params => { 
-
-      console.log("params 1111::::",params);
+    this.actRoute.queryParams.subscribe(async params => {  console.log("ffffffffff");
 
       if (this.router.getCurrentNavigation().extras.state) {
         
         this.getNotiKey = this.router.getCurrentNavigation().extras.state.details;
         
       }
-      console.log("getNotiKey:::" ,  this.getNotiKey);
 
       if(this.getNotiKey == '28'){  console.log("innn 28");
         this.activeSegment = "allTrans";
         this.getTransactions();
       //  this.refRejected();
        
-      }else if(this.getNotiKey == '27'){
+      }else if(this.getNotiKey == '27'){ console.log("innn 27");
 
         this.activeSegment = 'rejected_trans';
         this.getRejectedTransactions();
@@ -147,23 +150,22 @@ export class MyExpensesPage implements OnInit{
       
         
 
-      }else{
+     }else{ console.log("innnelse");
         this.getTransactions();
-      }
+        this.getRejectedTransactions();
+    }
 
      // this.refRejected();
-      //this.getTransactions();
+    //  this.getTransactions();
       this.showCurrentBalance();
+    //  this.getRejectedTransactions();
 
-      if(params.filter=='new'){ console.log("parms filter in::::");
+      if(params.filter=='new'){ 
         this.getRejectedTransactions();
-      
         this.showCurrentBalance();
       }
     });
 
-
-    console.log("tabs::::",this.activeSegment);
 
   }
 
@@ -207,11 +209,11 @@ export class MyExpensesPage implements OnInit{
   showCurrentBalance(){
 
     this.expensesData=localStorage.getItem("expensesData");
-    // if(this.expensesData != ''){
-    //   this.getCurrBalance = this.expensesData
-    // }
 
+    if(this.expensesData != ''){
+      this.getCurrBalance = JSON.parse(this.expensesData);
 
+    }
 
     this.apiService.getCurrentBalance().subscribe ((result:any) =>{
 
@@ -223,6 +225,9 @@ export class MyExpensesPage implements OnInit{
       }
 
       this.getCurrBalance = result.data;
+
+      console.log("get bal:::", this.getCurrBalance);
+
       localStorage.setItem("expensesData", JSON.stringify(result.data));
       });
 
@@ -230,8 +235,6 @@ export class MyExpensesPage implements OnInit{
   }
 
   toggleClicked(id,balance) {
-
-
 
 
     this.toggleChecked = true;
@@ -261,16 +264,29 @@ export class MyExpensesPage implements OnInit{
   }
 
   getTransactions(){
+   
+    if(localStorage.getItem("listOfAllTransaction") != ''){
+    
+      this.transctionHistory = localStorage.getItem("listOfAllTransaction");
 
-    console.log("getTransactions in::::");
+      this.transctionHistory = JSON.parse(this.transctionHistory);
 
+    }
 
     this.apiServices.getAllTransctionHistoryByTime().subscribe((result:any) => {
       this.transctionHistory = [];
 
       Object.entries(result.data).forEach(
         ([key, value]) => {
+
+          this.lengthOfVal = value;
+
+          localStorage.setItem('lengthOfValAll',this.lengthOfVal.length);
+          this.lengthOfValAll = localStorage.getItem('lengthOfValAll');
           this.transctionHistory.push({transKey:key,transValue:value});
+
+          localStorage.setItem("listOfAllTransaction", JSON.stringify(this.transctionHistory));
+       
 
       });
 
@@ -282,11 +298,7 @@ export class MyExpensesPage implements OnInit{
           this.btnSubstatus = itm.submission_status;
           this.btnShowTrans = itm.show_transaction;
         });
-
-
       });
-
-
 
       // result.data.forEach(element => {
       //   element.display_date = new Date(element.time_of_transaction).toDateString();
@@ -296,13 +308,14 @@ export class MyExpensesPage implements OnInit{
       // });
       //this.transctionHistory = result.data;
 
-      localStorage.setItem("selectedTrasactionIds", JSON.stringify(this.transctionHistory));
-
+     
       if(result.data.length > 0){
         this.sortByDate();
       }
 
     });
+
+    
   }
 
   sortByDate() {
@@ -571,18 +584,17 @@ segmentChanged(event) {
 
    if (this.activeSegment === 'allTrans') {
      this.swiper.swiperRef.slideTo(0);
-    //this.getTransactions();
+    // localStorage.removeItem('lengthOfValRejc');
   }
-  if (this.activeSegment=== 'rejected_trans') {
+  if (this.activeSegment === 'rejected_trans') {
     this.swiper.swiperRef.slideTo(1);
+  //  localStorage.removeItem('lengthOfValAll');
     
   }
  // localStorage.setItem('activeKeyTrans',this.activeSegment);
 }
 
 onSlideChange(event) {
-
-
 
   if (event[0].activeIndex === 0) {
     this.activeSegment = 'allTrans';
@@ -603,25 +615,32 @@ onSlideChange(event) {
 
 getRejectedTransactions(){
 
+  if(localStorage.getItem("listOfRejectedTransaction") != ''){
+    
+    this.rejectedTransctionHistory = localStorage.getItem("listOfRejectedTransaction");
+
+    this.rejectedTransctionHistory = JSON.parse(this.rejectedTransctionHistory);
+
+  }
+
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
+
     this.rejectedTransctionHistory =[];
    
-  //  if(result.data.length>0){+
       Object.entries(result.data).forEach(
         ([key, value]) => {
           this.lengthOfVal = value;
           
-          localStorage.setItem('lengthOfVal',this.lengthOfVal.length);
-
-          console.log("sssssssssss:::",this.lengthOfVal.length);
+          localStorage.setItem('lengthOfValRejc',this.lengthOfVal.length);
+          this.lengthOfValRejc = localStorage.getItem('lengthOfValRejc');
 
           this.rejectedTransctionHistory.push({transKey:key,transValue:value})
 
+          localStorage.setItem("listOfRejectedTransaction", JSON.stringify(this.rejectedTransctionHistory));
+       
+         
       });
 
-
-
-   
 
     // plus button hide function
     this.transctionHistory.forEach(itms=>{
