@@ -58,7 +58,7 @@ export class MyExpensesPage implements OnInit{
   todayDateTime:any;
   hideSubmitButton:boolean=true;
   datePipe: any;
-  keyReview: any;
+
   varTrue =true;
   varFalse = false;
   varTrue1 =true;
@@ -425,7 +425,7 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
 });
 }
 
-async deleteTRansactionHistory(details:any) {  
+async deleteTRansactionHistory(details:any) {   console.log("aaaaaaaaaa",details);
   const alert = await this.alertController.create({
     cssClass: '',
     header: 'Delete Transaction!',
@@ -466,7 +466,7 @@ async deleteTRansactionHistory(details:any) {
     ]
   });
 
- // await alert.present();
+  await alert.present();
 
 }
 
@@ -507,18 +507,35 @@ verifyEvent(id:any) {
 
 async addTransactionHistory(){
 
-  this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
+  //this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
+
+  this.getAllTrasactionId = (JSON.parse(localStorage.getItem("listOfAllTransaction")));
+
+  console.log("this.getAllTrasactionId:::::",this.getAllTrasactionId);
 
   var transValue:any=[];
 
-  this.getAllTrasactionId.forEach(async items => {
 
+  this.getAllTrasactionId.forEach(async items => {
     items.transValue.forEach(async item =>{
       this.btnSubstatus = item.submission_status;
 
+      console.log("item.category:::::",item.category);
+
+      console.log(" item.show_transaction:::::", item.show_transaction);
+
+      console.log(" item.submission_status", item.submission_status);
+
 
       if(item.category != 'BALANCE ADDED' && item.category != 'tm_transfer' && item.show_transaction == 0 && item.submission_status == 0){
+      
+   
+      
         transValue.push(item.id);
+
+
+
+
         this.hideSubmitButton=false;
       }
 

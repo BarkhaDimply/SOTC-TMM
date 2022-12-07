@@ -56,9 +56,11 @@ export class TransactionHistoryPage implements OnInit {
       });
       this.transctionHistory = result.data;
 
+      console.log("transctionHistory1111::",this.transctionHistory);
+
       localStorage.setItem("selectedTrasactionIds", JSON.stringify(this.transctionHistory));
 
-      console.log("ttttt::",this.transctionHistory);
+    
       
       if(result.data.length > 0){
         this.sortByDate();

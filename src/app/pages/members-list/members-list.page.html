@@ -8,6 +8,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-refresher  slot="fixed" pullFactor="0.5" pullMin="50" pullMax="200"  (ionRefresh)="refreshPage()"></ion-refresher>
+
+
   <div class="content">
 
 
@@ -18,17 +22,31 @@
         </ion-searchbar>
       </ion-col>
       <ion-col size="2">
-        <!-- <div (click)="resetFilter()" *ngIf="getIsFilter == 'Yes'" style="margin-top: 10px;">
+     
+        <div (click)="resetFilter()" *ngIf="getIsFilter == 'true'" style="margin-top: 10px;">
           <img src="assets/images/member-list/clear-filter.png" style="width: 76%;">
-        </div> -->
-        <div *ngIf="activeSegment != 'rooming'" style="margin-top: 10px;">
-          <img [queryParams]="{activeSegment:activeSegment}" [routerLink]="'/tabs/members-list/members-list-filter'" 
+        </div>
+
+   
+        <div *ngIf="activeSegment != 'rooming' && getIsFilter != 'true'" style="margin-top: 10px;">
+         <img [queryParams]="{activeSegment:activeSegment}" [routerLink]="'/tabs/members-list/members-list-filter'" 
           style="width: 76%;" src="assets/images/member-list/filter.png">
         </div>
-        
-        <div *ngIf="activeSegment == 'rooming'" style="margin-top: 10px;">
-          <img (click)="isFilterOpen();isModal=true" style="width: 76%;" src="assets/images/member-list/filter.png">
+
+
+        <div *ngIf="activeSegment == 'rooming'">
+
+          <div *ngIf="isFilter != true" style="margin-top: 10px;">
+            <img (click)="isFilterOpen();isModal=true" style="width: 76%;" src="assets/images/member-list/filter.png">
+          </div>
+
+          <div (click)="resetFilter()" *ngIf="isFilter == true" style="margin-top: 10px;">
+            <img src="assets/images/member-list/clear-filter.png" style="width: 76%;">
+          </div>
+
         </div>
+
+        
 
       </ion-col>
     </ion-row>
@@ -53,7 +71,7 @@
       </span> 
     </div> -->
 
-    <ion-segment #segment (ionChange)="segmentChanged($event)" mode="ios" scrollable value="airline">    
+    <ion-segment #segment (ionChange)="segmentChanged($event)" mode="ios" scrollable value="airline">
       
       <ion-segment-button value="airline">
         <ion-label>Departure</ion-label>
@@ -79,6 +97,7 @@
         
           <!-----------------Without using Filter------------------------>
  
+
           <ion-row *ngIf="getFilterMemberListArrayDep.length == 0">
             <ion-card class="w-100">
               <ng-container *ngFor="let member of user.members_data">
@@ -89,7 +108,7 @@
                   </div>
 
                   <ion-avatar>
-                    <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+                    <img class="img-member-name"  [src]="'https://ui-avatars.com/api/?name='+member.name" />
                   </ion-avatar>
                   <ion-label>{{member.name}}
                     <br>      
@@ -117,7 +136,7 @@
 
                       <ion-col size="2">
                         <ion-avatar>
-                          <img class="img-member-name"
+                          <img class="img-member-name" style="width: 80%;"
                             [src]="'https://ui-avatars.com/api/?name='+familyMembers.name" />
                         </ion-avatar>
                       </ion-col>
@@ -493,6 +512,7 @@
             </ion-button>
           </ion-row>
 
+
           <div *ngIf="!isFilter">
 
 
@@ -590,9 +610,9 @@
           <div *ngIf="isFilter">
 
             <ion-row [attr.data-index]="i" *ngFor="let rms of totalDataRoom;let i = index">
-              <!-- <div *ngIf="key2">
+              
 
-          </div> -->
+
               <ion-card class="w-100">
                 <div class="w-100 d-flex">
                   <div class="w-60">

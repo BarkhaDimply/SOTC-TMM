@@ -29,6 +29,9 @@ export class NetworkService {
       if (this.status.getValue() === ConnectionStatus.Online) {
         console.log('WE ARE OFFLINE');
         this.updateNetworkStatus(ConnectionStatus.Offline);
+
+        
+        console.log("ConnectionStatus.Offline:::",ConnectionStatus.Offline)
       }
     });
 
@@ -36,6 +39,9 @@ export class NetworkService {
       if (this.status.getValue() === ConnectionStatus.Offline) {
         console.log('WE ARE ONLINE');
         this.updateNetworkStatus(ConnectionStatus.Online);
+
+        console.log("ConnectionStatus.Online:::",ConnectionStatus.Online)
+
       }
     });
   }

@@ -43,18 +43,7 @@ export class MembersListFilterPage implements OnInit {
 
     this.user = this.auth.user;
 
-    this.actRoute.queryParams.subscribe(async (params) => {
-      this.keyReview = params.activeSegment
-
-      
-
-    if(this.keyReview == 'airline' || this.keyReview == '' || typeof this.keyReview == 'undefined'){ 
-      this.activeSegment = 'dep';
-     }else{
-      this.activeSegment = 'arr';
-     }
-     
-     });
+    
 
   }
 
@@ -62,7 +51,20 @@ export class MembersListFilterPage implements OnInit {
 
     this.getFlightData();
 
-   
+    this.actRoute.queryParams.subscribe(async (params) => {
+      this.keyReview = params.activeSegment
+
+      console.log("this.keyReview::::",this.keyReview);
+
+      
+
+    if(this.keyReview == 'arrival_departure'){ 
+      this.activeSegment = "arr";
+     }else{
+      this.activeSegment = "dep";
+     }
+     
+     });
 
     
   }
@@ -136,7 +138,7 @@ export class MembersListFilterPage implements OnInit {
   }
 
   getFlightDataBySector(){ 
-    this.globalService.presentLoadingMemeber();
+    //this.globalService.presentLoadingMemeber();
     var Users:string = localStorage.getItem("user")
     let params:any = {}
     params.sector =  this.filterFlightCode
@@ -178,7 +180,9 @@ export class MembersListFilterPage implements OnInit {
 
   filterElementsNew() { 
 
-    localStorage.setItem('isFilterSet', 'Yes');
+
+
+    localStorage.setItem('isFilterSet', 'true');
     
     this.getDateFilter = localStorage.getItem("Flight_date");
     this.getTimeFilter = localStorage.getItem("Flight_time");
@@ -186,7 +190,7 @@ export class MembersListFilterPage implements OnInit {
 
   //  const split_time = this.getTimeFilter.split(',');
    
-    //console.log("getSelectedCodeFilter:::", split_time);
+    console.log("this.activeSegment:::", this.activeSegment);
 
     Object.entries(JSON.parse(this.getSelectedCodeFilter)).forEach(([key, value]) => {
 

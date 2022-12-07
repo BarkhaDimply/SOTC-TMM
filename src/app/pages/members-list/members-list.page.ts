@@ -78,6 +78,8 @@ export class MembersListPage {
   getFilterMemberListArray:any[] = [];
   getFilterMemberListArrayDep:any[] = [];
 
+  getFilterMemberListDepGet:any;
+
   public searchTerm: string = "";
   constructor(private location: Location,
     private alertController: AlertController,
@@ -98,13 +100,15 @@ export class MembersListPage {
         element['isFamily'] = false;
       }
     });
+
+    console.log("members_data::::",this.user.members_data);
   
  
   }
 
   ngOnInit() {  
 
-    this.getIsFilter= localStorage.getItem("isFilterSet");
+  
 
     this.auth.getUserStatus.subscribe(val => {
       if (val !== '0') {
@@ -112,20 +116,41 @@ export class MembersListPage {
       }
     });
 
-    if(localStorage.getItem("Flight_code")){
-      this.actRoute.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {   
+
+    console.log("3333333333333333333333:::::",this.router.getCurrentNavigation().extras.state);
+
+    //if(localStorage.getItem("Flight_code")){
+      this.actRoute.queryParams.subscribe(params => {  console.log("ggggggg:::::")
+      if (this.router.getCurrentNavigation().extras.state) {    console.log("ggggggg111111:::::")
 
         this.getFilterMemberList  = this.router.getCurrentNavigation().extras.state.details;
 
-        console.log("dep:::::",this.router.getCurrentNavigation().extras.state.details_active);
+        console.log("getFilterMemberList 11:::::",this.getFilterMemberList);
+
+        this.getFilterMemberListDepGet  = this.router.getCurrentNavigation().extras.state.details_active;
+
+        console.log("dep11111:::::",this.getFilterMemberListDepGet);
+
+        console.log("getFilterMemberList legthn:::::",this.getFilterMemberList.length);
 
         for(let i=0;i<this.getFilterMemberList.length;i++){
 
-          if(this.router.getCurrentNavigation().extras.state.details_active == 'dep'){
+
+
+          if(this.getFilterMemberListDepGet == 'dep'){
+
+            console.log("in dep:::::");
+
+            this.getIsFilter= localStorage.getItem("isFilterSet");
             this.getFilterMemberListArray = [];
             this.getFilterMemberListArrayDep.push(this.getFilterMemberList[i].members) 
-          }else{
+
+
+          }else{ 
+
+            console.log("in arv:::::");
+
+            this.getIsFilter= localStorage.getItem("isFilterSet");
             this.getFilterMemberListArrayDep = [];
             this.getFilterMemberListArray.push(this.getFilterMemberList[i].members) 
           }
@@ -141,11 +166,13 @@ export class MembersListPage {
       }
     
     });
-  }
+  //}
 
     
 
   }
+
+
 
   back(){
     this.location.back();
@@ -172,7 +199,8 @@ export class MembersListPage {
       this.swiper.swiperRef.slideTo(0);
       this.isRoomingFilter = true;
       this.isArrivalFilter = true;
-
+     // this.getIsFilter = false;
+      
       this.getHoltelLocation = "";
       this.getHoltelName = "";
       this.getselectedRoomCategory = "";
@@ -189,7 +217,7 @@ export class MembersListPage {
       this.searchRooming = false
       this.swiper.swiperRef.slideTo(1);
       this.isFilter= false;
-
+     // this.getIsFilter = false;
        this.getHoltelLocation = "";
        this.getHoltelName = "";
        this.getselectedRoomCategory = "";
@@ -206,7 +234,7 @@ export class MembersListPage {
       this.isFilter= false;
       this.rooming();
       this.swiper.swiperRef.slideTo(2);
-
+      this.getIsFilter = false;
     
     }
   }
@@ -251,15 +279,15 @@ export class MembersListPage {
 
   rooming() {
 
-    if(localStorage.getItem("listOfRooming") != ''){
+    // if(localStorage.getItem("listOfRooming") != ''){
     
-      this.totalDataRoom = localStorage.getItem("listOfRooming");
+    //   this.totalDataRoom = localStorage.getItem("listOfRooming");
   
-      this.totalDataRoom = JSON.parse(this.totalDataRoom);
+    //   this.totalDataRoom = JSON.parse(this.totalDataRoom);
   
-      console.log("total data room ::::", this.totalDataRoom);
+    //   console.log("total data room ::::", this.totalDataRoom);
 
-    }
+    // }
 
     //this.globalServices.presentLoading();
     var d = JSON.parse(localStorage.getItem('active_group'));
@@ -509,8 +537,8 @@ export class MembersListPage {
   resetFilter(){ 
 
     localStorage.removeItem("isFilterSet");
-
-
+    this.getIsFilter = false;
+    
     this.isFilter = false;
     this.getHoltelLocation = "";
     this.getHoltelName = "";
@@ -520,20 +548,25 @@ export class MembersListPage {
     this.filterFlightTime="";
     this.filterFlightName="";
     this.data_member="";
-     if(this.isArrivalFilter == true){
-      this.user = this.auth.user;
 
-    this.user.members_data.forEach((element: { hub: any; }) => {
-      this.totalMembers++;
-      if (element.hub === this.selectedHub) {
-        element['isFamily'] = false;
-      }
-    });
+     if(this.isArrivalFilter == true){
+
+      this.getFilterMemberListArrayDep.length = 0;
+
+      this.members_data = this.user.members_data;
      }
-    if(this.searchArrivflight == true){ 
-      this.user;
-      
+
+     if(this.isRoomingFilter != true){
+
+      this.getFilterMemberListArray.length = 0;
+
+      this.members_data = this.user.members_data;
      }
+
+     
+
+     
+
     if(this.isRoomingFilter == true){
       this.rooming();
     }
@@ -546,16 +579,13 @@ export class MembersListPage {
 
 
 
-   
-  //  this.isFilter = true;
-
     localStorage.removeItem('filterByDate');
     localStorage.removeItem('filterBySector');
     localStorage.removeItem('filterByFltName');
    
     this.getFlightCode = [], this.getFlightDates = [], this.getFlightName = [];
 
-    if (this.isRoomingFilter) {
+    if (this.isRoomingFilter) { this.isFilter = true;
       var newRoomary1 = [];
       var newArray1: any = []
 
@@ -982,6 +1012,52 @@ export class MembersListPage {
   }
 
 
+  refreshPage(){
+    this.globalService.presentLoading();
+ 
+  this.user_temp_data = JSON.parse(localStorage.getItem("user"));
+
+  console.log("this.user_data----",this.user_temp_data);
+
+  this.user_temp_data['itinerary'] =  this.user.itinerary
+
+  //localStorage.setItem('',this.user_temp_data['itinerary']);
+
+  console.log("this.user_data----",this.user_temp_data);
+
+  this.active_group = JSON.parse(localStorage.getItem('active_group'));
+
+      let request = {
+        'login_code': this.active_group[0]['tourCode'],
+        'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+      };
+
+      this.auth.login(request).subscribe(async (result: any) => {
+
+        if (result?.status === true) {
+
+          localStorage.setItem('user', JSON.stringify(result.data));
+          window.location.reload();
+
+          //this.loadModal(result.data.hub_list);
+        } else {
+          this.globalService.dismissLoading();
+          const alert = await this.alertController.create({
+            cssClass: 'my-custom-class',
+            message: result.error,
+            mode: 'ios',
+            buttons: ['OK']
+        
+          });
+        
+          await alert.present();
+          return;
+        }
+      });
+
+      
+ 
+  }
 
  
 }
