@@ -6,7 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { GlobalService } from '../global/global.service';
 import { ApiResponse, handleError } from '../utils';
 import { currencyExchange, rooming, showCurrentBalance,getCategories, getAllTourManager,
-         transactionHistory, transactionFetch, deleteTranscationHistory, updateNoShowStatus,historyNotification, tourManagerActiveGroup, sendSubmission, sendPolling, getPollingResponse, getPollingBroadcaste, getfetchstock, getAttendanceListData, getAttendanceById, updatestockData, tmStatusUpdate, getAttendancePresent, getTransactionDeatilsByTime, getRejectedTransactionDeatilsByTime, getFlightDataBySector, getFcmToken
+         transactionHistory, transactionFetch, deleteTranscationHistory, updateNoShowStatus,historyNotification, tourManagerActiveGroup, sendSubmission, sendPolling, getPollingResponse, getPollingBroadcaste, getfetchstock, getAttendanceListData, getAttendanceById, updatestockData, tmStatusUpdate, getAttendancePresent, getTransactionDeatilsByTime, getRejectedTransactionDeatilsByTime, getFlightDataBySector, getFcmToken, saveManagerHub
 } from '../variables';
 
 import { OfflineManagerService } from '../offlineManager/offline-manager.service';
@@ -446,7 +446,7 @@ export class ApiService {
     );
   }
 
-  /***************offline mode******************************* */
+  /***************offline mode********************************/
 
   getUsers(forceRefresh: boolean = false): Observable<any[]> {
     if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline || !forceRefresh) {
@@ -489,5 +489,22 @@ export class ApiService {
   private getLocalData(key) {
     return this.storage.get(`${API_STORAGE_KEY}-${key}`);
   }
+    /***************end of offline mode********************************/
+
+  //set hub in db -api
+
+  saveManagerHub(data){
+    return this.http.post<ApiResponse>(saveManagerHub,data,{ headers: this.auth.jsonheader }).pipe(
+      catchError(handleError => {
+        return throwError(handleError);
+     }),
+      map((result: ApiResponse) => {
+        const listing = new ApiResponse();
+        Object.assign(listing, result);        
+        return listing;
+      })
+    );
+  }
+
   
 }

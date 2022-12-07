@@ -264,6 +264,10 @@ export class LoginPage implements OnInit {
           handler: (data: any) => {
             if (data != '') {
               localStorage.setItem("selected_hub", data);
+
+              //set hub in db -api
+              this.getSaveManagerHub();
+
               this.auth.userLoggedIn.next("loggedin");
               this.navController.navigateRoot(['/']);
             }
@@ -294,11 +298,40 @@ export class LoginPage implements OnInit {
       
      });
  
-   }
+  }
 
+  getSaveManagerHub(){
 
+      let params:any = {}
 
+      var Users:string = localStorage.getItem("user");
+      params.driver_id = localStorage.getItem("manager_id");
+      params.hub = localStorage.getItem("selected_hub");
+      params.group_id = JSON.parse(Users).order_id;
+      params.nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
 
+      console.log("hub:::",params);
+          
+      this.apiServices.saveManagerHub(params).subscribe(async (result:any) => {   
+
+        console.log("hub result:::",result);
+
+        if(result.status == false) {
+
+          const alert = await this.alertController.create({
+              message: 'Hub Not Selected',
+              mode: 'ios',
+          
+            });
+           
+            await alert.present();
+
+        }
+
+                
+      });
+
+  }
 
 
 

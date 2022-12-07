@@ -28,3 +28,4 @@ export const getTransactionDeatilsByTime: string = environment.webserviceTcil +'
 export const getRejectedTransactionDeatilsByTime: string = environment.webserviceTcil +'/api/webservices/show_rejected_transaction_details_by_time';
 export const getFlightDataBySector: string = environment.webserviceTcil +'/api/webservices/V2/getFlightDataBySector';
 export const getFcmToken: string = environment.webserviceTcil +'/api/webservices/save_fcm_token';
+export const saveManagerHub: string = environment.webserviceTcil +'/api/webservices/V2/save_manager_hub';
