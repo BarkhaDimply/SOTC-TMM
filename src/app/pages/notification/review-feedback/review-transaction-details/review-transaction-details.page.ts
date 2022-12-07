@@ -108,6 +108,8 @@ export class ReviewTransactionDetailsPage implements OnInit {
 
 
  async deleteTRansactionHistory(details:any) {
+
+  console.log("length of rejected list:::",details);
     
     const alert = await this.alertController.create({
         cssClass: '',

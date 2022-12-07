@@ -129,24 +129,24 @@ export class MyExpensesPage implements OnInit{
         this.activeSegment = 'rejected_trans';
         this.getRejectedTransactions();
 
-        //this.valueGetLength = localStorage.getItem('lengthOfVal');
+        this.valueGetLength = localStorage.getItem('lengthOfValRejc');
         
-        //console.log("aaaaaaaaaa444:::",this.valueGetLength);
+        console.log("aaaaaaaaaa444:::",this.valueGetLength);
 
-        // if(this.valueGetLength == 0 || this.valueGetLength == '' || this.valueGetLength == 1){
+        if(this.valueGetLength == 1){
 
-        //   const alert = await this.alertController.create({
-        //     cssClass: '',
-        //     message: 'Your transactions have been deleted and auto-submitted for approval.',
-        //     mode: 'ios',
-        //     buttons: ['OK']
+          const alert = await this.alertController.create({
+            cssClass: '',
+            message: 'Your transactions have been deleted and auto-submitted for approval.',
+            mode: 'ios',
+            buttons: ['OK']
     
-        //   });
+          });
          
-        //   await alert.present();
-        //   localStorage.removeItem('lengthOfVal');
+          await alert.present();
+          localStorage.removeItem('lengthOfValRejc');
      
-        // }
+        }
       
         
 

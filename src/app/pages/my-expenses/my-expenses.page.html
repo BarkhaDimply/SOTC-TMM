@@ -476,7 +476,7 @@
 
           </ion-card>
 
-          <div *ngFor="let history of transctionHistory">
+          <div *ngFor="let history of rejectedTransctionHistory">
             <div *ngFor="let historyDetails of history.transValue">
 
               <ion-fab *ngIf=" (historyDetails.submission_status == 3 && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
