@@ -18,6 +18,7 @@ export class TripPage implements OnInit {
 
   ngOnInit() {
     this.getMyTrip();
+    localStorage.setItem('isFilterSet', 'false');
   }
 
   getMyTrip(){

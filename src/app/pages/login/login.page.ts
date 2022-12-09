@@ -100,7 +100,7 @@ export class LoginPage implements OnInit {
         this.serverMessage = result.error;
         const alert = await this.alertController.create({
           cssClass: 'my-custom-class',
-          message: 'Invalid User',
+          message: result.msg,
           mode: 'ios',
           buttons: ['OK']
       

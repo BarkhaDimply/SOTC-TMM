@@ -19,6 +19,7 @@ export class StockInventoryManagementPage implements OnInit {
   ngOnInit() {
     this.startScanner();
     this.scanActive = true;
+    localStorage.setItem('isFilterSet', 'false');
   }
 
   async checkPermission() {

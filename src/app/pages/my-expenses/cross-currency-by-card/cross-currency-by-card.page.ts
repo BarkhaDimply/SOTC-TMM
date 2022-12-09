@@ -325,7 +325,7 @@ export class CrossCurrencyByCardPage implements OnInit {
 
          return this.router.navigate(['/tabs/my-expenses']);
       }else{
-        localStorage.removeItem('edit_clicked');
+        //localStorage.removeItem('edit_clicked'); //no need- edit transaction issue change create mode
         const alert = await this.alertController.create({
           cssClass: '',
           message: result.message,

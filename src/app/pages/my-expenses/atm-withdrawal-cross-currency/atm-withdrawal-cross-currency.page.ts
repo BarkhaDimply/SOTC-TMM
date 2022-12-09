@@ -374,7 +374,7 @@ console.log("aaaaaa",this.showCashCurrency);
       }
 
       if(result.status == "false"){
-        localStorage.removeItem('edit_clicked');
+        //localStorage.removeItem('edit_clicked'); //no need- edit transaction issue change create mode
         const alert = await this.alertController.create({
           cssClass: '',
           message: result.message,

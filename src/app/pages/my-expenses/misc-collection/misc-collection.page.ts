@@ -222,7 +222,7 @@ export class MiscCollectionPage implements OnInit {
         });
 
         await alert.present();
-        localStorage.removeItem('edit_clicked');
+        //localStorage.removeItem('edit_clicked'); //no need- edit transaction issue change create mode
         return;
       }
        if(result.message == "success") {

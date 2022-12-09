@@ -45,6 +45,9 @@ export class CustomerEngagementPage implements OnInit {
     
 
   ngOnInit() {
+
+    localStorage.setItem('isFilterSet', 'false');
+    
     setTimeout(() => {
       this.swiper.swiperRef.slideTo(1);
     },200);

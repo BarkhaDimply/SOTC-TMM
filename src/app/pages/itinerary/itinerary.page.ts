@@ -31,6 +31,8 @@ export class ItineraryPage implements OnInit{
   }
   ngOnInit(): void {
 
+    localStorage.setItem('isFilterSet', 'false');
+
     this.checkPermission();
 
     this.auth.getUserStatus.subscribe(val => {

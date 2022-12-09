@@ -51,12 +51,17 @@ export class MembersListFilterPage implements OnInit {
 
     this.getFlightData();
 
+   
+
+    if(localStorage.getItem("isFilterSet") == 'false'){
+      this.getFlightCode=[];
+      this.keyOfDateMemeberFilter=[];
+      this.keyOfTimeMemeberFilter=[];
+    }
+
+
     this.actRoute.queryParams.subscribe(async (params) => {
       this.keyReview = params.activeSegment
-
-      console.log("this.keyReview::::",this.keyReview);
-
-      
 
     if(this.keyReview == 'arrival_departure'){ 
       this.activeSegment = "arr";
@@ -70,17 +75,21 @@ export class MembersListFilterPage implements OnInit {
   }
 
   back(){
-    this.filterFlightCode='';
+   
     this.location.back();
+    this.getFlightCode=[];
+    this.keyOfDateMemeberFilter=[];
+    this.keyOfTimeMemeberFilter=[];
+    
   }
 
   getFlightData(){
 
     var getFlightCodeV: any = [];
 
-    this.user.members_data.forEach((element) => {     console.log("aaa:::",element);
+    this.user.members_data.forEach((element) => {     
  
-      if(element.flight != ''){
+      if(element.flight != ''){ console.log("in:::");
         var flCode = ""
         element.flight.forEach(item => {
           flCode = item.dep_code + "-" + item.arr_code
@@ -96,12 +105,20 @@ export class MembersListFilterPage implements OnInit {
   }
 
   getSelectedFlCode(event: any) {
+
     this.filterFlightCode = event.target.textContent;
+    
+    this.filterFlightDate=[];
+    this.keyOfDateMemeberFilter=[];
+    console.log("flight:::::",this.filterFlightCode);
+    this.keyOfTimeMemeberFilter=[];
+    
     this.getFlightDataBySector()
     
   }
 
   getSelectedFlDate(event: any) { 
+   
     this.keyOfTimeMemeberFilter=[];
 
     this.filterFlightDate = event.target.textContent;
@@ -138,7 +155,10 @@ export class MembersListFilterPage implements OnInit {
   }
 
   getFlightDataBySector(){ 
-    //this.globalService.presentLoadingMemeber();
+
+    this.keyOfDateMemeberFilter=[];
+
+    this.globalService.presentLoadingMemeber();
     var Users:string = localStorage.getItem("user")
     let params:any = {}
     params.sector =  this.filterFlightCode
@@ -147,12 +167,12 @@ export class MembersListFilterPage implements OnInit {
 
     console.log("filter params::",params);
 
-    this.keyOfDateMemeberFilter = [];
+    
 
     this.apiService.getFlightDataBySector(params).subscribe(async (result: any) => {
     
       if(result.status === true) {
-        this.globalService.dismissLoading();
+      
         localStorage.setItem("Flight_code",JSON.stringify(result.data));
 
         Object.entries(result.data).forEach(([DateKey]) => {
@@ -160,7 +180,7 @@ export class MembersListFilterPage implements OnInit {
 
           console.log("filter data::",this.keyOfDateMemeberFilter);
         });
-
+        this.globalService.dismissLoading();
       }else{
         const alert = await this.alertController.create({
           cssClass: '',

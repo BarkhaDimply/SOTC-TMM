@@ -15,7 +15,7 @@
         <div class="d-flex" *ngIf="!OTP_box">
         <input style="width: 20%;" [disabled]="loginForm.invalid" type="text" value="91" readonly placeholder="+91"> &nbsp;
 
-        <input formControlName="manager_number" [disabled]="loginForm.invalid" id="manager_number" placeholder="8888888888" type="text" autocapitalize="off">
+        <input formControlName="manager_number" [disabled]="loginForm.invalid" id="manager_number" placeholder="8888888888" type="number" autocapitalize="off">
         </div>
 
         <ng-container *ngFor="let validation of validationMessages.manager_number">

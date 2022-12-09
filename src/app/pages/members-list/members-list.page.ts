@@ -103,12 +103,12 @@ export class MembersListPage {
 
     console.log("members_data::::",this.user.members_data);
   
- 
+   
   }
 
   ngOnInit() {  
 
-  
+
 
     this.auth.getUserStatus.subscribe(val => {
       if (val !== '0') {
@@ -121,6 +121,13 @@ export class MembersListPage {
 
     //if(localStorage.getItem("Flight_code")){
       this.actRoute.queryParams.subscribe(params => {  console.log("ggggggg:::::")
+
+      console.log("local filt::::::",localStorage.getItem("isFilterSet"));
+
+      if(localStorage.getItem("isFilterSet") == 'false'){
+        this.resetFilter();
+      }
+
       if (this.router.getCurrentNavigation().extras.state) {    console.log("ggggggg111111:::::")
 
         this.getFilterMemberList  = this.router.getCurrentNavigation().extras.state.details;
@@ -144,6 +151,8 @@ export class MembersListPage {
             this.getIsFilter= localStorage.getItem("isFilterSet");
             this.getFilterMemberListArray = [];
             this.getFilterMemberListArrayDep.push(this.getFilterMemberList[i].members) 
+
+            console.log("in dep list:::::",this.getFilterMemberListArrayDep);
 
 
           }else{ 
@@ -537,6 +546,8 @@ export class MembersListPage {
   resetFilter(){ 
 
     localStorage.removeItem("isFilterSet");
+
+
     this.getIsFilter = false;
     
     this.isFilter = false;
@@ -562,10 +573,6 @@ export class MembersListPage {
 
       this.members_data = this.user.members_data;
      }
-
-     
-
-     
 
     if(this.isRoomingFilter == true){
       this.rooming();
@@ -852,7 +859,7 @@ export class MembersListPage {
           }) ;
 
          
-        });  console.log("aaaa",this.totalDataRoomFilter);
+        });  //console.log("aaaa",this.totalDataRoomFilter);
       
 
         // this.totalDataRoom = this.totalDataRoom.filter(item => {     
@@ -967,12 +974,9 @@ export class MembersListPage {
         
             console.log("aaaa",params);
 
-
+            this.globalServices.presentLoading();
 
             this.apiService.updateNoShowStatus(params).subscribe((result: any) => {
-             
-
-              this.globalServices.presentLoading();
            // console.log("result:::",result);
             if(result.status == 'success'){
 
@@ -987,6 +991,18 @@ export class MembersListPage {
               this.auth.login(request).subscribe(async (result: any) => {
                 this.globalServices.dismissLoading();
                 if (result?.status === true) {
+
+                  const alert = await this.alertController.create({
+                    cssClass: '',
+                    message: '"No Show" marked succesfully',
+                    mode: 'ios',
+                    buttons: ['OK']
+            
+                  });
+            
+                  await alert.present();
+
+                 
         
                   localStorage.setItem('user', JSON.stringify(result.data));
                   this.auth.getUserStatus.subscribe(val => {

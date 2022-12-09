@@ -29,7 +29,7 @@ export class NotificationPage implements OnInit {
 
   ngOnInit() {
     this.getNorification();
-   
+    localStorage.setItem('isFilterSet', 'false');
    
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id');

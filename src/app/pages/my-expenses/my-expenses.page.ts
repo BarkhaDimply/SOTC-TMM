@@ -92,11 +92,12 @@ export class MyExpensesPage implements OnInit{
     private router: Router,
   ) {
     this.user = this.auth.user;
-
+   
   }
   
   ngOnInit(){
   
+    localStorage.setItem('isFilterSet', 'false');
 
     this.showCurrentBalance();
     setTimeout(() => {
@@ -122,7 +123,7 @@ export class MyExpensesPage implements OnInit{
       if(this.getNotiKey == '28'){  console.log("innn 28");
         this.activeSegment = "allTrans";
         this.getTransactions();
-      //  this.refRejected();
+        this.getRejectedTransactions();
        
       }else if(this.getNotiKey == '27'){ console.log("innn 27");
 
@@ -153,6 +154,7 @@ export class MyExpensesPage implements OnInit{
      }else{ console.log("innnelse");
         this.getTransactions();
         this.getRejectedTransactions();
+       
     }
 
      // this.refRejected();
@@ -447,12 +449,23 @@ async deleteTRansactionHistory(details:any) {   console.log("aaaaaaaaaa",details
         handler: () => {
           console.log('Confirm Okay');
           //this.globalService.presentLoading();
-          this.apiServices.deleteTransactionHistory(details.id).subscribe((result:any) =>{
+          this.apiServices.deleteTransactionHistory(details.id).subscribe(async (result:any) =>{
 
 
             if(result.message == 'Success'){
 
-              this.globalService.presentToast('Transaction deleted successfully 111');
+              const alert = await this.alertController.create({
+               // cssClass: 'remark-alert',
+               // header: 'Remark',
+          
+                message: 'Transaction deleted successfully',
+                mode: 'ios',
+                buttons: ['OK']
+              });
+          
+              await alert.present();
+
+             // this.globalService.presentToast('Transaction deleted successfully');
 
               this.refressfunc();
               this.refRejected();
@@ -563,35 +576,65 @@ async addTransactionHistory(){
   params.manager_id = localStorage.getItem("manager_id");
   params.transaction_ids = JSON.stringify(transValue);
 
-  this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
-   // this.globalService.dismissLoading();
-    if(result.status == false){
-
-      const alert = await this.alertController.create({
-        cssClass: '',
-        message: result.message,
-        mode: 'ios',
-        buttons: ['OK']
-
-      });
-
-      await alert.present();return;
-    }
-     if(result.status == true) {
 
 
-      const alert = await this.alertController.create({
-        cssClass: '',
-        message: 'Transaction Submit',
-        mode: 'ios',
-       buttons: ['OK']
+  const alert = await this.alertController.create({
+    //header: 'Mark as "NO SHOW"?',
+    message: '<strong>Are you sure you want to submit your transactions for approval?</strong>',
+    mode: 'ios',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: (blah) => {
+          console.log('Confirm Cancel: blah',blah);
+          
+        }
+      }, {
+        text: 'Confirm',
+        handler: () => {
+         
+          this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
+            // this.globalService.dismissLoading();
+             if(result.status == false){
+         
+               const alert = await this.alertController.create({
+                 cssClass: '',
+                 message: result.message,
+                 mode: 'ios',
+                 buttons: ['OK']
+         
+               });
+         
+               await alert.present();return;
+             }
+              if(result.status == true) {
+         
+         
+               const alert = await this.alertController.create({
+                 cssClass: '',
+                 message: 'Transaction Submit',
+                 mode: 'ios',
+                buttons: ['OK']
+         
+               });
+         
+               await alert.present();
+              this.refressfunc();
+               }
+           });
 
-      });
-
-      await alert.present();
-     this.refressfunc();
+        }
       }
+    ]
   });
+
+  await alert.present();
+
+
+
+ 
 
 }
 
@@ -630,7 +673,7 @@ onSlideChange(event) {
 /********************Rejected Trans************************/
 
 
-getRejectedTransactions(){
+getRejectedTransactions(){  
 
   if(localStorage.getItem("listOfRejectedTransaction") != ''){
     
@@ -641,6 +684,8 @@ getRejectedTransactions(){
   }
 
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
+
+    console.log("rej result::::",result);
 
     this.rejectedTransctionHistory =[];
    
@@ -655,7 +700,7 @@ getRejectedTransactions(){
 
           localStorage.setItem("listOfRejectedTransaction", JSON.stringify(this.rejectedTransctionHistory));
        
-         
+         console.log("rej trans::::",this.rejectedTransctionHistory);
       });
 
 
@@ -672,7 +717,7 @@ getRejectedTransactions(){
 }
 
 
-addTransactionHistoryReview(){
+  async addTransactionHistoryReview(){
 
 
 
@@ -702,38 +747,42 @@ addTransactionHistoryReview(){
   params.transaction_ids = JSON.stringify(transValue);
 
 
-  this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
 
-    if(result.status == "false"){
-      const alert = await this.alertController.create({
-        cssClass: '',
-        message: result.message,
-        mode: 'ios',
-        buttons: ['OK']
 
-      });
+          this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
 
-      await alert.present();
-      return;
+            if(result.status == "false"){
+              const alert = await this.alertController.create({
+                cssClass: '',
+                message: result.message,
+                mode: 'ios',
+                buttons: ['OK']
+        
+              });
+        
+              await alert.present();
+              return;
+        
+            }
+             if(result.status == true) {
+              const alert = await this.alertController.create({
+                cssClass: '',
+                message: 'Submitted Successfully',
+                mode: 'ios',
+                buttons: ['OK']
+        
+              });
+        
+              await alert.present();
+        
+               this.refressfunc();
+               //this.refRejected();
+        
+               return this.router.navigate(['/tabs/itinerary']);
+              }
+          });
 
-    }
-     if(result.status == true) {
-      const alert = await this.alertController.create({
-        cssClass: '',
-        message: 'Submitted Successfully',
-        mode: 'ios',
-        buttons: ['OK']
 
-      });
-
-      await alert.present();
-
-       this.refressfunc();
-       //this.refRejected();
-
-       return this.router.navigate(['/tabs/itinerary']);
-      }
-  });
 
 }
 

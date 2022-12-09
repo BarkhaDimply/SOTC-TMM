@@ -38,9 +38,9 @@ export class AtmWithdrawalsameCurrencyPage implements OnInit {
       this.actRoute.queryParams.subscribe(params => {
         if (this.router.getCurrentNavigation().extras.state) {
           this.getEditValue  = this.router.getCurrentNavigation().extras.state.details;
-          this.amtWithdraw =  this.getEditValue.credit;
+          this.amtWithdraw =  this.getEditValue.debit;
          this.currencyFromDropdown1 =  this.getEditValue.creditCurrency;
-         this.cashRecived = this.getEditValue.debit;
+         this.cashRecived = this.getEditValue.credit;
          this.currencyFromDropdown1 =  this.getEditValue.debitCurrency;
          this.withdrawDate = this.getEditValue.date;
          this.atmWithdrawFee = this.getEditValue.fees;
@@ -229,7 +229,7 @@ export class AtmWithdrawalsameCurrencyPage implements OnInit {
     params.atm_withdrawl_fees = this.atmWithdrawFee;
 
 
-    console.log("aaaaaaaaa:::",params);
+    console.log("aaaaaaaaa555:::",params);
 
     this.apiServices.postCurrencyExchange(params).subscribe(async (result:any) =>{
     //  this.globalService.dismissLoading()
@@ -251,7 +251,7 @@ export class AtmWithdrawalsameCurrencyPage implements OnInit {
 
 
      }else{
-      localStorage.removeItem('edit_clicked');
+      //localStorage.removeItem('edit_clicked'); //no need- edit transaction issue change create mode
       const alert = await this.alertController.create({
         cssClass: '',
         message: result.message,

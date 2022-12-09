@@ -17,6 +17,7 @@
   
       <ion-button class="ml-2" *ngFor="let flCode of getFlightCode"
       [color]="(filterFlightCode === flCode)? 'success':'light'" (click)="getSelectedFlCode($event)">
+     
         <div>{{flCode}}</div>
       </ion-button>
 
@@ -24,7 +25,7 @@
 
       <ion-button class="ml-2" *ngFor="let flDate of keyOfDateMemeberFilter"
         [color]="(filterFlightDate === flDate)? 'success':'light'" (click)="getSelectedFlDate($event)">
-       
+    
         <div>{{flDate}}</div>
       </ion-button>
 
@@ -36,12 +37,14 @@
         </ion-button>
     
 
-
-      <ion-row class="mt-2 mb-2 ml-2 mr-2">
-        <ion-button class="primary-btn" style="color:#fff;" (click)="filterElementsNew()">Apply Filter
+   
+      <ion-row class="mt-2 mb-2 ml-2 mr-2"> 
+        <ion-button  class="primary-btn" style="color:#fff;" (click)="filterElementsNew()">Apply Filter
         </ion-button>
+       
+
       </ion-row>
- 
+      
 
     </div>
   </ion-card>

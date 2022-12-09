@@ -136,7 +136,7 @@
 
                       <ion-col size="2">
                         <ion-avatar>
-                          <img class="img-member-name" style="width: 80%;"
+                          <img class="img-member-name" style="width: 75%;margin-left: 0px;"
                             [src]="'https://ui-avatars.com/api/?name='+familyMembers.name" />
                         </ion-avatar>
                       </ion-col>
@@ -726,7 +726,7 @@
        
 
        <!----------------------------Arrival----------------------------->
-        <div *ngIf="isArrivalFilter || isAirline">
+        <!-- <div *ngIf="isArrivalFilter || isAirline">
           <div class="w-100 d-flex form-group">
             <ion-col size="4">
               <label class="lable-radio"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; By Sector
@@ -740,7 +740,7 @@
                   (change)="onItemChange($event.target.value)">
                 <span class="radio-checkmark"></span></label>
             </ion-col>
-            <!-- <ion-col size="4" *ngIf="isAirline == true"> -->
+             <ion-col size="4" *ngIf="isAirline == true"> 
             <ion-col size="5">
               <label class="lable-radio"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; By Flight Name
                 <input type="radio" name="radio" class="form-control" value="byFlightName"
@@ -782,7 +782,7 @@
             </ion-button>
           </div>
 
-        </div>
+        </div> -->
 
 
         <!----------------Rooming Filter-------------------->
