@@ -1,5 +1,5 @@
 <ion-content>
-  <div class="content" style="background-image: url(assets/images/screen_tour_min.png)">
+  <div class="content" >
 
     <div class="error-message">
       <p *ngFor="let err of errorMessage" class="error">{{ err }}</p>
@@ -26,14 +26,21 @@
           </div>
         </ng-container>
       </div>
+
+     
       <div class="form-group">
 
-        <input placeholder="OTP eg. 123456" type="number" autocapitalize="off" [(ngModel)]="otp" *ngIf="OTP_box" [ngModelOptions]="{standalone: true}" required>
+       
+      <ng-otp-input   *ngIf="OTP_box" name="otp" ngDefaultControl [(ngModel)]="otp" [config]="{length:4}" [ngModelOptions]="{standalone: true}" required></ng-otp-input>
+
+       
+
+        <!-- <input placeholder="OTP eg. 123456" type="number" autocapitalize="off" [(ngModel)]="otp" *ngIf="OTP_box" [ngModelOptions]="{standalone: true}" required> -->
 
       </div>
       <div class="form-group">
         <ion-button [disabled]="loginForm.invalid" class="primary-btn" type="submit" *ngIf="!OTP_box">Submit</ion-button>
-        <ion-button (click)="verifyOtp()" class="secondary-btn" type="button" *ngIf="OTP_box">Submit</ion-button>
+        <ion-button (click)="verifyOtp()" style="margin-top: 10px;    width: 98%;" class="primary-btn" type="button" *ngIf="OTP_box">Submit</ion-button>
       </div>
 
 

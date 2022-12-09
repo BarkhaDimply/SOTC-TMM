@@ -52,6 +52,7 @@
     "cordova-plugin-splashscreen": "^6.0.2",
     "cordova-sqlite-storage": "^6.0.0",
     "firebase": "^9.6.11",
+    "ng-otp-input": "^1.8.5",
     "rxjs": "~6.6.0",
     "swiper": "^8.4.5",
     "tslib": "^2.2.0",

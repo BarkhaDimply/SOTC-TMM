@@ -139,6 +139,8 @@ export class LoginPage implements OnInit {
   async verifyOtp()  
   {
 
+    console.log("otp:::",this.otp);
+
 
     if(typeof this.otp == 'undefined'){
       const alert = await this.alertController.create({
