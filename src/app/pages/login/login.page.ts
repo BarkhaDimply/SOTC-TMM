@@ -34,6 +34,8 @@ export class LoginPage implements OnInit {
     ],
   };
   recaptchaVerifier = "435435";
+  valueGet: any;
+  getOtp: any;
 
   constructor(
     private globalService: GlobalService,
@@ -136,11 +138,17 @@ export class LoginPage implements OnInit {
     });
   }
 
+  onOtpChange(otp) {
+
+    if (otp.length === 4) {    
+        this.getOtp = otp
+    }
+}
+
   async verifyOtp()  
   {
 
-    console.log("otp:::",this.otp);
-
+    this.otp = this.getOtp
 
     if(typeof this.otp == 'undefined'){
       const alert = await this.alertController.create({
@@ -155,8 +163,10 @@ export class LoginPage implements OnInit {
       return false;
     }
 
-    if(atob(this.loginResponse.otp).toString() === this.otp.toString()){
+    if(atob(this.loginResponse.otp).toString() === this.otp.toString()){ 
+
       this.tourManagerActiveGroup(this.loginResponse.manager_id);
+
     }else{
       //this.globalService.presentToast("Plase enter valid otp");
 

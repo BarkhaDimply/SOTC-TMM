@@ -28,10 +28,10 @@
       </div>
 
      
-      <div class="form-group">
+      <div class="form-group" class="d-flex">
 
        
-      <ng-otp-input   *ngIf="OTP_box" name="otp" ngDefaultControl [(ngModel)]="otp" [config]="{length:4}" [ngModelOptions]="{standalone: true}" required></ng-otp-input>
+      <ng-otp-input (onInputChange)="onOtpChange($event)" *ngIf="OTP_box"  ngDefaultControl [(ngModel)]="otp" [config]="{length:4}" [ngModelOptions]="{standalone: true}" required></ng-otp-input>
 
        
 

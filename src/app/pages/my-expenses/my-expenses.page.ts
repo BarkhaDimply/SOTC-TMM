@@ -112,7 +112,7 @@ export class MyExpensesPage implements OnInit{
 
     this.manager_name=localStorage.getItem("manager_name");
 
-    this.actRoute.queryParams.subscribe(async params => {  console.log("ffffffffff");
+    this.actRoute.queryParams.subscribe(async params => {  //console.log("ffffffffff");
 
       if (this.router.getCurrentNavigation().extras.state) {
         
@@ -120,19 +120,19 @@ export class MyExpensesPage implements OnInit{
         
       }
 
-      if(this.getNotiKey == '28'){  console.log("innn 28");
+      if(this.getNotiKey == '28'){  //console.log("innn 28");
         this.activeSegment = "allTrans";
         this.getTransactions();
         this.getRejectedTransactions();
        
-      }else if(this.getNotiKey == '27'){ console.log("innn 27");
+      }else if(this.getNotiKey == '27'){ //console.log("innn 27");
 
         this.activeSegment = 'rejected_trans';
         this.getRejectedTransactions();
 
         this.valueGetLength = localStorage.getItem('lengthOfValRejc');
         
-        console.log("aaaaaaaaaa444:::",this.valueGetLength);
+        //console.log("aaaaaaaaaa444:::",this.valueGetLength);
 
         if(this.valueGetLength == 1){
 
@@ -151,7 +151,7 @@ export class MyExpensesPage implements OnInit{
       
         
 
-     }else{ console.log("innnelse");
+     }else{ //console.log("innnelse");
         this.getTransactions();
         this.getRejectedTransactions();
        
@@ -228,7 +228,7 @@ export class MyExpensesPage implements OnInit{
 
       this.getCurrBalance = result.data;
 
-      console.log("get bal:::", this.getCurrBalance);
+      //console.log("get bal:::", this.getCurrBalance);
 
       localStorage.setItem("expensesData", JSON.stringify(result.data));
       });
@@ -289,6 +289,8 @@ export class MyExpensesPage implements OnInit{
 
           localStorage.setItem("listOfAllTransaction", JSON.stringify(this.transctionHistory));
        
+
+          console.log("trans::::",this.transctionHistory);
 
       });
 
@@ -427,7 +429,7 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
 });
 }
 
-async deleteTRansactionHistory(details:any) {   console.log("aaaaaaaaaa",details);
+async deleteTRansactionHistory(details:any) {   //console.log("aaaaaaaaaa",details);
   const alert = await this.alertController.create({
     cssClass: '',
     header: 'Delete Transaction!',
@@ -524,7 +526,7 @@ async addTransactionHistory(){
 
   this.getAllTrasactionId = (JSON.parse(localStorage.getItem("listOfAllTransaction")));
 
-  console.log("this.getAllTrasactionId:::::",this.getAllTrasactionId);
+  //console.log("this.getAllTrasactionId:::::",this.getAllTrasactionId);
 
   var transValue:any=[];
 
@@ -533,22 +535,16 @@ async addTransactionHistory(){
     items.transValue.forEach(async item =>{
       this.btnSubstatus = item.submission_status;
 
-      console.log("item.category:::::",item.category);
+      // console.log("item.category:::::",item.category);
 
-      console.log(" item.show_transaction:::::", item.show_transaction);
+      // console.log(" item.show_transaction:::::", item.show_transaction);
 
-      console.log(" item.submission_status", item.submission_status);
+      // console.log(" item.submission_status", item.submission_status);
 
 
       if(item.category != 'BALANCE ADDED' && item.category != 'tm_transfer' && item.show_transaction == 0 && item.submission_status == 0){
       
-   
-      
         transValue.push(item.id);
-
-
-
-
         this.hideSubmitButton=false;
       }
 
@@ -685,7 +681,7 @@ getRejectedTransactions(){
 
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
 
-    console.log("rej result::::",result);
+  //  console.log("rej result::::",result);
 
     this.rejectedTransctionHistory =[];
    
@@ -717,8 +713,7 @@ getRejectedTransactions(){
 }
 
 
-  async addTransactionHistoryReview(){
-
+  async addTransactionHistoryReview(id:any){
 
 
   this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
@@ -729,7 +724,17 @@ getRejectedTransactions(){
     items.transValue.forEach(async item =>{
 
       item.id.forEach(async getId =>{
-        transValue.push(getId)
+
+        console.log("id rejc::::",id);
+
+        console.log("getId rejc::::",getId);
+
+        //var pushGetId = getId
+
+        transValue.push(id, getId)
+
+        console.log("transValue rejc::::",transValue);
+        
 
       });
 

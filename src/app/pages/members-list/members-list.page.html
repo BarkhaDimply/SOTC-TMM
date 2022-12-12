@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
 
   <ion-refresher  slot="fixed" pullFactor="0.5" pullMin="50" pullMax="200"  (ionRefresh)="refreshPage()"></ion-refresher>
 
@@ -71,7 +71,7 @@
       </span> 
     </div> -->
 
-    <ion-segment #segment (ionChange)="segmentChanged($event)" mode="ios" scrollable value="airline">
+    <ion-segment #segment (ionChange)="segmentChanged($event)" mode="ios" value="airline">
       
       <ion-segment-button value="airline">
         <ion-label>Departure</ion-label>

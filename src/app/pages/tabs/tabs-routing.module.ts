@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('../members-list/members-list.module').then(m => m.MembersListPageModule)
       },
       {
+        path: 'add-expense',
+        loadChildren: () => import('../my-expenses/transaction-modal/transaction-modal.module').then(m => m.TransactionModalPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/itinerary',
         pathMatch: 'full'

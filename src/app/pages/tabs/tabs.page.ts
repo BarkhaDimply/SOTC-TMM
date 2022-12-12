@@ -45,14 +45,18 @@ export class TabsPage implements OnInit{
         ([key, value]) => {
 
           this.transactionValue.push({transKey:key,transValue:value});
-           console.log("Trand11",this.transactionValue);
+           
           this.transactionValue.forEach(itms => {
             itms.transValue.forEach(itm=>{
 
-
-              if((itm.submission_status == 1 || itm.submission_status == 3) && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
+              //if((itm.submission_status == 1 || itm.submission_status == 3) && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
+                
+              if(itm.submission_status == 1 && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
+                
+                console.log("aaaaa::::;",itm);
+                
                 this.btnSubstatus =false;
-                console.log("status",this.btnSubstatus)
+               
 
 
               }

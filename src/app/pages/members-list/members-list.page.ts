@@ -324,7 +324,7 @@ export class MembersListPage {
         this.roomLength =0;
       }
 
-      Object.entries(result["data"]).forEach(
+      Object?.entries(result["data"])?.forEach(
         ([key1, value]) => {
           var roomVal: any = value
           for (const [key, value] of Object.entries(roomVal.rooms)) {
