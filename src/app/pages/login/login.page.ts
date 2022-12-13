@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
@@ -9,12 +9,15 @@ import { GlobalService } from 'src/app/services/global/global.service';
 import { FcmService } from 'src/app/services/fcm/fcm.service';
 import { ApiService } from 'src/app/services/api/api.service';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+
+
   loginForm: UntypedFormGroup;
   errorMessage: any;
   serverMessage = [];
@@ -34,8 +37,10 @@ export class LoginPage implements OnInit {
     ],
   };
   recaptchaVerifier = "435435";
-  valueGet: any;
+
   getOtp: any;
+
+
 
   constructor(
     private globalService: GlobalService,
@@ -140,6 +145,8 @@ export class LoginPage implements OnInit {
 
   onOtpChange(otp) {
 
+
+
     if (otp.length === 4) {    
         this.getOtp = otp
     }
@@ -147,6 +154,8 @@ export class LoginPage implements OnInit {
 
   async verifyOtp()  
   {
+
+
 
     this.otp = this.getOtp
 

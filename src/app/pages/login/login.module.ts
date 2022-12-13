@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -8,7 +8,9 @@ import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
 
-import { NgOtpInputModule } from 'ng-otp-input';
+import { NgOtpInputComponent, NgOtpInputModule } from 'ng-otp-input';
+
+
 
 @NgModule({
   imports: [
