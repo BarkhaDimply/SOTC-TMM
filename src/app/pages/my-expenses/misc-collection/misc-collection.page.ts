@@ -137,7 +137,33 @@ export class MiscCollectionPage implements OnInit {
    async addMiscCollectionExcahnge () {
 
 
+    console.log("amt:::",this.currencyFromDropdown);
 
+    
+    if(this.currencyFromDropdown == ""){
+      const alert = await this.alertController.create({
+        cssClass: '',
+        message: 'Please choose currency',
+        mode: 'ios',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return this.router.navigate(['/tabs/my-expenses/misc-collection']);
+    }
+   
+
+    if(this.paidAmt == ""){
+      const alert = await this.alertController.create({
+        cssClass: '',
+        message: 'Please enter received amount',
+        mode: 'ios',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return this.router.navigate(['/tabs/my-expenses/misc-collection']);
+    }
 
     if (this.paidAmt < 0) {
       const alert = await this.alertController.create({

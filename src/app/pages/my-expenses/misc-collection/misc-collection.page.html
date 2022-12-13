@@ -56,11 +56,14 @@
           <ion-col>
             <div class="form-group">
               <label>Date of Transaction</label>
-              <input *ngIf="selectedDate != 0" readonly type="date"  [(ngModel)]="selectedDate" class="form-control"  [max]="todayDateTime" placeholder="DD-MM-YYYY"/>
+
+              <input type="date" [(ngModel)]="selectedDate" [max]="todayDateTime" class="form-control" placeholder="Date" />
+
+              <!-- <input *ngIf="selectedDate != 0" readonly type="date"  [(ngModel)]="selectedDate" class="form-control"  [max]="todayDateTime" placeholder="DD-MM-YYYY"/>
             
 
               <input *ngIf="selectedDate == 0" type="date"  [(ngModel)]="selectedDate" class="form-control"  [max]="todayDateTime" placeholder="DD-MM-YYYY"/>
-            
+             -->
             </div>
             <div class="form-group">
               <label>Description</label>
