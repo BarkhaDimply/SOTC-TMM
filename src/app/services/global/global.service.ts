@@ -5,6 +5,7 @@ import { monthsNumbers } from '../utils';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { Camera, CameraResultType } from '@capacitor/camera';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class GlobalService {
   loading: HTMLIonLoadingElement;
   selectedLang: string;
   isLoading = false;
-  
+  fileUploadSize = 6291456;
 
   constructor(
     private loadingController: LoadingController,
@@ -111,6 +112,43 @@ export class GlobalService {
   }
 
 
+  async takePhoto() {
+    let imageUrl = '';
+    const errorMessage = [];
+    const permission = await Camera.checkPermissions();
 
+    if (permission.photos !== 'granted') {
+      await Camera.requestPermissions();
+    }
+
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl
+    });
+
+    imageUrl = image.dataUrl;
+    const selectedFile = await fetch(imageUrl).then(r => r.blob());
+    if (this.calculateImageSize(imageUrl) > this.fileUploadSize) {
+      errorMessage.push('File size exceed');
+      imageUrl = '';
+    }
+
+    return { selectedFile, imageUrl, errorMessage };
+  }
+
+  calculateImageSize(base64String) {
+    let padding;
+    if (base64String.endsWith('==')) {
+      padding = 2;
+    } else if (base64String.endsWith('=')) {
+      padding = 1;
+    } else {
+      padding = 0;
+    }
+
+    const base64StringLength = base64String.length;
+    return (base64StringLength / 4) * 3 - padding;
+  }
 
 }

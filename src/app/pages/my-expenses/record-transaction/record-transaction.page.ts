@@ -362,23 +362,32 @@ export class RecordTransactionPage implements OnInit {
 
   async openGallery() {
 
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos, // Camera, Photos or Prompt!
-      saveToGallery: true,
-      // width: 200,
-      // height: 200,
+    this.globalService.takePhoto().then(result => {
+      // this.selectedFile = result.selectedFile;
+      // this.errorMessage = result.errorMessage;
+
+      this.imageDisplay = result.imageUrl;
+      this.imgPath = result.imageUrl;
+     
     });
 
-    console.log("aaaaaaaaaaaa:::",image);
+    // const image = await Camera.getPhoto({
+    //   quality: 90,
+    //   allowEditing: false,
+    //   resultType: CameraResultType.DataUrl,
+    //   source: CameraSource.Photos, // Camera, Photos or Prompt!
+    //   saveToGallery: true,
+    //   // width: 200,
+    //   // height: 200,
+    // });
 
-    if (image) {
-      this.imageDisplay = image.dataUrl;
-      this.imgPath = image.dataUrl;
+    // console.log("aaaaaaaaaaaa:::",image);
 
-    }
+    // if (image) {
+    //   this.imageDisplay = image.dataUrl;
+    //   this.imgPath = image.dataUrl;
+
+    // }
   }
 
   keyPressNumbers(event) {
