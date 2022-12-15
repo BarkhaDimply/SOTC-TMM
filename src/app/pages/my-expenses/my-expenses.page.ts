@@ -77,6 +77,8 @@ export class MyExpensesPage implements OnInit{
   valueGetLength: any;
   lengthOfValAll: any;
   lengthOfValRejc:any;
+  user_temp_data: any;
+  active_group: any;
   
   
   constructor(
@@ -802,7 +804,43 @@ editReviewTransaction (details:any){
 
 }
 
+refreshPage(){
+  this.globalService.presentLoading();
 
+  this.user_temp_data = JSON.parse(localStorage.getItem("user"));
+  this.user_temp_data['itinerary'] =  this.user.itinerary
+
+  this.active_group = JSON.parse(localStorage.getItem('active_group'));
+
+    let request = {
+      'login_code': this.active_group[0]['tourCode'],
+      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+    };
+
+    this.auth.login(request).subscribe(async (result: any) => {
+
+      if (result?.status === true) {
+
+        localStorage.setItem('user', JSON.stringify(result.data));
+        window.location.reload();
+      } else {
+        this.globalService.dismissLoading();
+        const alert = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          message: result.error,
+          mode: 'ios',
+          buttons: ['OK']
+      
+        });
+      
+        await alert.present();
+        return;
+      }
+    });
+
+    
+
+}
 
 
 }

@@ -5,7 +5,7 @@ import { monthsNumbers } from '../utils';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Camera, CameraResultType } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 
 @Injectable({
   providedIn: 'root'
@@ -129,13 +129,10 @@ export class GlobalService {
 
     imageUrl = image.dataUrl;
     const selectedFile = await fetch(imageUrl).then(r => r.blob());
-    if (this.calculateImageSize(imageUrl) > this.fileUploadSize) {
-      errorMessage.push('File size exceed');
-      imageUrl = '';
-    }
-
+   
     return { selectedFile, imageUrl, errorMessage };
   }
+
 
   calculateImageSize(base64String) {
     let padding;

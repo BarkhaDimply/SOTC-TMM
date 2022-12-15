@@ -26,6 +26,8 @@ export class AtmWithdrawalsameCurrencyPage implements OnInit {
   autoCalculateVlaue: string;
   isModal: boolean;
   debit_image: any;
+  debit_image_new: any;
+  image_type: boolean;
 
 
   constructor(private apiServices:ApiService,private location: Location,
@@ -81,22 +83,28 @@ export class AtmWithdrawalsameCurrencyPage implements OnInit {
   }
 
   async  openGallery(){
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos, // Camera, Photos or Prompt!
-      saveToGallery: true,
-     // width: 200,
-     // height: 200,
-  });
 
-  if (image) {
-    this.imageDisplay =image.dataUrl;
-    this.imgPath = image.dataUrl;
+    this.globalService.takePhoto().then(result => {
+      if (result.imageUrl) {
+      this.imageDisplay = result.imageUrl;
+      this.imgPath = result.imageUrl;
+      }
+    });
 
+  //   const image = await Camera.getPhoto({
+  //     quality: 90,
+  //     allowEditing: false,
+  //     resultType: CameraResultType.DataUrl,
+  //     source: CameraSource.Photos, // Camera, Photos or Prompt!
+  //     saveToGallery: true,
+  // });
+
+  // if (image) {
+  //   this.imageDisplay =image.dataUrl;
+  //   this.imgPath = image.dataUrl;
+
+  // }
   }
-   }
 
    async atmWithdrawSameCurrency(){
 
@@ -208,17 +216,38 @@ export class AtmWithdrawalsameCurrencyPage implements OnInit {
     params.date_of_transaction = this.withdrawDate;
     params.transaction_from = 'Card';
     params.driver_name = localStorage.getItem("manager_name");
-    if(localStorage.getItem('edit_clicked') == 'yes'){
+    // if(localStorage.getItem('edit_clicked') == 'yes'){
+    //   params.token = this.getEditValue.token;
+    //   params.mode = "edit";
+    //   params.image  = this.getEditValue.debit_image;
+    //   params.image_type = false;
+    //   } else {
+    //     params.token = "";
+    //     params.mode = "create";
+    //   params.image = this.imgPath;
+    //   params.image_type = true;
+    //   }
+
+    if (localStorage.getItem('edit_clicked') == 'yes') {
+
+      if(this.debit_image != ''){
+        this.debit_image_new = this.getEditValue.debit_image;
+        this.image_type = false;
+      }else{
+        this.debit_image_new = this.imgPath;
+        this.image_type = true;
+      }
+
       params.token = this.getEditValue.token;
       params.mode = "edit";
-      params.image  = this.getEditValue.debit_image;
-      params.image_type = false;
-      } else {
-        params.token = "";
-        params.mode = "create";
+      params.image = this.debit_image_new  
+      params.image_type = this.image_type;
+    } else {
+      params.token = "";
+      params.mode = "create";
       params.image = this.imgPath;
       params.image_type = true;
-      }
+    }
 
     params.transaction_type = "atm_same_currency";
     params.description = this.withdrawDescription;

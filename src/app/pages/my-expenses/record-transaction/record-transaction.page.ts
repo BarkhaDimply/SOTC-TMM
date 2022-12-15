@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import { GlobalService } from 'src/app/services/global/global.service';
@@ -6,6 +6,7 @@ import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { appendFile } from 'fs';
 
 @Component({
   selector: 'app-record-transaction',
@@ -48,6 +49,8 @@ export class RecordTransactionPage implements OnInit {
   credit_transaction_by: any;
   transctionHistory: any = [];
   hideSubCat = true;
+  image_type: boolean;
+  debit_image_new: any;
 
   constructor(private apiService: ApiService, private location: Location, private datePipe: DatePipe,
     private alertCtrl: AlertController, private router: Router,
@@ -79,7 +82,7 @@ export class RecordTransactionPage implements OnInit {
 
           //this.base64textString.push('data:image/png;base64,' + btoa(this.debit_image));
 
-         // console.log("aaaaaaaaaaaa",this.base64textString);
+          console.log("debit_image::::",this.debit_image);
 
 
 
@@ -171,8 +174,6 @@ export class RecordTransactionPage implements OnInit {
   selectCurrencyDropdown(name: any): void {
     this.selectedCurrency = name
   }
-
-
 
   async postRegularPayment() {
 
@@ -268,18 +269,18 @@ export class RecordTransactionPage implements OnInit {
     // }
 
 
+    console.log("curr::::",this.selectedCurrency );
     var Users: string = localStorage.getItem("user")
-    if (typeof this.selectedCurrency == 'undefined' || this.selectedCurrency == '') {
+     if (typeof this.selectedCurrency == 'undefined' || this.selectedCurrency == '') {
+
       this.selectedCurrency = this.showCurrency[0]
 
     }
-    // if (this.selectedCurrency == "") {
-    //   this.selectedCurrency = this.showCurrency[0]
-    // }
+ 
     if (this.handoverType == "") {
       this.handoverType = 'Cash'
     }
-    //this.globalService.presentLoading();
+
 
     let params: any = {}
     params.group_id = JSON.parse(Users).order_id;
@@ -289,12 +290,40 @@ export class RecordTransactionPage implements OnInit {
     params.date_of_transaction = this.selectedDate;
     params.transaction_from = this.handoverType;
     params.driver_name = localStorage.getItem("manager_name");
+
+    // if (localStorage.getItem('edit_clicked') == 'yes') {
+    //   params.token = this.token;
+    //   params.mode = "edit";
+    //   //this.imgPath = this.debit_image     
+    //   if(this.imgPath)
+    //   {
+    //     params.image  = this.imgPath;
+    //     params.image_type = true;
+    //   }else{     
+    //     params.image_type = false;
+    //   }
+    // } else {
+    //   params.token = "";
+    //   params.mode = "create";
+    //   params.image = this.imgPath;
+    //   params.image_type = true;
+    // }
+
+
     if (localStorage.getItem('edit_clicked') == 'yes') {
+
+      if(this.debit_image != ''){
+        this.debit_image_new = this.debit_image;
+        this.image_type = false;
+      }else{
+        this.debit_image_new = this.imgPath;
+        this.image_type = true;
+      }
+
       params.token = this.token;
       params.mode = "edit";
-      //this.imgPath = this.debit_image
-      params.image  = this.imgPath;
-      params.image_type = false;
+      params.image = this.debit_image_new  
+      params.image_type = this.image_type;
     } else {
       params.token = "";
       params.mode = "create";
@@ -308,11 +337,11 @@ export class RecordTransactionPage implements OnInit {
     params.sub_category = this.selected_subcategory_id;
     // params.image = this.imgPath;
 
-    if (this.imgPath != '') {
-      params.image_type = true;
-    } else {
-      params.image_type = '';
-    }
+    // if (this.imgPath != '') {
+    //   params.image_type = true;
+    // } else {
+    //   params.image_type = false;
+    // }
 
     console.log("params:::: ",params);
 
@@ -363,12 +392,10 @@ export class RecordTransactionPage implements OnInit {
   async openGallery() {
 
     this.globalService.takePhoto().then(result => {
-      // this.selectedFile = result.selectedFile;
-      // this.errorMessage = result.errorMessage;
-
+      if (result.imageUrl) {
       this.imageDisplay = result.imageUrl;
       this.imgPath = result.imageUrl;
-     
+      }
     });
 
     // const image = await Camera.getPhoto({
@@ -377,8 +404,6 @@ export class RecordTransactionPage implements OnInit {
     //   resultType: CameraResultType.DataUrl,
     //   source: CameraSource.Photos, // Camera, Photos or Prompt!
     //   saveToGallery: true,
-    //   // width: 200,
-    //   // height: 200,
     // });
 
     // console.log("aaaaaaaaaaaa:::",image);

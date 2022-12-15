@@ -31,6 +31,8 @@ export class CurrencyExchangePage implements OnInit {
   debit_image: any;
   row: any;
   activeSegment: string;
+  debit_image_new: any;
+  image_type: boolean;
 
   constructor(private apiServices: ApiService, private navCtrl: NavController,
     private actRoute: ActivatedRoute, private location: Location,
@@ -220,23 +222,45 @@ export class CurrencyExchangePage implements OnInit {
     params.date_of_transaction = this.selectedDate;
     params.transaction_from = 'Cash';
     params.driver_name = localStorage.getItem("manager_name");
+
+
     if (localStorage.getItem('edit_clicked') == 'yes') {
+
+      if(this.debit_image != ''){
+        this.debit_image_new = this.getEditValue.debit_image;
+        this.image_type = false;
+      }else{
+        this.debit_image_new = this.imgPath;
+        this.image_type = true;
+      }
+
       params.token = this.getEditValue.token;
       params.mode = "edit";
-      params.image  = this.getEditValue.debit_image;
-      params.image_type = false;
+      params.image = this.debit_image_new  
+      params.image_type = this.image_type;
     } else {
       params.token = "";
       params.mode = "create";
       params.image = this.imgPath;
       params.image_type = true;
     }
+
+
+    // if (localStorage.getItem('edit_clicked') == 'yes') {
+    //   params.token = this.getEditValue.token;
+    //   params.mode = "edit";
+    //   params.image  = this.getEditValue.debit_image;
+    //   params.image_type = false;
+    // } else {
+    //   params.token = "";
+    //   params.mode = "create";
+    //   params.image = this.imgPath;
+    //   params.image_type = true;
+    // }
     params.transaction_type = "Exchange";
     params.description = this.description;
     params.exchange_amount_receive = this.receivedAmount;
     params.exchange_currency = this.recivedCurrency;
-    // params.image = this.imgPath;
-    // params.image_type = true;
     params.roe = 1 + this.paidCurrency + ' = ' + this.autoCalculateVlaue + this.recivedCurrency;
 
     console.log("params curr:::",params);
@@ -312,20 +336,26 @@ export class CurrencyExchangePage implements OnInit {
   }
 
   async openGallery() {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos, // Camera, Photos or Prompt!
-      saveToGallery: true,
-      //  width: 200,
-      //  height: 200,
+
+    this.globalService.takePhoto().then(result => {
+      if (result.imageUrl) {
+      this.imageDisplay = result.imageUrl;
+      this.imgPath = result.imageUrl;
+      }
     });
 
-    if (image) {
-      this.imageDisplay = image.dataUrl;
-      this.imgPath = image.dataUrl;
-    }
+    // const image = await Camera.getPhoto({
+    //   quality: 90,
+    //   allowEditing: false,
+    //   resultType: CameraResultType.DataUrl,
+    //   source: CameraSource.Photos, // Camera, Photos or Prompt!
+    //   saveToGallery: true,
+    // });
+
+    // if (image) {
+    //   this.imageDisplay = image.dataUrl;
+    //   this.imgPath = image.dataUrl;
+    // }
   }
 
   async autoCalculateCurrency() {

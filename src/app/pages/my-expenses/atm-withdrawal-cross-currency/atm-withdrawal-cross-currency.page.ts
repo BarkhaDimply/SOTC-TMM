@@ -33,6 +33,8 @@ export class AtmWithdrawalCrossCurrencyPage implements OnInit {
   row: any;
   recivedCurrency:string="";
   debit_image: any;
+  debit_image_new: any;
+  image_type: boolean;
 
 
   constructor(private apiServices: ApiService,private alertController: AlertController,private location: Location,
@@ -133,22 +135,29 @@ console.log("aaaaaa",this.showCashCurrency);
 
   async openGallery() {
 
-
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos, // Camera, Photos or Prompt!
-      saveToGallery: true,
-      //width: 200,
-     // height: 200,
+    this.globalService.takePhoto().then(result => {
+      if (result.imageUrl) {
+      this.imageDisplay = result.imageUrl;
+      this.imgPath = result.imageUrl;
+      }
     });
 
-    if (image) {
-      this.imageDisplay =image.dataUrl;
-      this.imgPath = image.dataUrl;
 
-    }
+    // const image = await Camera.getPhoto({
+    //   quality: 90,
+    //   allowEditing: false,
+    //   resultType: CameraResultType.DataUrl,
+    //   source: CameraSource.Photos, 
+    //   saveToGallery: true,
+    // });
+
+    // if (image) {
+    //   this.imageDisplay =image.dataUrl;
+    //   this.imgPath = image.dataUrl;
+
+    // }
+
+
   }
 
   async submitCrossCurrencyData() {
@@ -320,17 +329,45 @@ console.log("aaaaaa",this.showCashCurrency);
     params.transaction_from = 'Card';
 
     params.driver_name = localStorage.getItem("manager_name");
-    if(localStorage.getItem('edit_clicked') == 'yes'){
+    // if(localStorage.getItem('edit_clicked') == 'yes'){
+    //   params.token = this.getEditValue.token;
+    //   params.mode = "edit";
+    //   params.image  = this.imgPath;
+    //   params.image_type = false;
+    // //  params.image  = this.getEditValue.debit_image;
+    
+    //   } else {
+    //     params.token = "";
+    //     params.mode = "create";
+    //   params.image = this.imgPath;
+    //   params.image_type = true;
+    //   }
+
+
+    if (localStorage.getItem('edit_clicked') == 'yes') {
+
+      if(this.debit_image != ''){
+        this.debit_image_new = this.getEditValue.debit_image;
+        this.image_type = false;
+      }else{
+        this.debit_image_new = this.imgPath;
+        this.image_type = true;
+      }
+
       params.token = this.getEditValue.token;
       params.mode = "edit";
-      params.image  = this.getEditValue.debit_image;
-      params.image_type = false;
-      } else {
-        params.token = "";
-        params.mode = "create";
+      params.image = this.debit_image_new  
+      params.image_type = this.image_type;
+    } else {
+      params.token = "";
+      params.mode = "create";
       params.image = this.imgPath;
       params.image_type = true;
-      }
+    }
+
+
+
+
       params.transaction_type = "atm_cross_currency";
     params.description = this.descriptionCrossCurrency;
     params.exchange_amount_receive = this.amtRecivedCrossCurrency;
@@ -339,8 +376,11 @@ console.log("aaaaaa",this.showCashCurrency);
 
     params.exchange_currency = this.recivedCurrency;
 
-    // params.image = this.imgPath;
-    // params.image_type = true;
+    if (this.imgPath != '') {
+      params.image_type = true;
+    } else {
+      params.image_type = '';
+    }
 
     params.roe = 1+this.paidCurrency+' = '+this.autoCalculateVlaue+this.recivedCurrency;
 

@@ -88,31 +88,38 @@ export class TmTransferPage implements OnInit {
 
 
   async  openGallery(){
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos, // Camera, Photos or Prompt!
-      saveToGallery: true,
-     // width: 200,
-     // height: 200,
 
-  });
+    
+    this.globalService.takePhoto().then(result => {
+      if (result.imageUrl) {
+      this.imageDisplay = result.imageUrl;
+      this.imgPath = result.imageUrl;
+      }
+    });
 
-  if (image) {
-      this.imageDisplay =image.dataUrl;
-      this.imgPath = image.dataUrl;
+  //   const image = await Camera.getPhoto({
+  //     quality: 90,
+  //     allowEditing: false,
+  //     resultType: CameraResultType.DataUrl,
+  //     source: CameraSource.Photos, // Camera, Photos or Prompt!
+  //     saveToGallery: true,
 
-  }else{
+  // });
 
-            this.androidPermissions.requestPermissions(
-                [
-                    this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE,
-                    this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
-                ]
-            );
+  // if (image) {
+  //     this.imageDisplay =image.dataUrl;
+  //     this.imgPath = image.dataUrl;
 
-    }
+  // }else{
+
+  //           this.androidPermissions.requestPermissions(
+  //               [
+  //                   this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE,
+  //                   this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
+  //               ]
+  //           );
+
+  //   }
   }
 
    async TMTransfer() {

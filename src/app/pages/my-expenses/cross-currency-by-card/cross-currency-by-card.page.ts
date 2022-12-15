@@ -39,6 +39,8 @@ export class CrossCurrencyByCardPage implements OnInit {
   subCategory:any;
 
   hideSubCat = true;
+  debit_image_new: any;
+  image_type: boolean;
 
   constructor(private globalService:GlobalService,private location: Location,
     private actRoute: ActivatedRoute,private alertController: AlertController,
@@ -125,20 +127,27 @@ export class CrossCurrencyByCardPage implements OnInit {
   }
 
   async  openGallery(){
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos, // Camera, Photos or Prompt!
-      saveToGallery: true,
-    //  width: 200,
-    //  height: 200,
-  });
 
-  if (image) {
-    this.imageDisplay =image.dataUrl;
-    this.imgPath = image.dataUrl;
-  }
+    this.globalService.takePhoto().then(result => {
+      if (result.imageUrl) {
+      this.imageDisplay = result.imageUrl;
+      this.imgPath = result.imageUrl;
+      }
+    });
+
+
+  //   const image = await Camera.getPhoto({
+  //     quality: 90,
+  //     allowEditing: false,
+  //     resultType: CameraResultType.DataUrl,
+  //     source: CameraSource.Photos, // Camera, Photos or Prompt!
+  //     saveToGallery: true,
+  // });
+
+  // if (image) {
+  //   this.imageDisplay =image.dataUrl;
+  //   this.imgPath = image.dataUrl;
+  // }
    }
 
    async crossCurrencyByCard() {
@@ -283,17 +292,40 @@ export class CrossCurrencyByCardPage implements OnInit {
     params.date_of_transaction = this.selectedDate;
     params.transaction_from = 'Card';
     params.driver_name = localStorage.getItem("manager_name");
-    if(localStorage.getItem('edit_clicked') == 'yes'){
+
+    if (localStorage.getItem('edit_clicked') == 'yes') {
+
+      if(this.debit_image != ''){
+        this.debit_image_new = this.debit_image;
+        this.image_type = false;
+      }else{
+        this.debit_image_new = this.imgPath;
+        this.image_type = true;
+      }
+
       params.token = this.getEditValue.token;
       params.mode = "edit";
-      params.image  = this.getEditValue.debit_image;
-      params.image_type = false;
-      } else {
-        params.token = "";
-        params.mode = "create";
+      params.image = this.debit_image_new  
+      params.image_type = this.image_type;
+    } else {
+      params.token = "";
+      params.mode = "create";
       params.image = this.imgPath;
       params.image_type = true;
-      }
+    }
+  
+    // if(localStorage.getItem('edit_clicked') == 'yes'){
+      
+    //   params.token = this.getEditValue.token;
+    //   params.mode = "edit";
+    //    params.image  = this.imgPath;
+    //   params.image_type = false;
+    //   } else {
+    //     params.token = "";
+    //     params.mode = "create";
+    //     params.image = this.imgPath;
+    //     params.image_type = true;
+    //   }
 
     params.transaction_type = "cross_currency_by_card";
     params.description = this.description;
@@ -307,7 +339,14 @@ export class CrossCurrencyByCardPage implements OnInit {
     params.roe = 1+this.outgoing_selected_currency+' = '+this.autoCalculateVlaue+this.amtRecived_selected_currency;
 
 
-    //console.log("params::::",params);
+    if (this.imgPath != '') {
+      params.image_type = true;
+    } else {
+      params.image_type = '';
+    }
+
+
+    console.log("payment by card params::::",params);
 
     this.apiServices.postCurrencyExchange(params).subscribe(async (result:any) =>{
       //this.globalService.dismissLoading();

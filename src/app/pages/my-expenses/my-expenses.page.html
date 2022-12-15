@@ -9,17 +9,18 @@
 
 
   <ion-content  (ionRefresh)="doRefresh($event)">
-    <ion-refresher slot="fixed">
+
+    <ion-refresher  slot="fixed" pullFactor="0.5" pullMin="50" pullMax="200"  (ionRefresh)="refreshPage()"></ion-refresher>
+
+
+    <!-- <ion-refresher slot="fixed">
       <ion-refresher-content  pullingIcon="chevron-down-circle-outline"
                               pullingText="Pull to refresh"
                               refreshingSpinner="circles"
                               refreshingText="Refreshing..." style="background-color:#fff">
 
       </ion-refresher-content>
-    </ion-refresher>
-<!--    <virtual-scroll-element class="ion-content-scroll-host">-->
-<!--      &lt;!&ndash; Your virtual scroll content &ndash;&gt;-->
-<!--    </virtual-scroll-element>-->
+    </ion-refresher> -->
 
 
 
