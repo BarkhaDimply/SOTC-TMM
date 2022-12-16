@@ -623,6 +623,7 @@ async addTransactionHistory(){
          
                await alert.present();
               this.refressfunc();
+              return this.router.navigate(['/tabs/itinerary']);
                }
            });
 
@@ -757,24 +758,13 @@ getRejectedTransactions(){
   params.transaction_ids = JSON.stringify(transValue);
 
 
-
+  console.log("params rejc::::",params);
 
           this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
 
-            if(result.status == "false"){
-              const alert = await this.alertController.create({
-                cssClass: '',
-                message: result.message,
-                mode: 'ios',
-                buttons: ['OK']
-        
-              });
-        
-              await alert.present();
-              return;
-        
-            }
-             if(result.status == true) {
+            console.log("check tru/false:::",result.status);
+
+            if(result.status == true) {
               const alert = await this.alertController.create({
                 cssClass: '',
                 message: 'Submitted Successfully',
@@ -783,13 +773,28 @@ getRejectedTransactions(){
         
               });
         
-              await alert.present();
-        
+               await alert.present();
                this.refressfunc();
-               //this.refRejected();
-        
                return this.router.navigate(['/tabs/itinerary']);
+        
+               
+              }else{
+               
+                  const alert = await this.alertController.create({
+                    cssClass: '',
+                    message: result.message,
+                    mode: 'ios',
+                    buttons: ['OK']
+            
+                  });
+            
+                  await alert.present();
+                  return;
+            
               }
+
+            
+          
           });
 
 
