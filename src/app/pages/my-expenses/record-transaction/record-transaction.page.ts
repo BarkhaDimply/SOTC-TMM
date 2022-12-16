@@ -273,6 +273,21 @@ export class RecordTransactionPage implements OnInit {
     var Users: string = localStorage.getItem("user")
      if (typeof this.selectedCurrency == 'undefined' || this.selectedCurrency == '') {
 
+      console.log("aaaaaaaaaa",this.showCurrency[0]);
+
+      if(typeof this.showCurrency[0] == 'undefined'){
+
+        const alert = await this.alertController.create({
+          cssClass: '',
+          message: 'You dont have sufficient Balance',
+          mode: 'ios',
+          buttons: ['OK']
+        });
+  
+        await alert.present();
+        return this.router.navigate(['/tabs/my-expenses/record-transaction']);
+
+      }
       this.selectedCurrency = this.showCurrency[0]
 
     }

@@ -23,11 +23,12 @@
           <ion-col size="4">
             <label>Currency</label> 
 
-            <div class="form-group" *ngIf="currencyFromDropdown != ''">
-              <input readonly [(ngModel)]="currencyFromDropdown" class="form-control">
+            <!-- <div class="form-group" *ngIf="currencyFromDropdown != ''">
+              <input [(ngModel)]="currencyFromDropdown" class="form-control">
             </div>
+           <div class="form-group" *ngIf="currencyFromDropdown == ''">  -->
 
-            <div class="form-group" *ngIf="currencyFromDropdown == ''"> 
+            <div class="form-group"> 
               <select class="form-control" (change)="selectCurrencyDropdown($event.target.value)" [(ngModel)]="currencyFromDropdown">
                 <option  *ngFor="let currencyDisplay of showrecivedCashCurrency"  [ngValue]="currencyDisplay">{{currencyDisplay}}</option>
               </select>

@@ -592,9 +592,11 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .otp-input {
-    width: 60px !important;
+    width: 53px !important;
     font-size: 22px !important;
     height: 50px !important;
     font-weight: 500 !important;
     border-radius: 10px !important;
+    background-color: black;
+    color: #fff;
 }

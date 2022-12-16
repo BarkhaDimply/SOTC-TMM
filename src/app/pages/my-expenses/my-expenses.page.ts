@@ -372,6 +372,9 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
  // this.globalService.dismissLoading();
   localStorage.setItem("edit_clicked", 'yes');
 
+
+  console.log("edit mode:::",result.data.type);
+
   if(result.data.type == 'Exchange' ) {
     let navigationExtras: NavigationExtras = {
       state: {

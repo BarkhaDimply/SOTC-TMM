@@ -392,7 +392,7 @@
                 <div class="d-flex" *ngFor="let historyDetails of history.transValue">
               
                   <ion-card class="w-100"
-                  *ngIf="historyDetails.refId == 0 && historyDetails.submission_level == 0 && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+                  *ngIf="historyDetails.refId == 0 && historyDetails.submission_level == 0 && historyDetails.show_transaction != 1 && historyDetails.show_transaction != 3 && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
                   historyDetails.category != 'tm_transfer'"
                             [ngStyle]="{'background-color':historyDetails.refId == 0 ? '#f9e9e9' : 'rgb(220 247 220)'}"
                             style="margin:0.5rem;border:2px solid gray">

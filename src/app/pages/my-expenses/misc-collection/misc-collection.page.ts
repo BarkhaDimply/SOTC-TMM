@@ -30,6 +30,7 @@ export class MiscCollectionPage implements OnInit {
   debit_image: any;
   debit_image_new: any;
   image_type: boolean;
+  token: any;
 
   constructor(private globalService:GlobalService,private location: Location,
     private actRoute: ActivatedRoute,private alertController: AlertController,
@@ -53,7 +54,9 @@ export class MiscCollectionPage implements OnInit {
          this.recivedCurrencySelected =  this.getEditValue.debitCurrency
          this.selectedDate = this.getEditValue.date;
          this.description = this.getEditValue.description;
+         this.token =  this.getEditValue.token;
         }
+
         console.log("getEditValue 111:::::", this.getEditValue);
       });
     }
