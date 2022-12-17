@@ -6,9 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  agency_logo: string;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    this.agency_logo = localStorage.getItem('agency_logo');
+  }
 
 }

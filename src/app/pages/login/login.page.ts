@@ -39,9 +39,8 @@ export class LoginPage implements OnInit {
   recaptchaVerifier = "435435";
 
   getOtp: any;
-
-
-
+  urlBaseChange: any;
+  
   constructor(
     private globalService: GlobalService,
     private fireAuth: AngularFireAuth,
@@ -59,13 +58,10 @@ export class LoginPage implements OnInit {
       manager_number: ['', [Validators.required]]
     });
 
-  
-
   }
 
   ngOnInit() {
-
-   
+   // this.loadModalLogo();
   }
 
   initializeApp() { 
@@ -76,8 +72,7 @@ export class LoginPage implements OnInit {
     });
   }
 
-
-  demonstateSubmit() {
+  demonstateSubmit() {      
     this.errorMessage = [];
     this.serverMessage = [];
 
@@ -97,11 +92,12 @@ export class LoginPage implements OnInit {
 
     this.auth.loginManager(request).subscribe(async (result: any) => {
 
-      if(result.status == true){
+       if(result.status == true){
         this.OTP_box = true;
         localStorage.setItem('manager_id', result.manager_id);
         localStorage.setItem('manager_name', result.manager_name)
         this.loginResponse = result;
+
         
       }else{
         this.serverMessage = result.error;
@@ -155,8 +151,6 @@ export class LoginPage implements OnInit {
   async verifyOtp()  
   {
 
-
-
     this.otp = this.getOtp
 
     if(typeof this.otp == 'undefined'){
@@ -175,6 +169,7 @@ export class LoginPage implements OnInit {
     if(atob(this.loginResponse.otp).toString() === this.otp.toString()){ 
 
       this.tourManagerActiveGroup(this.loginResponse.manager_id);
+
 
     }else{
       //this.globalService.presentToast("Plase enter valid otp");
@@ -229,15 +224,16 @@ export class LoginPage implements OnInit {
     };
 
     this.auth.login(request).subscribe(async (result: any) => {
+
       if (result?.status === true) {
 
         this.initializeApp();
         this.getFcmTokenNoty();
 
         localStorage.setItem('user', JSON.stringify(result.data));
+        localStorage.setItem('hubList', JSON.stringify(result.data.hub_list));
         this.loadModal(result.data.hub_list);
-
-
+       
       } else {
        // this.serverMessage = result.error;
         const alert = await this.alertController.create({
@@ -254,6 +250,63 @@ export class LoginPage implements OnInit {
     });
 
   }
+
+  loadModalLogo() {
+
+    let options = [];
+
+    const listLogo = ["SOTC", "TC"];
+
+    listLogo.forEach((element, index) => {
+      if (index === 0) {
+        options.push({
+          type: 'radio',
+          label: element,
+          value: element,
+          checked: true
+        });
+      } else {
+        options.push({
+          type: 'radio',
+          label: element,
+          value: element,
+        });
+      }
+    });
+
+
+  this.alertController.create({
+    header: 'Select Branch',
+    inputs: options,
+    backdropDismiss: false,
+    buttons: [
+      {
+        text: 'Done',
+        handler: (data: any) => {
+          if (data != '') {
+
+            console.log("data:::", data);
+
+            if(data == 'SOTC'){
+              this.urlBaseChange = 'https://sotcconnect.travelexic.com'
+              localStorage.setItem('sotcBase',this.urlBaseChange);
+
+            }else{
+              this.urlBaseChange = 'https://tcgateway.travelexic.com'
+              localStorage.setItem('tcBase',this.urlBaseChange);
+            }
+
+           //const hubList =  JSON.parse(localStorage.getItem('hubList'));
+          // this.loadModal(hubList);
+           //console.log("hubbbb:::", hubList);
+          }
+        }
+      }
+    ]
+  }).then(res => {
+    res.present();
+  });
+}
 
   loadModal(hub_list) {
     let options = [];

@@ -14,7 +14,10 @@ import { NetworkService, ConnectionStatus } from '../network/network.service';
 import { Storage } from '@ionic/storage';
 
 const API_STORAGE_KEY = 'AIzaSyATuK2tzjGc_y1Gn6XLwR5T-nCX3DeYRHE';
-const API_URL = 'https://tcil-sotc.travelexic.com/api/webservices/';
+//const API_URL = 'https://tcil-sotc.travelexic.com/api/webservices/';
+const API_URL = 'https://tcgateway.travelexic.com/api/webservices/';
+//const API_URL = 'https://sotcconnect.travelexic.com/api/webservices/';
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +27,7 @@ export class ApiService {
 
   constructor(private http: HttpClient,private auth: AuthService, private globalService: GlobalService,
      private networkService: NetworkService, 
-    private storage: Storage, private offlineManager: OfflineManagerService) {
+     private storage: Storage, private offlineManager: OfflineManagerService) {
 
    }
 

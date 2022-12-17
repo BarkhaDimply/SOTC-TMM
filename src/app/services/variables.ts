@@ -1,6 +1,10 @@
 import { environment } from '../../environments/environment';
 
 //auth
+
+//console.log("sotcBase::::",localStorage.getItem('sotcBase'));
+//console.log("tc::::",localStorage.getItem('tcBase'));
+
 export const loginUrl: string = environment.webserviceTcil + '/api/webservices/V2/getManagerItinerary2';
 export const loginUrl2: string = environment.webserviceTcil + '/api/webservices/AuthenticateManager';
 export const tourManagerActiveGroup: string = environment.webserviceTcil + '/api/webservices/V2/TmActiveGroups';

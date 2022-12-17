@@ -1,6 +1,6 @@
 {
 	"appId": "io.ionic.starter",
-	"appName": "Tourmanager_sotc",
+	"appName": "TM APP",
 	"webDir": "www",
 	"bundledWebRuntime": false,
 	"plugins": {

@@ -12,6 +12,7 @@ import { NetworkService, ConnectionStatus } from './services/network/network.ser
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { OfflineManagerService } from './services/offlineManager/offline-manager.service';
+import { GlobalService } from './services/global/global.service';
 
 
 @Component({
@@ -27,6 +28,9 @@ export class AppComponent implements OnInit{
 @ViewChild(IonRouterOutlet,{static:true})routerOutlet: IonRouterOutlet;
 
   menuVisible = true;
+  active_group: any;
+  agency_logo: any;
+
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -37,7 +41,8 @@ export class AppComponent implements OnInit{
    // private statusBar: StatusBar,
     private fcmService: FcmService,
     private offlineManager: OfflineManagerService,
-    private networkService: NetworkService
+    private networkService: NetworkService,
+    private globalService: GlobalService
 
   ) {
     this.initializeApp();
@@ -45,6 +50,10 @@ export class AppComponent implements OnInit{
   
 
   ngOnInit(): void {
+
+
+    this.agency_logo = localStorage.getItem('agency_logo');
+
 
     this.auth.getUserStatus.subscribe(val => {
       if (val === '0') {
@@ -54,7 +63,15 @@ export class AppComponent implements OnInit{
       }
     });
 
+
+
   }
+
+
+ 
+  
+ 
+
 
   initializeApp() {
     this.platform.ready().then(() => {

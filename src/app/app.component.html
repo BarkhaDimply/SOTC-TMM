@@ -1,11 +1,14 @@
 <ion-app>
   <ion-split-pane contentId="menu-content" when="false">
     <ion-menu contentId="menu-content" class="app-sidemenu" *ngIf="menuVisible">
-      <ion-header>
-        <ion-toolbar color="danger">
+      <ion-header style="background-color: #0354A6 !important;">
+        <ion-toolbar color="danger1" style="background-color: #0354A6 !important;">
           <ion-title class="menu-back">
             <div class="menu">
-              <img src="assets/images/sotc-logo.png" style="height:40px;width:170px" class="logo" />MENU
+            <!--  <img src="assets/images/sotc-logo.png" style="height:40px;width:170px" class="logo" />-->
+              <img src="{{agency_logo}}" style="height: 25px;width: 157px;" class="logo" />
+              
+              <span style="color: #fff;margin-left: 30px;">MENU</span>
             </div>
           </ion-title>
         </ion-toolbar>
