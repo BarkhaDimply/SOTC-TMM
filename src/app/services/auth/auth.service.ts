@@ -37,7 +37,9 @@ export class AuthService {
     const headers = {
       'content-type': 'application/json',
       'Access-Control-Allow': '*',
-      'Accept':'application/json'
+      'Accept':'application/json',
+      //'Access-Control-Allow-Origin': '*'
+      //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       // authorization: 'Bearer ' + this.user?.token
     };
     return headers;

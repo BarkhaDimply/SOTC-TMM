@@ -171,6 +171,8 @@ export class LoginPage implements OnInit {
       this.tourManagerActiveGroup(this.loginResponse.manager_id);
 
 
+
+
     }else{
       //this.globalService.presentToast("Plase enter valid otp");
 
@@ -201,6 +203,8 @@ export class LoginPage implements OnInit {
         localStorage.setItem('active_group', JSON.stringify(result.data));
         this.login(result.data[0]);
 
+      
+
       } else {
         //this.serverMessage = result.error;
         const alert = await this.alertController.create({
@@ -223,7 +227,14 @@ export class LoginPage implements OnInit {
       'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
     };
 
+    console.log("inside  333",request);
+
     this.auth.login(request).subscribe(async (result: any) => {
+
+
+      console.log("inside  555");
+
+      console.log("inside  666",result);
 
       if (result?.status === true) {
 

@@ -51,7 +51,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
 
-
+    this.globalService.getCheckActiveManager();
     this.agency_logo = localStorage.getItem('agency_logo');
 
 

@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  //webserviceNew: 'https://cors-anywhere.herokuapp.com/https://new.travelexic.com',
   webserviceNew: 'https://new.travelexic.com',
- // webserviceTcil: 'https://tcil-sotc.travelexic.com', //for test server
   webserviceTcil: 'https://tcgateway.travelexic.com',
+  //webserviceNew: 'https://cors-anywhere.herokuapp.com/https://new.travelexic.com',
+  //webserviceTcil: 'https://tcil-sotc.travelexic.com', //for test server
   //webserviceTcil: 'https://sotcconnect.travelexic.com',
   firebaseConfig : {
     apiKey: "AIzaSyATuK2tzjGc_y1Gn6XLwR5T-nCX3DeYRHE",
