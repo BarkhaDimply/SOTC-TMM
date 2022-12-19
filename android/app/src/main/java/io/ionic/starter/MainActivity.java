@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package travelexic.com.thomascook;
 
 import com.getcapacitor.BridgeActivity;
 
