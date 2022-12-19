@@ -160,7 +160,7 @@ export class GlobalService {
     this.active_group = JSON.parse(localStorage.getItem('active_group'));
 
     let request = {
-      'login_code': 'TC512136',
+      'login_code': this.active_group[0]['tourCode'],
       'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
     };
 
