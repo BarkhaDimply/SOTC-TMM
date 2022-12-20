@@ -23,6 +23,7 @@ export class ItineraryPage implements OnInit{
   user_temp_data: string;
   user_data: any;
   active_group: any;
+  agency_logo: string;
 
   constructor(private auth: AuthService, private alertController: AlertController,private globalService: GlobalService) {
     this.user = this.auth.user;
@@ -30,6 +31,10 @@ export class ItineraryPage implements OnInit{
     console.log("user::",this.user.itinerary.length);
   }
   ngOnInit(): void {
+
+    
+    this.getCheckActiveManager();
+ 
 
     localStorage.setItem('isFilterSet', 'false');
 
@@ -47,6 +52,31 @@ export class ItineraryPage implements OnInit{
     var t = new Date().getTime()/1000;
     console.log("tttt", t);
   
+
+  }
+
+  
+  getCheckActiveManager(){
+
+    this.active_group = JSON.parse(localStorage.getItem('active_group'));
+
+    let request = {
+      'login_code': this.active_group[0]['tourCode'],
+      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+    };
+
+    this.auth.login(request).subscribe(async (result: any) => {
+
+      if(result.data != ''){
+        this.agency_logo = result.data.agency_logo
+
+        localStorage.setItem('agency_logo',this.agency_logo);
+
+      }
+
+    });
+
+    console.log("agency_logo itenry:::::",this.agency_logo);
 
   }
 

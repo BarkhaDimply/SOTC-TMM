@@ -40,6 +40,8 @@ export class LoginPage implements OnInit {
 
   getOtp: any;
   urlBaseChange: any;
+  agency_logo: string;
+  active_group: any;
   
   constructor(
     private globalService: GlobalService,
@@ -61,8 +63,35 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-   // this.loadModalLogo();
+  
+
   }
+
+
+  getCheckActiveManager(){
+
+    this.active_group = JSON.parse(localStorage.getItem('active_group'));
+
+    let request = {
+      'login_code': this.active_group[0]['tourCode'],
+      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+    };
+
+    this.auth.login(request).subscribe(async (result: any) => {
+
+      if(result.data != ''){
+        this.agency_logo = result.data.agency_logo
+
+        localStorage.setItem('agency_logo',this.agency_logo);
+
+      }
+
+    });
+
+    console.log("agency_logo itenry:::::",this.agency_logo);
+
+  }
+
 
   initializeApp() { 
     this.platform.ready().then(() => {
@@ -231,19 +260,16 @@ export class LoginPage implements OnInit {
 
     this.auth.login(request).subscribe(async (result: any) => {
 
-
-      console.log("inside  555");
-
-      console.log("inside  666",result);
-
       if (result?.status === true) {
 
         this.initializeApp();
         this.getFcmTokenNoty();
-
+    
         localStorage.setItem('user', JSON.stringify(result.data));
         localStorage.setItem('hubList', JSON.stringify(result.data.hub_list));
         this.loadModal(result.data.hub_list);
+
+     
        
       } else {
        // this.serverMessage = result.error;
@@ -352,7 +378,7 @@ export class LoginPage implements OnInit {
 
               //set hub in db -api
               this.getSaveManagerHub();
-
+            
               this.auth.userLoggedIn.next("loggedin");
               this.navController.navigateRoot(['/']);
             }

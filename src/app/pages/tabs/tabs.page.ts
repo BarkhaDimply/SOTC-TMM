@@ -17,6 +17,7 @@ export class TabsPage implements OnInit{
   routVal='';
   transactionValue:any = [];
   btnSubstatus= true;
+
   constructor(private globalService: GlobalService,private auth: AuthService, private router: Router,private location: Location,
               private platform : Platform,
               private alertController:AlertController, private apiServices:ApiService,  private actRoute: ActivatedRoute, ) { }
@@ -32,7 +33,7 @@ export class TabsPage implements OnInit{
     this.actRoute.queryParams.subscribe(params => {
 
     });
-
+   
 
   }
 
@@ -49,17 +50,23 @@ export class TabsPage implements OnInit{
           this.transactionValue.forEach(itms => {
             itms.transValue.forEach(itm=>{
 
-              //if((itm.submission_status == 1 || itm.submission_status == 3) && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
+             
+
+             // if(itm.submission_status == 0 && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
+            
+              if(itm.submission_status == 2){
+                this.btnSubstatus =false;
+              }
+              else if(itm.show_transaction == 0 && itm.submission_status == 1 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
                 
-              if(itm.submission_status == 1 && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
-                
-                console.log("aaaaa::::;",itm);
+             
                 
                 this.btnSubstatus =false;
                
 
 
               }
+              
 
 
             });

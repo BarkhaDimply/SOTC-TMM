@@ -279,7 +279,7 @@ export class RecordTransactionPage implements OnInit {
 
         const alert = await this.alertController.create({
           cssClass: '',
-          message: 'You dont have sufficient Balance',
+          message: 'You do not have sufficient Balance',
           mode: 'ios',
           buttons: ['OK']
         });
