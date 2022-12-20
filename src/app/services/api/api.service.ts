@@ -6,7 +6,12 @@ import { AuthService } from '../auth/auth.service';
 import { GlobalService } from '../global/global.service';
 import { ApiResponse, handleError } from '../utils';
 import { currencyExchange, rooming, showCurrentBalance,getCategories, getAllTourManager,
-         transactionHistory, transactionFetch, deleteTranscationHistory, updateNoShowStatus,historyNotification, tourManagerActiveGroup, sendSubmission, sendPolling, getPollingResponse, getPollingBroadcaste, getfetchstock, getAttendanceListData, getAttendanceById, updatestockData, tmStatusUpdate, getAttendancePresent, getTransactionDeatilsByTime, getRejectedTransactionDeatilsByTime, getFlightDataBySector, getFcmToken, saveManagerHub
+         transactionHistory, transactionFetch, deleteTranscationHistory, updateNoShowStatus, 
+         historyNotification, tourManagerActiveGroup, sendSubmission, sendPolling, getPollingResponse, 
+         getPollingBroadcaste, getfetchstock, getAttendanceListData, getAttendanceById, updatestockData, 
+         tmStatusUpdate, getAttendancePresent, getTransactionDeatilsByTime, 
+         getRejectedTransactionDeatilsByTime, getFlightDataBySector, getFcmToken, 
+         saveManagerHub, getUsers
 } from '../variables';
 
 import { OfflineManagerService } from '../offlineManager/offline-manager.service';
@@ -14,27 +19,28 @@ import { NetworkService, ConnectionStatus } from '../network/network.service';
 import { Storage } from '@ionic/storage';
 
 const API_STORAGE_KEY = 'AIzaSyATuK2tzjGc_y1Gn6XLwR5T-nCX3DeYRHE';
-//const API_URL = 'https://tcil-sotc.travelexic.com/api/webservices/';
-const API_URL = 'https://tcgateway.travelexic.com/api/webservices/';
-//const API_URL = 'https://sotcconnect.travelexic.com/api/webservices/';
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   [x: string]: any;
 
+  urlBaseChange: string = 'https://sotcconnect.travelexic.com';
+
   constructor(private http: HttpClient,private auth: AuthService, private globalService: GlobalService,
      private networkService: NetworkService, 
      private storage: Storage, private offlineManager: OfflineManagerService) {
-
+      this.auth.urlBaseChangeEvent.subscribe(val =>{
+        if(val !== null){
+          this.urlBaseChange = val;
+        }
+      });
    }
 
   
   apiGetRooming(data): Observable<ApiResponse> {
     
-    return this.http.post<ApiResponse>(rooming, data, { headers: this.auth.jsonheader }).pipe(
+    return this.http.post<ApiResponse>(this.urlBaseChange + rooming, data, { headers: this.auth.jsonheader }).pipe(
       catchError(handleError => {
         this.globalService.dismissLoading();
         return throwError(handleError);
@@ -460,7 +466,7 @@ export class ApiService {
       let page = Math.floor(Math.random() * Math.floor(6));
 
       // Return real API data and store it locally
-      return this.http.get(`${API_URL}/users?per_page=2&page=${page}`).pipe(
+      return this.http.get(`${getUsers}?per_page=2&page=${page}`).pipe(
         map(res => res['data']),
         tap(res => {
           this.setLocalData('users', res);
@@ -470,7 +476,7 @@ export class ApiService {
   }
 
   updateUser(user, data): Observable<any> {
-    let url = `${API_URL}/users/${user}`;
+    let url = `${getUsers}/${user}`;
     if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline) {
       return from(this.offlineManager.storeRequest(url, 'PUT', data));
     } else {

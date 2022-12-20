@@ -27,7 +27,9 @@ export class GlobalService {
     private auth: AuthService,
     
 
-  ) { }
+  ) { 
+   
+  }
 
   async presentLoading() {
     // this.loading = await this.loadingController.create({
@@ -169,7 +171,7 @@ export class GlobalService {
       console.log("aaaaaaa request:::::111",result);
 
       if(result.data != ''){
-        this.agency_logo = result.data.agency_logo
+        this.agency_logo = result?.data?.agency_logo
 
 
         localStorage.setItem('agency_logo',this.agency_logo);

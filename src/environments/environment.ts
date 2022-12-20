@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   webserviceNew: 'https://new.travelexic.com',
   webserviceTcil: 'https://tcgateway.travelexic.com',
+
   //webserviceNew: 'https://cors-anywhere.herokuapp.com/https://new.travelexic.com',
   //webserviceTcil: 'https://tcil-sotc.travelexic.com', //for test server
   //webserviceTcil: 'https://sotcconnect.travelexic.com',

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
   myDeviceToken: string;
   loginResponse = {} as any;
   OTP_box = false;
-  otp:any;
+  otp: any;
   validationMessages = {
     login_code: [
       { type: 'required', message: 'Required' },
@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
 
   getOtp: any;
   urlBaseChange: any;
-  
+
   constructor(
     private globalService: GlobalService,
     private fireAuth: AngularFireAuth,
@@ -50,8 +50,8 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private fomrBuilder: UntypedFormBuilder,
     private fcmService: FcmService,
-    private platform : Platform,
-    private apiServices:ApiService,
+    private platform: Platform,
+    private apiServices: ApiService,
   ) {
     this.myDeviceToken = localStorage.getItem('deviceToken') || '';
     this.loginForm = this.fomrBuilder.group({
@@ -61,10 +61,10 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-   // this.loadModalLogo();
+    this.loadModalLogo();
   }
 
-  initializeApp() { 
+  initializeApp() {
     this.platform.ready().then(() => {
 
       // Trigger the push setup
@@ -72,7 +72,7 @@ export class LoginPage implements OnInit {
     });
   }
 
-  demonstateSubmit() {      
+  demonstateSubmit() {
     this.errorMessage = [];
     this.serverMessage = [];
 
@@ -84,31 +84,31 @@ export class LoginPage implements OnInit {
     let request = this.loginForm.value;
     request.nonce = nonce;
 
-    if(request.manager_number){
+    if (request.manager_number) {
 
-      request.manager_number = '91'+request.manager_number;
+      request.manager_number = '91' + request.manager_number;
     }
     console.log(request);
 
     this.auth.loginManager(request).subscribe(async (result: any) => {
 
-       if(result.status == true){
+      if (result.status == true) {
         this.OTP_box = true;
         localStorage.setItem('manager_id', result.manager_id);
         localStorage.setItem('manager_name', result.manager_name)
         this.loginResponse = result;
 
-        
-      }else{
+
+      } else {
         this.serverMessage = result.error;
         const alert = await this.alertController.create({
           cssClass: 'my-custom-class',
           message: result.msg,
           mode: 'ios',
           buttons: ['OK']
-      
+
         });
-      
+
         await alert.present();
         this.loginForm.reset();
       }
@@ -127,14 +127,14 @@ export class LoginPage implements OnInit {
       //     message: result.errors,
       //     mode: 'ios',
       //     buttons: ['OK']
-      
+
       //   });
-      
+
       //   await alert.present();
       //   this.loginForm.reset();
-     
-        
-       
+
+
+
       // } 
     });
   }
@@ -143,37 +143,36 @@ export class LoginPage implements OnInit {
 
 
 
-    if (otp.length === 4) {    
-        this.getOtp = otp
+    if (otp.length === 4) {
+      this.getOtp = otp
     }
-}
+  }
 
-  async verifyOtp()  
-  {
+  async verifyOtp() {
 
     this.otp = this.getOtp
 
-    if(typeof this.otp == 'undefined'){
+    if (typeof this.otp == 'undefined') {
       const alert = await this.alertController.create({
-      //  cssClass: 'my-custom-class',
+        //  cssClass: 'my-custom-class',
         message: 'Plase enter otp',
         mode: 'ios',
         buttons: ['OK']
-    
+
       });
-    
+
       await alert.present();
       return false;
     }
 
-    if(atob(this.loginResponse.otp).toString() === this.otp.toString()){ 
+    if (atob(this.loginResponse.otp).toString() === this.otp.toString()) {
 
       this.tourManagerActiveGroup(this.loginResponse.manager_id);
 
 
 
 
-    }else{
+    } else {
       //this.globalService.presentToast("Plase enter valid otp");
 
       const alert = await this.alertController.create({
@@ -181,16 +180,16 @@ export class LoginPage implements OnInit {
         message: 'Plase enter valid otp',
         mode: 'ios',
         buttons: ['OK']
-    
+
       });
-    
+
       await alert.present();
-      this.otp='';
+      this.otp = '';
       return;
 
 
     }
-    
+
   }
 
   tourManagerActiveGroup(id) {
@@ -203,7 +202,7 @@ export class LoginPage implements OnInit {
         localStorage.setItem('active_group', JSON.stringify(result.data));
         this.login(result.data[0]);
 
-      
+
 
       } else {
         //this.serverMessage = result.error;
@@ -212,9 +211,9 @@ export class LoginPage implements OnInit {
           message: result.error,
           mode: 'ios',
           buttons: ['OK']
-      
+
         });
-      
+
         await alert.present();
         return;
       }
@@ -227,14 +226,14 @@ export class LoginPage implements OnInit {
       'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
     };
 
-    console.log("inside  333",request);
+    console.log("inside  333", request);
 
     this.auth.login(request).subscribe(async (result: any) => {
 
 
       console.log("inside  555");
 
-      console.log("inside  666",result);
+      console.log("inside  666", result);
 
       if (result?.status === true) {
 
@@ -244,17 +243,17 @@ export class LoginPage implements OnInit {
         localStorage.setItem('user', JSON.stringify(result.data));
         localStorage.setItem('hubList', JSON.stringify(result.data.hub_list));
         this.loadModal(result.data.hub_list);
-       
+
       } else {
-       // this.serverMessage = result.error;
+        // this.serverMessage = result.error;
         const alert = await this.alertController.create({
           //cssClass: 'my-custom-class',
           message: result.error,
           mode: 'ios',
           buttons: ['OK']
-      
+
         });
-      
+
         await alert.present();
         return;
       }
@@ -286,38 +285,41 @@ export class LoginPage implements OnInit {
     });
 
 
-  this.alertController.create({
-    header: 'Select Branch',
-    inputs: options,
-    backdropDismiss: false,
-    buttons: [
-      {
-        text: 'Done',
-        handler: (data: any) => {
-          if (data != '') {
+    this.alertController.create({
+      header: 'Select Branch',
+      inputs: options,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Done',
+          handler: (data: any) => {
+            if (data != '') {
 
-            console.log("data:::", data);
+              console.log("data:::", data);
 
-            if(data == 'SOTC'){
-              this.urlBaseChange = 'https://sotcconnect.travelexic.com'
-              localStorage.setItem('sotcBase',this.urlBaseChange);
+              if (data == 'SOTC') {
+                // this.urlBaseChange = 'https://sotcconnect.travelexic.com'
+                 localStorage.setItem('urlBaseChange', this.urlBaseChange);
 
-            }else{
-              this.urlBaseChange = 'https://tcgateway.travelexic.com'
-              localStorage.setItem('tcBase',this.urlBaseChange);
+                this.auth.urlBaseChangeEvent.next("https://sotcconnect.travelexic.com");
+
+              } else {
+                // this.urlBaseChange = 'https://tcgateway.travelexic.com'
+                 localStorage.setItem('urlBaseChange', this.urlBaseChange);
+                this.auth.urlBaseChangeEvent.next("https://tcgateway.travelexic.com");
+              }
+
+              //const hubList =  JSON.parse(localStorage.getItem('hubList'));
+              // this.loadModal(hubList);
+              //console.log("hubbbb:::", hubList);
             }
-
-           //const hubList =  JSON.parse(localStorage.getItem('hubList'));
-          // this.loadModal(hubList);
-           //console.log("hubbbb:::", hubList);
           }
         }
-      }
-    ]
-  }).then(res => {
-    res.present();
-  });
-}
+      ]
+    }).then(res => {
+      res.present();
+    });
+  }
 
   loadModal(hub_list) {
     let options = [];
@@ -365,56 +367,56 @@ export class LoginPage implements OnInit {
   }
 
 
-  getFcmTokenNoty(){
+  getFcmTokenNoty() {
 
-    let params:any = {}
-    
+    let params: any = {}
+
     params.driver_id = localStorage.getItem("manager_id");
     params.device = 'android'
     params.fcm_token = localStorage.getItem("FCMTokenKey");
 
-    console.log("params333::::",JSON.stringify(params));
+    console.log("params333::::", JSON.stringify(params));
 
-     this.apiServices.getFcmToken(params).subscribe((result:any) => {
-      
-     
-        console.log("notification fcm::::",result);
- 
-      
-     });
- 
+    this.apiServices.getFcmToken(params).subscribe((result: any) => {
+
+
+      console.log("notification fcm::::", result);
+
+
+    });
+
   }
 
-  getSaveManagerHub(){
+  getSaveManagerHub() {
 
-      let params:any = {}
+    let params: any = {}
 
-      var Users:string = localStorage.getItem("user");
-      params.driver_id = localStorage.getItem("manager_id");
-      params.hub = localStorage.getItem("selected_hub");
-      params.group_id = JSON.parse(Users).order_id;
-      params.nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
+    var Users: string = localStorage.getItem("user");
+    params.driver_id = localStorage.getItem("manager_id");
+    params.hub = localStorage.getItem("selected_hub");
+    params.group_id = JSON.parse(Users).order_id;
+    params.nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
 
-      console.log("hub:::",params);
-          
-      this.apiServices.saveManagerHub(params).subscribe(async (result:any) => {   
+    console.log("hub:::", params);
 
-        console.log("hub result:::",result);
+    this.apiServices.saveManagerHub(params).subscribe(async (result: any) => {
 
-        if(result.status == false) {
+      console.log("hub result:::", result);
 
-          const alert = await this.alertController.create({
-              message: 'Hub Not Selected',
-              mode: 'ios',
-          
-            });
-           
-            await alert.present();
+      if (result.status == false) {
 
-        }
+        const alert = await this.alertController.create({
+          message: 'Hub Not Selected',
+          mode: 'ios',
 
-                
-      });
+        });
+
+        await alert.present();
+
+      }
+
+
+    });
 
   }
 

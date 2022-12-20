@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { loginUrl, loginUrl2, tourManagerActiveGroup } from '../variables';
 import { ApiResponse, handleError } from '../utils';
 import { UserModel } from 'src/app/models/user.model';
+import { GlobalService } from '../global/global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,17 @@ export class AuthService {
   httpOptions: any;
   headers = { 'content-type': 'application/json' };
   userLoggedIn = new BehaviorSubject('0');
+  urlBaseChange: string = 'https://sotcconnect.travelexic.com';
+  public urlBaseChangeEvent = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
+
+    this.urlBaseChangeEvent.subscribe(val =>{
+      if(val !== null){
+        this.urlBaseChange = val;
+      }
+    });
+
     if (this.isAuthenticated) {
       this.userLoggedIn.next(this.user?.agency_name);
     } else {
@@ -61,7 +71,7 @@ export class AuthService {
   }
 
   loginManager(data): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(loginUrl2+'?manager_number='+data.manager_number,{ headers: this.jsonheader }).pipe(
+    return this.http.get<ApiResponse>(this.urlBaseChange + loginUrl2+'?manager_number='+data.manager_number,{ headers: this.jsonheader }).pipe(
       catchError(handleError),
       map((result: ApiResponse) => {
         const listing = new ApiResponse();
@@ -78,7 +88,7 @@ export class AuthService {
   }
 
   login(data): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(loginUrl, data, { headers: this.jsonheader }).pipe(
+    return this.http.post<ApiResponse>(this.urlBaseChange + loginUrl, data, { headers: this.jsonheader }).pipe(
       catchError(handleError)     
     );
   }
