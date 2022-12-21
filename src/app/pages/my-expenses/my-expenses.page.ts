@@ -11,6 +11,7 @@ import { SwiperOptions } from 'swiper';
 import { element } from 'protractor';
 import { SwiperModule } from 'swiper/angular';
 import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
+import { count } from 'console';
 
 SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom]);
 
@@ -79,6 +80,8 @@ export class MyExpensesPage implements OnInit{
   lengthOfValRejc:any;
   user_temp_data: any;
   active_group: any;
+  lengthOfValRejcAll: void;
+  countValue: any;
   
   
   constructor(
@@ -114,7 +117,7 @@ export class MyExpensesPage implements OnInit{
 
     this.manager_name=localStorage.getItem("manager_name");
 
-    this.actRoute.queryParams.subscribe(async params => {  //console.log("ffffffffff");
+    this.actRoute.queryParams.subscribe(async params => {  
 
       if (this.router.getCurrentNavigation().extras.state) {
         
@@ -122,19 +125,21 @@ export class MyExpensesPage implements OnInit{
         
       }
 
-      if(this.getNotiKey == '28'){  //console.log("innn 28");
+      if(this.getNotiKey == '28'){  
         this.activeSegment = "allTrans";
         this.getTransactions();
         this.getRejectedTransactions();
        
-      }else if(this.getNotiKey == '27'){ //console.log("innn 27");
+      }else if(this.getNotiKey == '27'){ 
 
         this.activeSegment = 'rejected_trans';
+        this.refressfunc()
         this.getRejectedTransactions();
 
-        this.valueGetLength = localStorage.getItem('lengthOfValRejc');
-        
-        //console.log("aaaaaaaaaa444:::",this.valueGetLength);
+
+        /********************code for last trascation deleted ******************************/
+   
+         this.valueGetLength = localStorage.getItem('lengthOfValRejc');
 
         if(this.valueGetLength == 1){
 
@@ -150,10 +155,10 @@ export class MyExpensesPage implements OnInit{
           localStorage.removeItem('lengthOfValRejc');
      
         }
-      
+       /********************end of code for last trascation deleted ******************************/
         
 
-     }else{ //console.log("innnelse");
+     }else{ 
         this.getTransactions();
         this.getRejectedTransactions();
        
@@ -176,9 +181,10 @@ export class MyExpensesPage implements OnInit{
   refRejected(){
       this.rejectedTransctionHistory = [];
       this.getRejectedTransactions();
+   
   }
 
-  doRefresh(event) {
+  doRefresh(event) { 
    this.refressfunc();
 
     setTimeout(() => {
@@ -189,7 +195,9 @@ export class MyExpensesPage implements OnInit{
   refressfunc(){
       this.transctionHistory=[];
       this.getTransactions();
+      this.getRejectedTransactions();
       this.showCurrentBalance();
+    
   }
   soAmount(){
 
@@ -290,9 +298,7 @@ export class MyExpensesPage implements OnInit{
           this.transctionHistory.push({transKey:key,transValue:value});
 
           localStorage.setItem("listOfAllTransaction", JSON.stringify(this.transctionHistory));
-       
-
-          console.log("trans::::",this.transctionHistory);
+      
 
       });
 
@@ -525,13 +531,14 @@ verifyEvent(id:any) {
   }
 }
 
+
 async addTransactionHistory(){
 
   //this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
 
   this.getAllTrasactionId = (JSON.parse(localStorage.getItem("listOfAllTransaction")));
 
-  //console.log("this.getAllTrasactionId:::::",this.getAllTrasactionId);
+  console.log("get all trans:::::",this.getAllTrasactionId);
 
   var transValue:any=[];
 
@@ -546,6 +553,7 @@ async addTransactionHistory(){
 
       // console.log(" item.submission_status", item.submission_status);
 
+    
 
       if(item.category != 'BALANCE ADDED' && item.category != 'tm_transfer' && item.show_transaction == 0 && item.submission_status == 0){
       
@@ -558,18 +566,18 @@ async addTransactionHistory(){
 
   });
 
-  if(transValue.length == 0){
+  // if(transValue.length == 0){
   
-    const alert = await this.alertController.create({
-      cssClass: '',
-      message: 'No transaction found to submit',
-      mode: 'ios',
-      buttons: ['OK']
+  //   const alert = await this.alertController.create({
+  //     cssClass: '',
+  //     message: 'No transaction found to submit',
+  //     mode: 'ios',
+  //     buttons: ['OK']
 
-    });
+  //   });
 
-    await alert.present();return;
-  }
+  //   await alert.present();return;
+  // }
 
   let params:any = {}
   var Users:string = localStorage.getItem("user")
@@ -623,6 +631,7 @@ async addTransactionHistory(){
          
                await alert.present();
               this.refressfunc();
+
               return this.router.navigate(['/tabs/itinerary']);
                }
            });
@@ -683,28 +692,36 @@ getRejectedTransactions(){
 
     this.rejectedTransctionHistory = JSON.parse(this.rejectedTransctionHistory);
 
+    this.lengthOfValRejcAll = localStorage.setItem('lengthOfValRejcAll',this.rejectedTransctionHistory.length);
+    console.log("tesinggg::::",this.rejectedTransctionHistory.length);
+
   }
 
+
+ 
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
 
   //  console.log("rej result::::",result);
 
     this.rejectedTransctionHistory =[];
-   
+    this.countValue= 0;
+
       Object.entries(result.data).forEach(
         ([key, value]) => {
           this.lengthOfVal = value;
-          
-          localStorage.setItem('lengthOfValRejc',this.lengthOfVal.length);
-          this.lengthOfValRejc = localStorage.getItem('lengthOfValRejc');
 
+          this.countValue+=this.lengthOfVal.length;
           this.rejectedTransctionHistory.push({transKey:key,transValue:value})
 
           localStorage.setItem("listOfRejectedTransaction", JSON.stringify(this.rejectedTransctionHistory));
-       
-         console.log("rej trans::::",this.rejectedTransctionHistory);
+        
       });
 
+      localStorage.setItem('lengthOfValRejc',this.countValue);
+
+      this.lengthOfValRejc = localStorage.getItem('lengthOfValRejc');
+
+      console.log("lengthOfValRejc111111::::",this.countValue);
 
     // plus button hide function
     this.transctionHistory.forEach(itms=>{
@@ -719,25 +736,27 @@ getRejectedTransactions(){
 }
 
 
-  async addTransactionHistoryReview(id:any){
+  async addTransactionHistoryReview(){
 
+   // console.log("id_new rejc::::",id_new);
+   this.addTransactionHistory();
 
   this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
   var transValue:any=[];
 
   this.rejectedTransctionHistory.forEach(items => {
 
+    console.log(" this.rejectedTransctionHistory::::",this.rejectedTransctionHistory);
+
     items.transValue.forEach(async item =>{
 
       item.id.forEach(async getId =>{
 
-        console.log("id rejc::::",id);
-
         console.log("getId rejc::::",getId);
 
         //var pushGetId = getId
-
-        transValue.push(id, getId)
+        //transValue.push(id_new, getId)
+        transValue.push( getId)
 
         console.log("transValue rejc::::",transValue);
         
@@ -765,15 +784,15 @@ getRejectedTransactions(){
             console.log("check tru/false:::",result.status);
 
             if(result.status == true) {
-              const alert = await this.alertController.create({
-                cssClass: '',
-                message: 'Submitted Successfully',
-                mode: 'ios',
-                buttons: ['OK']
+              // const alert = await this.alertController.create({
+              //   cssClass: '',
+              //   message: 'Submitted Successfully',
+              //   mode: 'ios',
+              //   buttons: ['OK']
         
-              });
+              // });
         
-               await alert.present();
+              //  await alert.present();
                this.refressfunc();
                return this.router.navigate(['/tabs/itinerary']);
         
@@ -804,6 +823,9 @@ getRejectedTransactions(){
 
 
 editReviewTransaction (details:any){
+
+
+  console.log("details edit:::",details);
 
  // this.globalService.presentLoading();
  // this.globalService.dismissLoading();

@@ -36,7 +36,7 @@ export class ReviewTransactionDetailsPage implements OnInit {
     var dataView = JSON.parse(localStorage.getItem('view_details'));
     this.getEditReviewValue = dataView;
 
-    console.log("edit review11:",this.getEditReviewValue.id.length);
+    console.log("edit review11222:",this.getEditReviewValue);
 
   }
 

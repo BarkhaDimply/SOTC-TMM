@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 export const loginUrl: string = '/api/webservices/V2/getManagerItinerary2';
 export const loginUrl2: string = '/api/webservices/AuthenticateManager';
-export const tourManagerActiveGroup: string = environment.webserviceTcil + '/api/webservices/V2/TmActiveGroups';
+export const tourManagerActiveGroup: string = '/api/webservices/V2/TmActiveGroups';
 export const rooming: string = '/api/webservices/fetch_rooming2';
 export const showCurrentBalance: string = environment.webserviceTcil + '/api/webservices/show_current_balance';
 export const currencyExchange: string = environment.webserviceTcil + '/api/webservices/transaction_update';

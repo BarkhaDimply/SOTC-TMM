@@ -128,7 +128,7 @@ export class ApiService {
       })
     );
   }
-
+ 
   getAllTransctionHistory(){
     let params:any = {}
     var Users:string = localStorage.getItem("user");
@@ -267,7 +267,7 @@ export class ApiService {
   getMyTrip(){
     let params:any = {}
     params.manager_id = localStorage.getItem("manager_id");
-    return this.http.post<ApiResponse>(tourManagerActiveGroup,params,{ headers: this.auth.jsonheader }).pipe(
+    return this.http.post<ApiResponse>(this.urlBaseChange+ tourManagerActiveGroup,params,{ headers: this.auth.jsonheader }).pipe(
       catchError(handleError => {
         this.globalService.dismissLoading();
         return throwError(handleError);

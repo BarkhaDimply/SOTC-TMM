@@ -169,7 +169,7 @@ export class MiscCollectionPage implements OnInit {
     if(this.paidAmt == ""){
       const alert = await this.alertController.create({
         cssClass: '',
-        message: 'Please enter received amount',
+        message: 'Please enter paid amount',
         mode: 'ios',
         buttons: ['OK']
       });

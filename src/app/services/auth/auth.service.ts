@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   apiTourManagerActiveGroup(data): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(tourManagerActiveGroup, data, {headers: this.headers}).pipe(
+    return this.http.post<ApiResponse>(this.urlBaseChange + tourManagerActiveGroup, data, {headers: this.headers}).pipe(
       catchError(handleError)
     );
   }
