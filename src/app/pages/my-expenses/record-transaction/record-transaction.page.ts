@@ -125,7 +125,7 @@ export class RecordTransactionPage implements OnInit {
           this.showCurrency.push(element.currency_name);
 
 
-          console.log("curr333",this.showCurrency);
+          //console.log("curr333",this.showCurrency);
         }
       });
     }

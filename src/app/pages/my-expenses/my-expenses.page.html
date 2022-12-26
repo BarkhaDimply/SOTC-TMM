@@ -351,23 +351,19 @@
                   </div>-->
               </div>
 
-              <div *ngFor="let historyDetails of history.transValue">
+              <!-----------------------------commnt code use single submit----------------------------------------------->
+              <!-- <div *ngFor="let historyDetails of history.transValue">
 
-                <ion-fab class="mr-3" slot="fixed"
-                  style="bottom: 20px;position: fixed;right: 3px;">
+                <ion-fab class="mr-3" slot="fixed" style="bottom: 20px;position: fixed;right: 3px;">
 
                   <ion-fab-button *ngIf="((historyDetails.submission_status == 0 || historyDetails.submission_status == 3 ) && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED'
                   && historyDetails.category != 'misc_collection' && historyDetails.category != 'tm_transfer'" style="font-size: 14px; --box-shadow:none;"
                   (click)="addTransactionHistory()">Submit
                 </ion-fab-button>
 
-                  <!-- <ion-fab-button *ngIf="(historyDetails.submission_status == 0 && historyDetails.show_transaction == 0)  && historyDetails.category != 'BALANCE ADDED'
-                    && historyDetails.category != 'misc_collection' &&
-                  historyDetails.category != 'tm_transfer'" style="font-size: 14px; --box-shadow:none;"
-                    (click)="addTransactionHistory()" >Submit
-                  </ion-fab-button> -->
                 </ion-fab>
-              </div>
+              </div> -->
+               <!-----------------------------end of commnt code use single submit--------------------------------------->
             </div>
 
             </div>
@@ -382,10 +378,8 @@
 
       <ng-template swiperSlide> 
         <ion-card style="margin-top: 0px;padding-bottom: 5rem;">
-
-       
       
-             <div *ngIf="lengthOfValRejc > 0"> 
+            <div *ngIf="lengthOfValRejc > 0"> 
 
                 <!-------------------------Add new Transcation after Submit----------------------------->
                 <div *ngFor="let historyAll of transctionHistory">
@@ -423,8 +417,7 @@
                         </ion-row>
                       </div>
 
-                      <div class="mt-3" (click)="editReviewTransaction(historyDetailsAll)"
-                          [routerLink]="'/notification/review-feedback/review-transaction-details'">
+                      <div class="mt-3">
                         <ion-row>
 
                           <ion-col style="text-align: center;" size="12" class="text-bal" 
@@ -460,10 +453,10 @@
                   </div>
                 </div>
                 <!-------------------------End of add new Transcation after Submit----------------------------->
-         </div>
+            </div>
   
 
-              <div *ngFor="let history of rejectedTransctionHistory"> 
+            <div *ngFor="let history of rejectedTransctionHistory"> 
 
                 <div style="width: 100%;display: inline-flex;"
                   *ngIf="history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection' ">
@@ -561,10 +554,11 @@
             </div> -->
 
 
-          </div>
+            </div>
 
 
-          <div *ngFor="let history of transctionHistory"> 
+          <!-----------------------------commnt code use single submit----------------------------------------------->
+          <!-- <div *ngFor="let history of transctionHistory"> 
             <div *ngFor="let historyDetails of history.transValue"> 
 
               <ion-fab *ngIf="((historyDetails.submission_status == 3 || historyDetails.submission_status == 0)  && historyDetails.show_transaction == 0)  && historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
@@ -576,16 +570,34 @@
               </ion-fab>
             </div>
 
-          </div>
+          </div> -->
+           <!-----------------------------end of commnt code use single submit--------------------------------------->
           </ion-card>
 
         
-
+          
 
 
       </ng-template>
-
     </swiper>
+
+      <div *ngFor="let history of transctionHistory">
+        <div *ngFor="let historyDetails of history.transValue">
+
+          <ion-fab class="mr-3" slot="fixed" style="bottom: 20px;position: fixed;right: 3px;">
+
+            <ion-fab-button *ngIf="((historyDetails.submission_status == 0 || historyDetails.submission_status == 3 ) && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED'
+                              && historyDetails.category != 'misc_collection' && historyDetails.category != 'tm_transfer'" style="font-size: 14px; --box-shadow:none;"
+                              (click)="addTransactionHistoryReview()">Submit
+            </ion-fab-button>
+
+          </ion-fab>
+          
+        </div>
+      </div>
+
+
+ 
 
 
    

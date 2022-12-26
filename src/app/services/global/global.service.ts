@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { monthsNumbers } from '../utils';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -19,13 +19,15 @@ export class GlobalService {
   fileUploadSize = 6291456;
   active_group: any;
   agency_logo: any;
+  valueGetLength: any;
+  
 
   constructor(
     private loadingController: LoadingController,
     private http: HttpClient,
     private toastController: ToastController,
     private auth: AuthService,
-    
+    private alertController: AlertController,
 
   ) { }
 
@@ -180,5 +182,29 @@ export class GlobalService {
     });
 
   }
+
+  async getAlertNotifyRejection(){
+    this.valueGetLength = localStorage.getItem('lengthOfValRejc');
+  
+    console.log("get legth:::",this.valueGetLength);
+  
+       if(this.valueGetLength == 1){
+  
+         const alert = await this.alertController.create({
+           cssClass: '',
+           message: 'Your transactions have been deleted and auto-submitted for approval.',
+           mode: 'ios',
+           buttons: ['OK']
+   
+         });
+        
+         await alert.present();
+         localStorage.removeItem('lengthOfValRejc');
+    
+       }
+
+  }
+
+  
 
 }

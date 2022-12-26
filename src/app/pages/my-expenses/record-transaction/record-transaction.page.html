@@ -32,7 +32,7 @@
                 <select class="form-control"  (change)="selectCurrencyDropdown($event.target.value)">
                   <option class="place-holder" *ngIf="selectedCurrency != 0" [ngValue]="selectedCurrency" selected >{{selectedCurrency}}</option>
 
-                  <option class="place-holder"  *ngFor="let cashCurrency of showCurrency"
+                  <option class="place-holder" *ngFor="let cashCurrency of showCurrency"
                           [ngValue]="cashCurrency">{{cashCurrency}}</option>
                 </select>
 

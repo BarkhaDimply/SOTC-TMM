@@ -33,7 +33,6 @@
             </select>
 
 
-
             <!-- <select class="form-control" (change)="onCardCurrencyChange($event.target.value)" >
             <option class="place-holder" *ngFor="let cardCurrency of showCardCurrency" [ngValue]="cardCurrency">
               {{cardCurrency}}</option>
@@ -105,7 +104,7 @@
 
 
         <div *ngIf="row" style="text-align: center;font-weight: bolder;font-size: 18px;">{{row}}</div>
-        <div *ngIf="autoCalculateVlaue" style="text-align: center;font-weight: bolder;font-size: 18px;"> 1 {{paidCurrency}} = {{autoCalculateVlaue}} {{recivedCurrency}}</div>
+        <div *ngIf="autoCalculateVlaue" style="text-align: center;font-weight: bolder;font-size: 18px;"> 1 {{showCashCurrency}} = {{autoCalculateVlaue}} {{recivedCurrency}}</div>
         <ion-row class="mb-2 ml-2 mr-2">
 
 

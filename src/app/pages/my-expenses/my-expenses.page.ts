@@ -125,40 +125,21 @@ export class MyExpensesPage implements OnInit{
         
       }
 
-      if(this.getNotiKey == '28'){  
+      if(this.getNotiKey == '28'){  console.log("28");
         this.activeSegment = "allTrans";
         this.getTransactions();
         this.getRejectedTransactions();
        
-      }else if(this.getNotiKey == '27'){ 
+      }else if(this.getNotiKey == '27'){  console.log("27");
 
         this.activeSegment = 'rejected_trans';
         this.refressfunc()
         this.getRejectedTransactions();
 
 
-        /********************code for last trascation deleted ******************************/
-   
-         this.valueGetLength = localStorage.getItem('lengthOfValRejc');
-
-        if(this.valueGetLength == 1){
-
-          const alert = await this.alertController.create({
-            cssClass: '',
-            message: 'Your transactions have been deleted and auto-submitted for approval.',
-            mode: 'ios',
-            buttons: ['OK']
-    
-          });
-         
-          await alert.present();
-          localStorage.removeItem('lengthOfValRejc');
-     
-        }
-       /********************end of code for last trascation deleted ******************************/
         
 
-     }else{ 
+     }else{  console.log("else");
         this.getTransactions();
         this.getRejectedTransactions();
        
@@ -477,13 +458,10 @@ async deleteTRansactionHistory(details:any) {   //console.log("aaaaaaaaaa",detai
               });
           
               await alert.present();
-
-             // this.globalService.presentToast('Transaction deleted successfully');
-
               this.refressfunc();
               this.refRejected();
 
-              
+             
                 
             }
           });
@@ -495,6 +473,8 @@ async deleteTRansactionHistory(details:any) {   //console.log("aaaaaaaaaa",detai
   await alert.present();
 
 }
+
+
 
 checkCheckbox() {
 
@@ -546,14 +526,6 @@ async addTransactionHistory(){
   this.getAllTrasactionId.forEach(async items => {
     items.transValue.forEach(async item =>{
       this.btnSubstatus = item.submission_status;
-
-      // console.log("item.category:::::",item.category);
-
-      // console.log(" item.show_transaction:::::", item.show_transaction);
-
-      // console.log(" item.submission_status", item.submission_status);
-
-    
 
       if(item.category != 'BALANCE ADDED' && item.category != 'tm_transfer' && item.show_transaction == 0 && item.submission_status == 0){
       
@@ -686,22 +658,26 @@ onSlideChange(event) {
 
 getRejectedTransactions(){  
 
-  if(localStorage.getItem("listOfRejectedTransaction") != ''){
+
+  console.log("inside rejected list");
+  console.log("rej localst::::",localStorage.getItem("listOfRejectedTransaction"));
+
+  // if(localStorage.getItem("listOfRejectedTransaction") != ''){
     
-    this.rejectedTransctionHistory = localStorage.getItem("listOfRejectedTransaction");
+  //   this.rejectedTransctionHistory = localStorage.getItem("listOfRejectedTransaction");
 
-    this.rejectedTransctionHistory = JSON.parse(this.rejectedTransctionHistory);
+  //   this.rejectedTransctionHistory = JSON.parse(this.rejectedTransctionHistory);
 
-    this.lengthOfValRejcAll = localStorage.setItem('lengthOfValRejcAll',this.rejectedTransctionHistory.length);
-    console.log("tesinggg::::",this.rejectedTransctionHistory.length);
+  //   this.lengthOfValRejcAll = localStorage.setItem('lengthOfValRejcAll',this.rejectedTransctionHistory.length);
+  //   console.log("tesinggg::::",this.rejectedTransctionHistory.length);
 
-  }
-
+  // }
+  console.log("tesing rej 111::::",this.rejectedTransctionHistory);
 
  
   this.apiServices.getRejectedTransctionHistoryByTime().subscribe((result:any) => {
 
-  //  console.log("rej result::::",result);
+   console.log("rej result::::",result);
 
     this.rejectedTransctionHistory =[];
     this.countValue= 0;
@@ -716,6 +692,8 @@ getRejectedTransactions(){
           localStorage.setItem("listOfRejectedTransaction", JSON.stringify(this.rejectedTransctionHistory));
         
       });
+
+      console.log("tesing rej::::",this.rejectedTransctionHistory);
 
       localStorage.setItem('lengthOfValRejc',this.countValue);
 

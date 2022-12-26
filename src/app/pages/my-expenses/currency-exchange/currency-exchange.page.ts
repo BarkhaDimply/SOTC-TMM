@@ -85,7 +85,7 @@ export class CurrencyExchangePage implements OnInit {
         this.showCashCurrency.push(element.currency_name);
 
 
-           console.log("curr333",this.showCashCurrency);
+          // console.log("curr333",this.showCashCurrency);
          }
       });
     }

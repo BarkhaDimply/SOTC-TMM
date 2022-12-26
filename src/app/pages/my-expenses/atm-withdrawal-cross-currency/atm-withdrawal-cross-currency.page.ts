@@ -76,8 +76,10 @@ export class AtmWithdrawalCrossCurrencyPage implements OnInit {
 
   ngOnInit() {
 
+    console.log("this.expenseData :::",this.expenseData);
+
     if (this.expenseData) {
-      this.expenseData.forEach(element => {  console.log("aaaaaaaaa:::",element);
+      this.expenseData.forEach(element => {  
         if(element.balance_card > 0){
           this.showCashCurrency.push(element.currency_name);
         }
@@ -85,7 +87,7 @@ export class AtmWithdrawalCrossCurrencyPage implements OnInit {
     }
 
 
-console.log("aaaaaa",this.showCashCurrency);
+console.log("show curr:::",this.showCashCurrency);
 
 
 
@@ -366,9 +368,10 @@ console.log("aaaaaa",this.showCashCurrency);
     }
 
 
+    console.log("params debit:::",params);
 
 
-      params.transaction_type = "atm_cross_currency";
+    params.transaction_type = "atm_cross_currency";
     params.description = this.descriptionCrossCurrency;
     params.exchange_amount_receive = this.amtRecivedCrossCurrency;
    // params.exchange_currency = this.selectedCashCurrency;
@@ -500,6 +503,8 @@ console.log("aaaaaa",this.showCashCurrency);
       await alert.present();
       return false;
     }
+
+    console.log("paid curr::",this.paidCurrency);
 
      var paidAmount = parseFloat(this.amtPaidCrossCurrency);
      var recivedAmount = parseFloat(this.amtRecivedCrossCurrency);

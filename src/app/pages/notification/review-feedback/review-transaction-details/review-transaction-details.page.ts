@@ -139,6 +139,11 @@ export class ReviewTransactionDetailsPage implements OnInit {
 
                 if(result.message == 'Success'){
 
+                    /********************code for last trascation deleted ******************************/
+                    this.globalService.getAlertNotifyRejection();
+                    /********************end of code for last trascation deleted ******************************/
+   
+
 
                   this.apiServices.getAllTransctionHistoryByTime().subscribe(async (result:any) => {
 
