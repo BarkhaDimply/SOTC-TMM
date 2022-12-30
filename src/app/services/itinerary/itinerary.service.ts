@@ -17,11 +17,11 @@ export class ItineraryService {
 
   constructor(private http: HttpClient) {
     this.baseURL = localStorage.getItem('baseURL') || '';
-    this.baseURLEvent.subscribe(val => {
-      if (val !== null) {
-        this.baseURL = val;   
-      }
-    });
+    // this.baseURLEvent.subscribe(val => {
+    //   if (val !== null) {
+    //     this.baseURL = val;   
+    //   }
+    // });
    
   }
 
