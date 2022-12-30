@@ -8,7 +8,6 @@ import { catchError, map } from 'rxjs/operators';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { AuthService } from '../auth/auth.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,7 +19,7 @@ export class GlobalService {
   active_group: any;
   agency_logo: any;
   valueGetLength: any;
-
+  public appLogoEvent = new BehaviorSubject<any>(null);
 
   constructor(
     private loadingController: LoadingController,
@@ -43,6 +42,10 @@ export class GlobalService {
     return base_url;
   }
 
+  public setAPPLogo(val){
+    
+  }
+
   async presentLoading() {
     this.isLoading = true;
     return await this.loadingController.create({
@@ -56,8 +59,6 @@ export class GlobalService {
         }
       });
     });
-
-
   }
 
   async presentLoadingMemeber() {
