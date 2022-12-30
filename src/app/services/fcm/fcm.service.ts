@@ -2,7 +2,7 @@ import { Injectable, Component, OnInit } from '@angular/core';
 
 import { NavigationExtras, Router } from '@angular/router';
 
-import {ActionPerformed, PushNotificationSchema, PushNotifications,Token, PushNotificationToken, PushNotification, PushNotificationActionPerformed,} from '@capacitor/push-notifications';
+import { ActionPerformed, PushNotificationSchema, PushNotifications, Token, PushNotificationToken, PushNotification, PushNotificationActionPerformed, } from '@capacitor/push-notifications';
 
 import { Capacitor } from '@capacitor/core';
 
@@ -21,14 +21,10 @@ export class FcmService {
     }
   }
 
-
   ngOnInit() {
   }
 
-
-
   private registerPush() {
-
     PushNotifications.requestPermissions().then((permission) => {
       if (permission.receive) {
         // Register with Apple / Google to receive push via APNS/FCM
@@ -44,7 +40,7 @@ export class FcmService {
 
 
         console.log('My token 11: ' + JSON.stringify(token.value));
-        localStorage.setItem("FCMTokenKey",token.value);
+        localStorage.setItem("FCMTokenKey", token.value);
       }
     );
 
@@ -64,31 +60,26 @@ export class FcmService {
       async (notification: PushNotificationActionPerformed) => {
         const data = notification.notification.data;
 
-        if(data.key == '27'){
+        if (data.key == '27') {
           this.router.navigateByUrl('/tabs/my-expenses');
-        }else if(data.key == '25'){
+        } else if (data.key == '25') {
           this.router.navigateByUrl('/notification');
-        }else if(data.key == '26'){
+        } else if (data.key == '26') {
           this.router.navigateByUrl('/notification');
-        }else if(data.key == '28'){
-         // this.router.navigateByUrl('/tabs/my-expenses');
+        } else if (data.key == '28') {
+          // this.router.navigateByUrl('/tabs/my-expenses');
           let navigationExtras: NavigationExtras = {
             state: {
-              details:28
+              details: 28
             }
           };
-         
-          console.log("fcm::::",JSON.stringify(navigationExtras));
-
-        this.router.navigate(['/tabs/my-expenses'], navigationExtras);   
-        }else{
+          console.log("fcm::::", JSON.stringify(navigationExtras));
+          this.router.navigate(['/tabs/my-expenses'], navigationExtras);
+        } else {
           this.router.navigateByUrl('/notification');
         }
-
-      
       }
     );
   }
 
-  
 }

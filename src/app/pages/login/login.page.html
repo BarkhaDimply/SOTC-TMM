@@ -1,5 +1,5 @@
 <ion-content>
-  <div class="content" >
+  <div class="content">
 
     <div class="error-message">
       <p *ngFor="let err of errorMessage" class="error">{{ err }}</p>
@@ -8,14 +8,12 @@
       <img src="assets/images/profileicon.png" />
     </div>
     <form (ngSubmit)="demonstateSubmit()" [formGroup]="loginForm" class="login-form">
-
-
       <div class="form-group">
-
         <div class="d-flex" *ngIf="!OTP_box">
-        <input style="width: 20%;" [disabled]="loginForm.invalid" type="text" value="91" readonly placeholder="+91"> &nbsp;
-
-        <input formControlName="manager_number" [disabled]="loginForm.invalid" id="manager_number" placeholder="8888888888" type="number" autocapitalize="off">
+          <input style="width: 20%;" [disabled]="loginForm.invalid" type="text" value="91" readonly placeholder="+91">
+          &nbsp;
+          <input formControlName="manager_number" [disabled]="loginForm.invalid" id="manager_number"
+            placeholder="8888888888" type="number" autocapitalize="off">
         </div>
 
         <ng-container *ngFor="let validation of validationMessages.manager_number">
@@ -27,27 +25,21 @@
         </ng-container>
       </div>
 
-     
+
       <div class="form-group" class="d-flex">
-
-        <div  style="margin: 0 auto;">
-       
-      <ng-otp-input (onInputChange)="onOtpChange($event)" *ngIf="OTP_box"  ngDefaultControl [(ngModel)]="otp" [config]="{length:4}" [ngModelOptions]="{standalone: true}" required></ng-otp-input>
-
-    </div>
-
+        <div style="margin: 0 auto;">
+          <ng-otp-input (onInputChange)="onOtpChange($event)" *ngIf="OTP_box" ngDefaultControl [(ngModel)]="otp"
+            [config]="{length:4}" [ngModelOptions]="{standalone: true}" required></ng-otp-input>
+        </div>
         <!-- <input placeholder="OTP eg. 123456" type="number" autocapitalize="off" [(ngModel)]="otp" *ngIf="OTP_box" [ngModelOptions]="{standalone: true}" required> -->
-
       </div>
+
       <div class="form-group">
-        <ion-button [disabled]="loginForm.invalid" class="primary-btn" type="submit" *ngIf="!OTP_box">Submit</ion-button>
-        <ion-button (click)="verifyOtp()" style="margin-top: 10px;    width: 98%;" class="primary-btn" type="button" *ngIf="OTP_box">Submit</ion-button>
+        <ion-button [disabled]="loginForm.invalid" class="primary-btn" type="submit" *ngIf="!OTP_box">Submit
+        </ion-button>
+        <ion-button (click)="verifyOtp()" style="margin-top: 10px;width: 98%;" class="primary-btn" type="button"
+          *ngIf="OTP_box">Submit</ion-button>
       </div>
-
-
-    
-      
-   
 
     </form>
   </div>

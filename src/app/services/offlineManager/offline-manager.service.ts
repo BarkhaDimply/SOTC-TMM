@@ -20,22 +20,16 @@ interface StoredRequest {
 })
 export class OfflineManagerService {
 
-  constructor(private storage: Storage, private http: HttpClient, private toastController: ToastController) { }
+  constructor(private storage: Storage, private toastCtrl: ToastController, private http: HttpClient) { }
 
-  checkForEvents(): Observable<any> {
+  checkForEvents() {
     return from(this.storage.get(STORAGE_REQ_KEY)).pipe(
       switchMap(storedOperations => {
-        let storedObj = JSON.parse(storedOperations);
+        const storedObj = JSON.parse(storedOperations);
         if (storedObj && storedObj.length > 0) {
           return this.sendRequests(storedObj).pipe(
             finalize(() => {
-              let toast = this.toastController.create({
-                message: `Local data succesfully synced to API!`,
-                duration: 3000,
-                position: 'bottom'
-              });
-              toast.then(toast => toast.present());
-
+              this.presentToast(`Local data succesfully synced to API!`);
               this.storage.remove(STORAGE_REQ_KEY);
             })
           );
@@ -44,18 +38,37 @@ export class OfflineManagerService {
           return of(false);
         }
       })
-    )
+    );
   }
 
-  storeRequest(url, type, data) {
-    let toast = this.toastController.create({
-      message: `Your data is stored locally because you seem to be offline.`,
+  sendRequests(operations: StoredRequest[]) {
+    const obs = [];
+
+    for (const op of operations) {
+      console.log('Make one request: ', op);
+      const data = JSON.stringify(op.data);
+      console.log('JSON.stringify(op.data)', data);
+      const oneObs = this.http.request(op.type, op.url, {body: op.data});
+      obs.push(oneObs);
+    }
+
+    // Send out all local events and return once they are finished.
+    return forkJoin(obs);
+  }
+
+  async presentToast(message) {
+    const toast = await this.toastCtrl.create({
+      message: message,
       duration: 3000,
       position: 'bottom'
     });
-    toast.then(toast => toast.present());
+    toast.present();
+  }
 
-    let action: StoredRequest = {
+  storeRequest(url, type, data) {
+    this.presentToast(`Your data is stored locally because you seem to be offline.`);
+
+    const action: StoredRequest = {
       url: url,
       type: type,
       data: data,
@@ -75,18 +88,5 @@ export class OfflineManagerService {
       // Save old & new local transactions back to Storage
       return this.storage.set(STORAGE_REQ_KEY, JSON.stringify(storedObj));
     });
-  }
-
-  sendRequests(operations: StoredRequest[]) {
-    let obs = [];
-
-    for (let op of operations) {
-      console.log('Make one request: ', op);
-      let oneObs = this.http.request(op.type, op.url, op.data);
-      obs.push(oneObs);
-    }
-
-    // Send out all local events and return once they are finished
-    return forkJoin(obs);
   }
 }

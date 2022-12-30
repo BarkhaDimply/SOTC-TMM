@@ -20,7 +20,7 @@ export class GlobalService {
   active_group: any;
   agency_logo: any;
   valueGetLength: any;
-  
+
 
   constructor(
     private loadingController: LoadingController,
@@ -32,17 +32,10 @@ export class GlobalService {
   ) { }
 
   async presentLoading() {
-    // this.loading = await this.loadingController.create({
-    //   cssClass: 'my-custom-class custom-loading',
-    //   message: 'Please wait...',
-    //   spinner: "lines-sharp",
-    // });
-    // await this.loading.present();
-
     this.isLoading = true;
     return await this.loadingController.create({
       message: 'Please wait...',
-       duration: 2000,
+      duration: 2000,
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
@@ -56,11 +49,10 @@ export class GlobalService {
   }
 
   async presentLoadingMemeber() {
-
     this.isLoading = true;
     return await this.loadingController.create({
       message: 'Please wait...',
-       duration: 4000,
+      duration: 4000,
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
@@ -69,29 +61,19 @@ export class GlobalService {
         }
       });
     });
-
-
   }
 
 
 
-  async dismissLoading() { 
-
-
-    // this.isLoading = false;
-    // return await this.loadingController.dismiss().then(() => console.log('dismissed'));
- 
-
-
-  this.loading = await this.loadingController.create({
-    cssClass: 'my-custom-class custom-loading',
-    message: 'Please wait...',
-    spinner: "lines-sharp",
-    duration: 2000
-  }); 
-  await this.loading.dismiss();
-
-}
+  async dismissLoading() {
+    this.loading = await this.loadingController.create({
+      cssClass: 'my-custom-class custom-loading',
+      message: 'Please wait...',
+      spinner: "lines-sharp",
+      duration: 2000
+    });
+    await this.loading.dismiss();
+  }
 
   public async presentToast(msg) {
     const toast = await this.toastController.create({
@@ -101,7 +83,7 @@ export class GlobalService {
     toast.present();
   }
 
- 
+
 
   dateFormatted(dateFromIonDatetime) {
     const date = new Date(dateFromIonDatetime);
@@ -137,7 +119,7 @@ export class GlobalService {
 
     imageUrl = image.dataUrl;
     const selectedFile = await fetch(imageUrl).then(r => r.blob());
-   
+
     return { selectedFile, imageUrl, errorMessage };
   }
 
@@ -151,60 +133,50 @@ export class GlobalService {
     } else {
       padding = 0;
     }
-
     const base64StringLength = base64String.length;
     return (base64StringLength / 4) * 3 - padding;
   }
 
 
-  getCheckActiveManager(){
-
+  getCheckActiveManager() {
     this.active_group = JSON.parse(localStorage.getItem('active_group'));
-
     let request = {
       'login_code': this.active_group[0]['tourCode'],
       'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
     };
-
     this.auth.login(request).subscribe(async (result: any) => {
-
-      console.log("aaaaaaa request:::::111",result);
-
-      if(result.data != ''){
+      console.log("aaaaaaa request:::::111", result);
+      if (result.data != '') {
         this.agency_logo = result.data.agency_logo
-
-
-        localStorage.setItem('agency_logo',this.agency_logo);
-
-        console.log("agency_logo request:::::111",this.agency_logo);
+        localStorage.setItem('agency_logo', this.agency_logo);
+        console.log("agency_logo request:::::111", this.agency_logo);
       }
-
     });
 
   }
 
-  async getAlertNotifyRejection(){
+  async getAlertNotifyRejection() {
     this.valueGetLength = localStorage.getItem('lengthOfValRejc');
-  
-    console.log("get legth:::",this.valueGetLength);
-  
-       if(this.valueGetLength == 1){
-  
-         const alert = await this.alertController.create({
-           cssClass: '',
-           message: 'Your transactions have been deleted and auto-submitted for approval.',
-           mode: 'ios',
-           buttons: ['OK']
-   
-         });
-        
-         await alert.present();
-         localStorage.removeItem('lengthOfValRejc');
-    
-       }
+
+    console.log("get legth:::", this.valueGetLength);
+
+    if (this.valueGetLength == 1) {
+
+      const alert = await this.alertController.create({
+        cssClass: '',
+        message: 'Your transactions have been deleted and auto-submitted for approval.',
+        mode: 'ios',
+        buttons: ['OK']
+
+      });
+
+      await alert.present();
+      localStorage.removeItem('lengthOfValRejc');
+
+    }
 
   }
 
-  
+
 
 }

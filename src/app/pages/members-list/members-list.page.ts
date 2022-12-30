@@ -8,7 +8,7 @@ import { SwiperComponent } from 'swiper/angular';
 import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 import { ApiService } from 'src/app/services/api/api.service';
 import { GlobalService } from 'src/app/services/global/global.service';
-import { TripPageModule } from '../trip/trip.module';
+//import { TripPageModule } from '../trip/trip.module';
 import { empty } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 

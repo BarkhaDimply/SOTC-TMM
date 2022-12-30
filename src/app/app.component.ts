@@ -50,11 +50,8 @@ export class AppComponent implements OnInit{
   
 
   ngOnInit(): void {
-
     this.globalService.getCheckActiveManager();
     this.agency_logo = localStorage.getItem('agency_logo');
-
-
     this.auth.getUserStatus.subscribe(val => {
       if (val === '0') {
         this.menuVisible = false;
@@ -62,25 +59,10 @@ export class AppComponent implements OnInit{
         this.menuVisible = true;
       }
     });
-
-
-
   }
-
-
- 
-  
- 
-
 
   initializeApp() {
     this.platform.ready().then(() => {
-    //  this.statusBar.styleDefault();
-   
-
-     // this.splashScreen.hide();
-
-      // Trigger the push setup
       this.fcmService.initPush();
     });
 

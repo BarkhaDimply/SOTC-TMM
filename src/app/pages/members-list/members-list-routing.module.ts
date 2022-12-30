@@ -6,10 +6,11 @@ const routes: Routes = [
   {
     path: '',
     component: MembersListPage,
-  },  {
-    path: 'members-list-filter',
-    loadChildren: () => import('./members-list-filter/members-list-filter.module').then( m => m.MembersListFilterPageModule)
-  }
+  },
+  // {
+  //   path: 'members-list-filter',
+  //   loadChildren: () => import('./members-list-filter/members-list-filter.module').then( m => m.MembersListFilterPageModule)
+  // }
 
 ];
 

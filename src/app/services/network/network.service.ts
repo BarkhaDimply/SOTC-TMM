@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Network } from '@ionic-native/network/ngx'
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ToastController, Platform } from '@ionic/angular';
+import { ToastController, LoadingController } from '@ionic/angular';
+import { Plugins, Capacitor } from '@capacitor/core';
+
+const { Network } = Plugins;
 
 export enum ConnectionStatus {
   Online,
@@ -14,48 +16,67 @@ export enum ConnectionStatus {
 export class NetworkService {
 
   private status: BehaviorSubject<ConnectionStatus> = new BehaviorSubject(ConnectionStatus.Offline);
+  private loading: any = null;
 
-  constructor(private network: Network, private toastController: ToastController, private plt: Platform) {
-    this.plt.ready().then(() => {
-      this.initializeNetworkEvents();
-      let status =  this.network.type !== 'none' ? ConnectionStatus.Online : ConnectionStatus.Offline;
-      this.status.next(status);
-    });
+  constructor(private toastController: ToastController, private loadingCtrl: LoadingController) {
+    console.log('NetworkService::constructor | method called');
+
+    let status = ConnectionStatus.Offline;
+    if (Capacitor.platform === 'web') {
+      console.log('WEB');
+      console.log('navigator.onLine', navigator.onLine);
+      this.addConnectivityListenersBrowser();
+      status =  navigator.onLine === true ? ConnectionStatus.Online : ConnectionStatus.Offline;
+    } else { // Native: use capacitor network plugin
+      console.log('NATIVE');
+      this.addConnectivityListernerNative();
+      // status = Network.getStatus();
+    }
+
+    this.status.next(status);
   }
 
-  public initializeNetworkEvents() {
+  onOnline() {
+    if (this.status.getValue() === ConnectionStatus.Offline) {
+      console.log('Network connected!');
+      console.log('navigator.onLine', navigator.onLine);
+      this.dismissLoading();
+      this.updateNetworkStatus(ConnectionStatus.Online);
+    }
+  }
 
-    this.network.onDisconnect().subscribe(() => {
-      if (this.status.getValue() === ConnectionStatus.Online) {
-        console.log('WE ARE OFFLINE');
-        this.updateNetworkStatus(ConnectionStatus.Offline);
+  onOffline() {
+    if (this.status.getValue() === ConnectionStatus.Online) {
+      console.log('Network was disconnected :-(');
+      console.log('navigator.onLine', navigator.onLine);
+      this.presentLoading();
+      this.updateNetworkStatus(ConnectionStatus.Offline);
+    }
+  }
 
-        
-        console.log("ConnectionStatus.Offline:::",ConnectionStatus.Offline)
-      }
-    });
+  addConnectivityListenersBrowser() {
+    window.addEventListener('online', this.onOnline.bind(this));
+    window.addEventListener('offline', this.onOffline.bind(this));
+  }
 
-    this.network.onConnect().subscribe(() => {
-      if (this.status.getValue() === ConnectionStatus.Offline) {
-        console.log('WE ARE ONLINE');
-        this.updateNetworkStatus(ConnectionStatus.Online);
+  addConnectivityListernerNative() {
 
-        console.log("ConnectionStatus.Online:::",ConnectionStatus.Online)
-
-      }
+    const handler = Network.addListener('networkStatusChange', (status) => {
+      console.log('Network status changed', status);
     });
   }
 
   private async updateNetworkStatus(status: ConnectionStatus) {
+    console.log('updateNetworkStatus', status);
     this.status.next(status);
 
-    let connection = status == ConnectionStatus.Offline ? 'Offline' : 'Online';
-    let toast = this.toastController.create({
+    const connection = status === ConnectionStatus.Offline ? 'Offline' : 'Online';
+    const toast = await this.toastController.create({
       message: `You are now ${connection}`,
       duration: 3000,
       position: 'bottom'
     });
-    toast.then(toast => toast.present());
+    toast.present();
   }
 
   public onNetworkChange(): Observable<ConnectionStatus> {
@@ -65,4 +86,20 @@ export class NetworkService {
   public getCurrentNetworkStatus(): ConnectionStatus {
     return this.status.getValue();
   }
+
+  private async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      message: 'Waiting for connection...',
+    });
+
+    return await this.loading.present();
+  }
+
+  private async dismissLoading() {
+    if ((this.loading !== null) && (typeof this.loading !== 'undefined')) {
+      this.loading.dismiss();
+      this.loading = null;
+    }
+  }
+
 }
