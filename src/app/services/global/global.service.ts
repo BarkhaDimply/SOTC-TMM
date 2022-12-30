@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { monthsNumbers } from '../utils';
+import { branches, monthsNumbers, nonce } from '../utils';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -30,6 +30,18 @@ export class GlobalService {
     private alertController: AlertController,
 
   ) { }
+
+  public setBaseURL(val) {
+    let base_url = '';
+    if (val === branches[0]) {
+      base_url = environment.webserviceSOTC;
+      localStorage.setItem('baseURL', base_url);
+    } else {
+      base_url = environment.webserviceTcil;
+      localStorage.setItem('baseURL', base_url);
+    }
+    return base_url;
+  }
 
   async presentLoading() {
     this.isLoading = true;
@@ -139,29 +151,26 @@ export class GlobalService {
 
 
   getCheckActiveManager() {
-    this.active_group = JSON.parse(localStorage.getItem('active_group'));
-    let request = {
-      'login_code': this.active_group[0]['tourCode'],
-      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
-    };
-    this.auth.login(request).subscribe(async (result: any) => {
-      console.log("aaaaaaa request:::::111", result);
-      if (result.data != '') {
-        this.agency_logo = result.data.agency_logo
-        localStorage.setItem('agency_logo', this.agency_logo);
-        console.log("agency_logo request:::::111", this.agency_logo);
-      }
-    });
-
+    this.active_group = JSON.parse(localStorage.getItem('active_group')) || null;   
+    if(this.active_group)
+    {
+      let request = {
+        'login_code': this.active_group[0]['tourCode'],
+        'nonce': nonce
+      };
+      this.auth.login(request).subscribe(async (result: any) => {       
+        if (result.data != '') {
+          this.agency_logo = result.data.agency_logo
+          localStorage.setItem('agency_logo', this.agency_logo);
+        }
+      });
+    }
   }
 
   async getAlertNotifyRejection() {
     this.valueGetLength = localStorage.getItem('lengthOfValRejc');
-
     console.log("get legth:::", this.valueGetLength);
-
     if (this.valueGetLength == 1) {
-
       const alert = await this.alertController.create({
         cssClass: '',
         message: 'Your transactions have been deleted and auto-submitted for approval.',
@@ -169,14 +178,9 @@ export class GlobalService {
         buttons: ['OK']
 
       });
-
       await alert.present();
       localStorage.removeItem('lengthOfValRejc');
-
     }
-
   }
-
-
 
 }

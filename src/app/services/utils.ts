@@ -42,3 +42,5 @@ export const timestampInMin = () => Math.floor(Date.now() / 1000 / 60);
 export const fileUploadSize = 6291456;
 
 export const nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
+
+export const branches = ["SOTC", "TC"];

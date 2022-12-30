@@ -10,17 +10,24 @@ import { UserModel } from 'src/app/models/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  url: string;
 
   httpOptions: any;
   headers = { 'content-type': 'application/json' };
-  userLoggedIn = new BehaviorSubject('0');
+  userLoggedIn = new BehaviorSubject<any>(null);
+  baseURL: string = '';
+  public baseURLEvent = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
+    this.baseURL = localStorage.getItem('baseURL') || '';
+    this.baseURLEvent.subscribe(val => {
+      if (val !== null) {
+        this.baseURL = val;   
+      }
+    });
     if (this.isAuthenticated) {
       this.userLoggedIn.next(this.user?.agency_name);
     } else {
-      this.userLoggedIn.next('0');
+      this.userLoggedIn.next(null);
     }
   }
 
@@ -37,17 +44,7 @@ export class AuthService {
     const headers = {
       'content-type': 'application/json',
       'Access-Control-Allow': '*',
-      'Accept':'application/json',
-      //'Access-Control-Allow-Origin': '*'
-      //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      // authorization: 'Bearer ' + this.user?.token
-    };
-    return headers;
-  }
-
-  get headersmultiPartHeader() {
-    const headers = {
-      'content-type': 'multipart/form-data'
+      'Accept': 'application/json',
     };
     return headers;
   }
@@ -61,61 +58,28 @@ export class AuthService {
   }
 
   loginManager(data): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(loginUrl2+'?manager_number='+data.manager_number,{ headers: this.jsonheader }).pipe(
+    return this.http.get<ApiResponse>(this.baseURL+ loginUrl2 + '?manager_number=' + data.manager_number, { headers: this.jsonheader }).pipe(
       catchError(handleError),
       map((result: ApiResponse) => {
         const listing = new ApiResponse();
-        Object.assign(listing, result);        
+        Object.assign(listing, result);
         return listing;
       })
     );
   }
 
   apiTourManagerActiveGroup(data): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(tourManagerActiveGroup, data, {headers: this.headers}).pipe(
+    return this.http.post<ApiResponse>(this.baseURL+ tourManagerActiveGroup, data, { headers: this.headers }).pipe(
       catchError(handleError)
     );
   }
 
   login(data): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(loginUrl, data, { headers: this.jsonheader }).pipe(
-      catchError(handleError)     
+    return this.http.post<ApiResponse>(this.baseURL+ loginUrl, data, { headers: this.jsonheader }).pipe(
+      catchError(handleError)
     );
   }
 
-
-
-  // register(data): Observable<ApiResponse> {
-  //   return this.http.post<ApiResponse>(registerUrl, data, {headers: this.headers}).pipe(
-  //     catchError(handleError),
-  //     map((result: ApiResponse) => {
-  //       const listing = new ApiResponse();
-  //       Object.assign(listing, result);
-  //       if (result.status) {
-  //         this.userLoggedIn.next(result.data.firstName);
-  //       }
-  //       return listing;
-  //     })
-  //   );
-  // }
-
-  // forgot(data): Observable<ApiResponse> {
-  //   return this.http.post<ApiResponse>(forgotPasswordUrl, data, {headers: this.headers}).pipe(
-  //     catchError(handleError)
-  //   );
-  // }
-
-  // verifyEmail(data): Observable<ApiResponse> {
-  //   return this.http.post<ApiResponse>(verifyEmail, data, {headers: this.headers}).pipe(
-  //     catchError(handleError),
-  //   );
-  // }
-
-  // verifyUsername(data): Observable<ApiResponse> {
-  //   return this.http.post<ApiResponse>(verifyUsername, data, {headers: this.headers}).pipe(
-  //     catchError(handleError),
-  //   );
-  // }
 
   // logout(data) {
   //   return this.http.post(logoutUrl, data, {headers: this.jsonheader}).pipe(

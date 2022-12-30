@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { nonce } from 'src/app/services/utils';
+import { branches, nonce } from 'src/app/services/utils';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { FcmService } from 'src/app/services/fcm/fcm.service';
@@ -59,32 +59,22 @@ export class LoginPage implements OnInit {
     this.loginForm = this.fomrBuilder.group({
       manager_number: ['', [Validators.required]]
     });
-
   }
 
   ngOnInit() {
     this.selectBranch();
   }
 
-
   selectBranch() {
     let options = [];
-    const listLogo = ["SOTC", "TC"];
-    listLogo.forEach((element, index) => {
-      if (index === 0) {
+    const branchOptions = branches;
+    branchOptions.forEach((element, index) => {      
         options.push({
           type: 'radio',
           label: element,
           value: element,
-          checked: true
-        });
-      } else {
-        options.push({
-          type: 'radio',
-          label: element,
-          value: element,
-        });
-      }
+          checked: index === 0 ? true : false
+        });      
     });
     this.alertController.create({
       header: 'Select Branch',
@@ -95,13 +85,8 @@ export class LoginPage implements OnInit {
           text: 'Done',
           handler: (data: any) => {
             if (data != '') {
-              if (data == 'SOTC') {
-                this.urlBaseChange = 'https://sotcconnect.travelexic.com'
-                localStorage.setItem('sotcBase', this.urlBaseChange);
-              } else {
-                this.urlBaseChange = 'https://tcgateway.travelexic.com'
-                localStorage.setItem('tcBase', this.urlBaseChange);
-              }
+             const url = this.globalService.setBaseURL(data);
+             this.auth.baseURLEvent.next(url);
             }
           }
         }
@@ -134,14 +119,7 @@ export class LoginPage implements OnInit {
         localStorage.setItem('manager_name', result.manager_name)
         this.loginResponse = result;
       } else {
-        this.serverMessage = result.error;
-        const alert = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          message: result.msg,
-          mode: 'ios',
-          buttons: ['OK']
-        });
-        await alert.present();
+        this.globalService.presentToast(result.msg);
         this.loginForm.reset();
       }
     });
@@ -149,36 +127,20 @@ export class LoginPage implements OnInit {
 
   onOtpChange(otp) {
     if (otp.length === 4) {
-      this.getOtp = otp
+      this.getOtp = otp;
     }
   }
 
   async verifyOtp() {
     this.otp = this.getOtp;
-
     if (typeof this.otp == 'undefined') {
-      const alert = await this.alertController.create({
-        //  cssClass: 'my-custom-class',
-        message: 'Plase enter otp',
-        mode: 'ios',
-        buttons: ['OK']
-      });
-      await alert.present();
+      this.globalService.presentToast('Plase enter otp');
       return false;
     }
-
     if (atob(this.loginResponse.otp).toString() === this.otp.toString()) {
       this.tourManagerActiveGroup(this.loginResponse.manager_id);
     } else {
-      //this.globalService.presentToast("Plase enter valid otp");
-
-      const alert = await this.alertController.create({
-        cssClass: '',
-        message: 'Plase enter valid otp',
-        mode: 'ios',
-        buttons: ['OK']
-      });
-      await alert.present();
+      this.globalService.presentToast('Plase enter valid otp');
       this.otp = '';
       return;
     }
@@ -188,45 +150,30 @@ export class LoginPage implements OnInit {
     const data = {
       manager_id: id
     };
-
     this.auth.apiTourManagerActiveGroup(data).subscribe(async (result: any) => {
       if (result?.status === true) {
         localStorage.setItem('active_group', JSON.stringify(result.data));
-        this.login(result.data[0]);
+        this.getHubList(result.data[0]);
       } else {
-        //this.serverMessage = result.error;
-        const alert = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          message: result.error,
-          mode: 'ios',
-          buttons: ['OK']
-        });
-        await alert.present();
+       this.globalService.presentToast(result.error);
         return;
       }
     });
   }
 
-  login(data) {
+  getHubList(data) {
     let request = {
       'login_code': data['tourCode'],
-      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+      'nonce': nonce
     };
-
     this.auth.login(request).subscribe(async (result: any) => {
       if (result?.status === true) {
         localStorage.setItem('user', JSON.stringify(result.data));
         localStorage.setItem('hubList', JSON.stringify(result.data.hub_list));
+        localStorage.setItem('agency_logo', result.data.agency_logo);
         this.loadModal(result.data.hub_list);
       } else {
-        // this.serverMessage = result.error;
-        const alert = await this.alertController.create({
-          //cssClass: 'my-custom-class',
-          message: result.error,
-          mode: 'ios',
-          buttons: ['OK']
-        });
-        await alert.present();
+        this.globalService.presentToast(result.error);
         return;
       }
     });
@@ -235,23 +182,14 @@ export class LoginPage implements OnInit {
 
   loadModal(hub_list) {
     let options = [];
-    hub_list.forEach((element, index) => {
-      if (index === 0) {
+    hub_list.forEach((element, index) => {     
         options.push({
           type: 'radio',
           label: element,
           value: element,
-          checked: true
+          checked: index === 0 ? true : false
         });
-      } else {
-        options.push({
-          type: 'radio',
-          label: element,
-          value: element,
-        });
-      }
     });
-
     this.alertController.create({
       header: 'Select Hub',
       cssClass: 'my-custom-class',
@@ -263,10 +201,8 @@ export class LoginPage implements OnInit {
           handler: (data: any) => {
             if (data != '') {
               localStorage.setItem("selected_hub", data);
-
               //set hub in db -api
-              this.getSaveManagerHub();
-
+             // this.getSaveManagerHub();
               this.auth.userLoggedIn.next("loggedin");
               this.navController.navigateRoot(['/']);
             }
@@ -279,37 +215,37 @@ export class LoginPage implements OnInit {
   }
 
 
-  getFcmTokenNoty() {
-    let params: any = {}
-    params.driver_id = localStorage.getItem("manager_id");
-    params.device = 'android'
-    params.fcm_token = localStorage.getItem("FCMTokenKey");
-    console.log("params333::::", JSON.stringify(params));
-    this.apiServices.getFcmToken(params).subscribe((result: any) => {
-      console.log("notification fcm::::", result);
-    });
+  // getFcmTokenNoty() {
+  //   let params: any = {}
+  //   params.driver_id = localStorage.getItem("manager_id");
+  //   params.device = 'android'
+  //   params.fcm_token = localStorage.getItem("FCMTokenKey");
+  //   console.log("params333::::", JSON.stringify(params));
+  //   this.apiServices.getFcmToken(params).subscribe((result: any) => {
+  //     console.log("notification fcm::::", result);
+  //   });
 
-  }
+  // }
 
-  getSaveManagerHub() {
-    let params: any = {}
+  // getSaveManagerHub() {
+  //   let params: any = {}
 
-    var Users: string = localStorage.getItem("user");
-    params.driver_id = localStorage.getItem("manager_id");
-    params.hub = localStorage.getItem("selected_hub");
-    params.group_id = JSON.parse(Users).order_id;
-    params.nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
-    console.log("hub:::", params);
-    this.apiServices.saveManagerHub(params).subscribe(async (result: any) => {
-      console.log("hub result:::", result);
-      if (result.status == false) {
-        const alert = await this.alertController.create({
-          message: 'Hub Not Selected',
-          mode: 'ios',
-        });
-        await alert.present();
-      }
-    });
+  //   var Users: string = localStorage.getItem("user");
+  //   params.driver_id = localStorage.getItem("manager_id");
+  //   params.hub = localStorage.getItem("selected_hub");
+  //   params.group_id = JSON.parse(Users).order_id;
+  //   params.nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
+  //   console.log("hub:::", params);
+  //   this.apiServices.saveManagerHub(params).subscribe(async (result: any) => {
+  //     console.log("hub result:::", result);
+  //     if (result.status == false) {
+  //       const alert = await this.alertController.create({
+  //         message: 'Hub Not Selected',
+  //         mode: 'ios',
+  //       });
+  //       await alert.present();
+  //     }
+  //   });
 
-  }
+  // }
 }
