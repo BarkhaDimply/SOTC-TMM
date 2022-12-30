@@ -50,10 +50,15 @@ export class AppComponent implements OnInit{
   
 
   ngOnInit(): void {
-    this.globalService.getCheckActiveManager();
-    this.agency_logo = localStorage.getItem('agency_logo');
+   // this.globalService.getCheckActiveManager();
+    this.agency_logo = localStorage.getItem('agency_logo') || '';
+    this.globalService.appLogoEvent.subscribe(val => {
+      if(val !== null){
+        this.agency_logo = val;
+      }
+    });
     this.auth.getUserStatus.subscribe(val => {
-      if (val === '0') {
+      if (val === null) {
         this.menuVisible = false;
       }else{
         this.menuVisible = true;
@@ -65,7 +70,6 @@ export class AppComponent implements OnInit{
     this.platform.ready().then(() => {
       this.fcmService.initPush();
     });
-
     this.networkService.onNetworkChange().subscribe((status: ConnectionStatus) => {
       if (status == ConnectionStatus.Online) {
         this.offlineManager.checkForEvents().subscribe();

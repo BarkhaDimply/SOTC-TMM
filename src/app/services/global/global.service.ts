@@ -42,8 +42,8 @@ export class GlobalService {
     return base_url;
   }
 
-  public setAPPLogo(val){
-    
+  public setAPPLogo(val) {
+
   }
 
   async presentLoading() {
@@ -152,14 +152,13 @@ export class GlobalService {
 
 
   getCheckActiveManager() {
-    this.active_group = JSON.parse(localStorage.getItem('active_group')) || null;   
-    if(this.active_group)
-    {
+    this.active_group = JSON.parse(localStorage.getItem('active_group')) || null;
+    if (this.active_group) {
       let request = {
         'login_code': this.active_group[0]['tourCode'],
         'nonce': nonce
       };
-      this.auth.login(request).subscribe(async (result: any) => {       
+      this.auth.login(request).subscribe(async (result: any) => {
         if (result.data != '') {
           this.agency_logo = result.data.agency_logo
           localStorage.setItem('agency_logo', this.agency_logo);

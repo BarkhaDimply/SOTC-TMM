@@ -4,8 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { loginUrl, loginUrl2, tourManagerActiveGroup } from '../variables';
 import { ApiResponse, handleError } from '../utils';
-import { UserModel } from 'src/app/models/user.model';
-
+import { AuthService } from '../auth/auth.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,14 +14,13 @@ export class ItineraryService {
   headers = { 'content-type': 'application/json' };
   baseURL: string = '';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private auth: AuthService) {
     this.baseURL = localStorage.getItem('baseURL') || '';
-    // this.baseURLEvent.subscribe(val => {
-    //   if (val !== null) {
-    //     this.baseURL = val;   
-    //   }
-    // });
-   
+    this.auth.baseURLEvent.subscribe(val => {
+      if (val !== null) {
+        this.baseURL = val;   
+      }
+    });   
   }
 
 }

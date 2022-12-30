@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MembersListPage } from './members-list.page';
 import { MembersListRoutingModule } from './members-list-routing.module';
-import { HeaderModule } from 'src/app/components/header/header.module';
 import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
@@ -15,7 +14,6 @@ import { SwiperModule } from 'swiper/angular';
     FormsModule,
     RouterModule.forChild([{ path: '', component: MembersListPage }]),
     MembersListRoutingModule,
-    HeaderModule,
     SwiperModule
   ],
   declarations: [MembersListPage]

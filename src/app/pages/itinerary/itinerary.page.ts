@@ -11,11 +11,11 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
   templateUrl: 'itinerary.page.html',
   styleUrls: ['itinerary.page.scss']
 })
-export class ItineraryPage implements OnInit{
+export class ItineraryPage implements OnInit {
   user: UserModel;
   ShowOthersIcon: boolean = false;
-  hideAddButton:boolean = true;
-  getbydate :any;
+  hideAddButton: boolean = true;
+  getbydate: any;
   key_itinerary: any;
   showData: any;
   merber_name: any[];
@@ -25,16 +25,16 @@ export class ItineraryPage implements OnInit{
   active_group: any;
   agency_logo: string;
 
-  constructor(private auth: AuthService, private alertController: AlertController,private globalService: GlobalService) {
+  constructor(private auth: AuthService, private alertController: AlertController, private globalService: GlobalService) {
     this.user = this.auth.user;
- 
-    console.log("user::",this.user.itinerary.length);
+
+    console.log("user::", this.user.itinerary.length);
   }
   ngOnInit(): void {
 
-    
+
     this.getCheckActiveManager();
- 
+
 
     localStorage.setItem('isFilterSet', 'false');
 
@@ -49,14 +49,14 @@ export class ItineraryPage implements OnInit{
     this.getByDayswise();
 
 
-    var t = new Date().getTime()/1000;
+    var t = new Date().getTime() / 1000;
     console.log("tttt", t);
-  
+
 
   }
 
-  
-  getCheckActiveManager(){
+
+  getCheckActiveManager() {
 
     this.active_group = JSON.parse(localStorage.getItem('active_group'));
 
@@ -67,56 +67,59 @@ export class ItineraryPage implements OnInit{
 
     this.auth.login(request).subscribe(async (result: any) => {
 
-      if(result.data != ''){
+      if (result.data != '') {
         this.agency_logo = result.data.agency_logo
 
-        localStorage.setItem('agency_logo',this.agency_logo);
+        localStorage.setItem('agency_logo', this.agency_logo);
 
       }
 
     });
 
-    console.log("agency_logo itenry:::::",this.agency_logo);
+    console.log("agency_logo itenry:::::", this.agency_logo);
 
   }
 
 
-  async checkPermission() {  
+  async checkPermission() {
     //return new Promise(async (resolve, reject) => {
-      const status = await BarcodeScanner.checkPermission({ force: true });
-      console.log("checkPermission status:::",JSON.stringify(status));
+    const status = await BarcodeScanner.checkPermission({ force: true });
+    console.log("checkPermission status:::", JSON.stringify(status));
 
 
-      if (status.granted) {return true;
-      }else if (status.denied) {return false;
-      }else if (status.neverAsked) {
-        const c = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          message: 'Please give permission for camera to use expense module',
-          mode: 'ios',
-          buttons: ['OK']
-      
-        });
-      
-        await c.present();
+    if (status.granted) {
+      return true;
+    } else if (status.denied) {
+      return false;
+    } else if (status.neverAsked) {
+      const c = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        message: 'Please give permission for camera to use expense module',
+        mode: 'ios',
+        buttons: ['OK']
 
-        if (!c) {return false;}
-      }else if (status.restricted || status.unknown) {return false;
-      }else{
-        BarcodeScanner.checkPermission();
-        
-        // const alert = await this.alertController.create({
-        //   cssClass: 'my-custom-class',
-        //   message: 'Please give permission for camera to use expense module',
-        //   mode: 'ios',
-        //   buttons: ['OK']
-      
-        // });
-      
-        // await alert.present();
-        // BarcodeScanner.openAppSettings();
-      }
-    
+      });
+
+      await c.present();
+
+      if (!c) { return false; }
+    } else if (status.restricted || status.unknown) {
+      return false;
+    } else {
+      BarcodeScanner.checkPermission();
+
+      // const alert = await this.alertController.create({
+      //   cssClass: 'my-custom-class',
+      //   message: 'Please give permission for camera to use expense module',
+      //   mode: 'ios',
+      //   buttons: ['OK']
+
+      // });
+
+      // await alert.present();
+      // BarcodeScanner.openAppSettings();
+    }
+
     //});
   }
 
@@ -125,7 +128,7 @@ export class ItineraryPage implements OnInit{
 
   doRefresh(event) {
     console.log('Begin async operation');
-    
+
     setTimeout(() => {
       console.log('Async operation has ended');
       event.target.complete();
@@ -136,14 +139,14 @@ export class ItineraryPage implements OnInit{
 
     let inputs = [] as any;
 
-    this.user.hub_list.forEach((element,index) => {
+    this.user.hub_list.forEach((element, index) => {
       inputs.push({
-        name: 'radio'+index,
+        name: 'radio' + index,
         type: 'radio',
         label: element,
         value: element,
         handler: () => {
-          console.log('Radio  selected'+index);
+          console.log('Radio  selected' + index);
         },
         checked: false
       });
@@ -173,45 +176,45 @@ export class ItineraryPage implements OnInit{
     await alert.present();
   }
 
-  getByDayswise(){
+  getByDayswise() {
 
-    let iti_data=[];
-    let iti_data1=[];
-   
-      this.user.itinerary.forEach((city,index)=> {  
+    let iti_data = [];
+    let iti_data1 = [];
 
-        let key2= 0;
+    this.user.itinerary.forEach((city, index) => {
 
-         Object.entries(city).forEach( 
-           ([key1, value]) => { 
-            var roomVal: any = value
-             
+      let key2 = 0;
 
-          if(value && typeof value =='object'){ 
-              
-               iti_data.push({index,date:key1,dayplan:value,key3:key2})
-               key2++;
+      Object.entries(city).forEach(
+        ([key1, value]) => {
+          var roomVal: any = value
 
-             } 
-        
-           });
 
-      });
+          if (value && typeof value == 'object') {
 
-      console.log("data::",iti_data);
-      this.getbydate =iti_data;
-    
+            iti_data.push({ index, date: key1, dayplan: value, key3: key2 })
+            key2++;
+
+          }
+
+        });
+
+    });
+
+    console.log("data::", iti_data);
+    this.getbydate = iti_data;
+
     // iti_data.forEach((ele:any)=>{  console.log("data ele::",ele);
     //   ele.dayplan.forEach((ele2:any)=>{
     //     iti_data1.push(ele2.attendance)
     //   })
-     
+
     // })
 
     // console.log("data iti_data1::",iti_data1);
 
     // let nameArry=[]
-    
+
     // for (const [key, value] of Object.entries(iti_data1)) {
     //   value.forEach(ele3=>{nameArry.push(ele3)
     //   }) 
@@ -220,68 +223,68 @@ export class ItineraryPage implements OnInit{
 
     // this.getbydate =iti_data;
 
-    
+
   }
 
-  getLocationsArray(itinerary,date){
+  getLocationsArray(itinerary, date) {
 
     //console.log("date",date);
-   
-    return itinerary[date.replaceAll("-","/")];
+
+    return itinerary[date.replaceAll("-", "/")];
   }
-  getLocationsLen(itinerary,date){
-   
-    return itinerary[date.replaceAll("-","/")]?.length;
+  getLocationsLen(itinerary, date) {
+
+    return itinerary[date.replaceAll("-", "/")]?.length;
   }
 
-  refreshPage(){
+  refreshPage() {
     this.globalService.presentLoading();
- 
-  this.user_temp_data = JSON.parse(localStorage.getItem("user"));
 
-  console.log("this.user_data----",this.user_temp_data);
+    this.user_temp_data = JSON.parse(localStorage.getItem("user"));
 
-  this.user_temp_data['itinerary'] =  this.user.itinerary
+    console.log("this.user_data----", this.user_temp_data);
 
-  //localStorage.setItem('',this.user_temp_data['itinerary']);
+    this.user_temp_data['itinerary'] = this.user.itinerary
 
-  console.log("this.user_data----",this.user_temp_data);
+    //localStorage.setItem('',this.user_temp_data['itinerary']);
 
-  this.active_group = JSON.parse(localStorage.getItem('active_group'));
+    console.log("this.user_data----", this.user_temp_data);
 
-      let request = {
-        'login_code': this.active_group[0]['tourCode'],
-        'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
-      };
+    this.active_group = JSON.parse(localStorage.getItem('active_group'));
 
-      this.auth.login(request).subscribe(async (result: any) => {
+    let request = {
+      'login_code': this.active_group[0]['tourCode'],
+      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+    };
 
-        if (result?.status === true) {
+    this.auth.login(request).subscribe(async (result: any) => {
 
-          localStorage.setItem('user', JSON.stringify(result.data));
-          window.location.reload();
+      if (result?.status === true) {
 
-          //this.loadModal(result.data.hub_list);
-        } else {
-          this.globalService.dismissLoading();
-          const alert = await this.alertController.create({
-            cssClass: 'my-custom-class',
-            message: result.error,
-            mode: 'ios',
-            buttons: ['OK']
-        
-          });
-        
-          await alert.present();
-          return;
-        }
-      });
+        localStorage.setItem('user', JSON.stringify(result.data));
+        window.location.reload();
 
-      
- 
+        //this.loadModal(result.data.hub_list);
+      } else {
+        this.globalService.dismissLoading();
+        const alert = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          message: result.error,
+          mode: 'ios',
+          buttons: ['OK']
+
+        });
+
+        await alert.present();
+        return;
+      }
+    });
+
+
+
   }
 
-  logout() {   
+  logout() {
     this.auth.getUserStatus.next('0');
     localStorage.removeItem('user');
     window.location.reload();
@@ -292,22 +295,22 @@ export class ItineraryPage implements OnInit{
     this.ShowOthersIcon = !this.ShowOthersIcon;
     this.hideAddButton = false;
   }
-  onButtonClickClose(){
+  onButtonClickClose() {
     this.hideAddButton = true;
-    this.ShowOthersIcon=false;
+    this.ShowOthersIcon = false;
   }
 
-  async checkAttendanceStatus(){
+  async checkAttendanceStatus() {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       message: 'Attendance Not Allowed',
       mode: 'ios',
       buttons: ['OK']
-  
+
     });
-  
+
     await alert.present();
     return;
   }
-  
+
 }
