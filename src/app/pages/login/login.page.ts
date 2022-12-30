@@ -4,12 +4,8 @@ import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { branches, nonce } from 'src/app/services/utils';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { FcmService } from 'src/app/services/fcm/fcm.service';
-import { ApiService } from 'src/app/services/api/api.service';
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -17,11 +13,9 @@ import { ApiService } from 'src/app/services/api/api.service';
 })
 export class LoginPage implements OnInit {
 
-
   loginForm: UntypedFormGroup;
   errorMessage: any;
   serverMessage = [];
-  myDeviceToken: string;
   loginResponse = {} as any;
   OTP_box = false;
   otp: any;
@@ -36,26 +30,18 @@ export class LoginPage implements OnInit {
       { type: 'required', message: 'Required' },
     ],
   };
-  recaptchaVerifier = "435435";
 
   getOtp: any;
-  urlBaseChange: any;
-  agency_logo: string;
-  active_group: any;
 
   constructor(
     private globalService: GlobalService,
-    private fireAuth: AngularFireAuth,
     public router: Router,
     private navController: NavController,
     private auth: AuthService,
     private alertController: AlertController,
     private fomrBuilder: UntypedFormBuilder,
     private fcmService: FcmService,
-    private platform: Platform,
-    private apiServices: ApiService,
   ) {
-    this.myDeviceToken = localStorage.getItem('deviceToken') || '';
     this.loginForm = this.fomrBuilder.group({
       manager_number: ['', [Validators.required]]
     });
@@ -169,9 +155,10 @@ export class LoginPage implements OnInit {
     this.auth.login(request).subscribe(async (result: any) => {
       if (result?.status === true) {
         localStorage.setItem('user', JSON.stringify(result.data));
-        localStorage.setItem('hubList', JSON.stringify(result.data.hub_list));
-        localStorage.setItem('agency_logo', result.data.agency_logo);
+        localStorage.setItem('agency_logo', result.data.agency_logo);        
+        this.globalService.appLogoEvent.next(result.data.agency_logo);
         this.loadModal(result.data.hub_list);
+        // localStorage.setItem('hubList', JSON.stringify(result.data.hub_list)); // no need
       } else {
         this.globalService.presentToast(result.error);
         return;

@@ -12,13 +12,17 @@ export class HeaderComponent implements OnInit {
   constructor(
     private globalService: GlobalService
   ) {
-
- 
    }
 
   ngOnInit() {
     this.globalService.getCheckActiveManager();
     this.agency_logo = localStorage.getItem('agency_logo');
+
+    this.globalService.appLogoEvent.subscribe(val => {
+      if(val !== null){
+        this.agency_logo = val;
+      }
+    });
   }
 
 }
