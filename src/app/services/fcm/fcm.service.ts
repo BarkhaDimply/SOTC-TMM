@@ -2,7 +2,9 @@ import { Injectable, Component, OnInit } from '@angular/core';
 
 import { NavigationExtras, Router } from '@angular/router';
 
-import { ActionPerformed, PushNotificationSchema, PushNotifications, Token, PushNotificationToken, PushNotification, PushNotificationActionPerformed, } from '@capacitor/push-notifications';
+import { ActionPerformed, PushNotificationSchema, PushNotifications, Token, 
+  PushNotificationToken, PushNotification, PushNotificationActionPerformed, 
+} from '@capacitor/push-notifications';
 
 import { Capacitor } from '@capacitor/core';
 
