@@ -4,7 +4,7 @@ import { identity } from 'rxjs';
 import { UserModel } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { nonce } from 'src/app/services/utils';
 
 @Component({
   selector: 'app-itinerary',
@@ -13,304 +13,64 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 })
 export class ItineraryPage implements OnInit {
   user: UserModel;
-  ShowOthersIcon: boolean = false;
-  hideAddButton: boolean = true;
-  getbydate: any;
-  key_itinerary: any;
   showData: any;
-  merber_name: any[];
-  newArray: number;
-  user_temp_data: string;
   user_data: any;
-  active_group: any;
   agency_logo: string;
+  itineraries = [] as any;
 
   constructor(private auth: AuthService, private alertController: AlertController, private globalService: GlobalService) {
-    this.user = this.auth.user;
 
-    console.log("user::", this.user.itinerary.length);
   }
   ngOnInit(): void {
-
-
-    this.getCheckActiveManager();
-
-
-    localStorage.setItem('isFilterSet', 'false');
-
-    this.checkPermission();
-
-    this.auth.getUserStatus.subscribe(val => {
-      if (val !== '0') {
-        this.user = this.auth.user;
-      }
-    });
-
-    this.getByDayswise();
-
-
-    var t = new Date().getTime() / 1000;
-    console.log("tttt", t);
-
-
+    this.user = this.auth.user;
+    this.globalService.checkPermission();
+    this.firstLoad();
+    // this.auth.getUserStatus.subscribe(val => {
+    //   if (val !== '0') {
+    //     this.user = this.auth.user;
+    //   }
+    // });
   }
 
-
-  getCheckActiveManager() {
-
-    this.active_group = JSON.parse(localStorage.getItem('active_group'));
-
-    let request = {
-      'login_code': this.active_group[0]['tourCode'],
-      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
-    };
-
-    this.auth.login(request).subscribe(async (result: any) => {
-
-      if (result.data != '') {
-        this.agency_logo = result.data.agency_logo
-
-        localStorage.setItem('agency_logo', this.agency_logo);
-
-      }
-
-    });
-
-    console.log("agency_logo itenry:::::", this.agency_logo);
-
+  firstLoad() {
+    this.itineraries = this.user.itinerary;
   }
 
-
-  async checkPermission() {
-    //return new Promise(async (resolve, reject) => {
-    const status = await BarcodeScanner.checkPermission({ force: true });
-    console.log("checkPermission status:::", JSON.stringify(status));
-
-
-    if (status.granted) {
-      return true;
-    } else if (status.denied) {
-      return false;
-    } else if (status.neverAsked) {
-      const c = await this.alertController.create({
-        cssClass: 'my-custom-class',
-        message: 'Please give permission for camera to use expense module',
-        mode: 'ios',
-        buttons: ['OK']
-
-      });
-
-      await c.present();
-
-      if (!c) { return false; }
-    } else if (status.restricted || status.unknown) {
-      return false;
-    } else {
-      BarcodeScanner.checkPermission();
-
-      // const alert = await this.alertController.create({
-      //   cssClass: 'my-custom-class',
-      //   message: 'Please give permission for camera to use expense module',
-      //   mode: 'ios',
-      //   buttons: ['OK']
-
-      // });
-
-      // await alert.present();
-      // BarcodeScanner.openAppSettings();
-    }
-
-    //});
-  }
-
-
-
-
-  doRefresh(event) {
-    console.log('Begin async operation');
-
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      event.target.complete();
-    }, 2000);
-  }
-
-  async askCity() {
-
-    let inputs = [] as any;
-
-    this.user.hub_list.forEach((element, index) => {
-      inputs.push({
-        name: 'radio' + index,
-        type: 'radio',
-        label: element,
-        value: element,
-        handler: () => {
-          console.log('Radio  selected' + index);
-        },
-        checked: false
-      });
-    });
-
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Select city',
-      inputs: inputs,
-      // buttons: [
-      //   {
-      //     text: 'Cancel',
-      //     role: 'cancel',
-      //     cssClass: 'secondary',
-      //     handler: () => {
-      //       console.log('Confirm Cancel');
-      //     }
-      //   }, {
-      //     text: 'Ok',
-      //     handler: () => {
-      //       console.log('Confirm Ok');
-      //     }
-      //   }
-      // ]    
-    });
-
-    await alert.present();
-  }
-
-  getByDayswise() {
-
+  getByDayswise(itinerary) {
     let iti_data = [];
-    let iti_data1 = [];
-
-    this.user.itinerary.forEach((city, index) => {
-
-      let key2 = 0;
-
-      Object.entries(city).forEach(
-        ([key1, value]) => {
-          var roomVal: any = value
-
-
-          if (value && typeof value == 'object') {
-
-            iti_data.push({ index, date: key1, dayplan: value, key3: key2 })
-            key2++;
-
-          }
-
-        });
-
+    let key = 0;
+    Object.entries(itinerary).forEach(([key1, value]) => {
+      var roomVal: any = value
+      if (value && typeof value == 'object') {
+        iti_data.push({ key, date: key1, dayplan: value });
+        key++;
+      }
     });
-
-    console.log("data::", iti_data);
-    this.getbydate = iti_data;
-
-    // iti_data.forEach((ele:any)=>{  console.log("data ele::",ele);
-    //   ele.dayplan.forEach((ele2:any)=>{
-    //     iti_data1.push(ele2.attendance)
-    //   })
-
-    // })
-
-    // console.log("data iti_data1::",iti_data1);
-
-    // let nameArry=[]
-
-    // for (const [key, value] of Object.entries(iti_data1)) {
-    //   value.forEach(ele3=>{nameArry.push(ele3)
-    //   }) 
-    // }
-    // this.merber_name = nameArry;
-
-    // this.getbydate =iti_data;
-
-
+    return iti_data;
   }
 
-  getLocationsArray(itinerary, date) {
-
-    //console.log("date",date);
-
-    return itinerary[date.replaceAll("-", "/")];
-  }
   getLocationsLen(itinerary, date) {
-
     return itinerary[date.replaceAll("-", "/")]?.length;
   }
 
   refreshPage() {
     this.globalService.presentLoading();
-
-    this.user_temp_data = JSON.parse(localStorage.getItem("user"));
-
-    console.log("this.user_data----", this.user_temp_data);
-
-    this.user_temp_data['itinerary'] = this.user.itinerary
-
-    //localStorage.setItem('',this.user_temp_data['itinerary']);
-
-    console.log("this.user_data----", this.user_temp_data);
-
-    this.active_group = JSON.parse(localStorage.getItem('active_group'));
-
+    const active_group = JSON.parse(localStorage.getItem('active_group'));
     let request = {
-      'login_code': this.active_group[0]['tourCode'],
-      'nonce': 'KHsD(PF3JzQfT)nm3l^TERO'
+      'login_code': active_group[0]['tourCode'],
+      'nonce': nonce
     };
-
     this.auth.login(request).subscribe(async (result: any) => {
-
+      this.globalService.dismissLoading();
       if (result?.status === true) {
-
         localStorage.setItem('user', JSON.stringify(result.data));
-        window.location.reload();
-
-        //this.loadModal(result.data.hub_list);
+        this.user = result.data;
+        this.firstLoad();
       } else {
-        this.globalService.dismissLoading();
-        const alert = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          message: result.error,
-          mode: 'ios',
-          buttons: ['OK']
-
-        });
-
-        await alert.present();
-        return;
+        this.globalService.presentToast(result.error);
       }
     });
 
-
-
-  }
-
-  logout() {
-    this.auth.getUserStatus.next('0');
-    localStorage.removeItem('user');
-    window.location.reload();
-  }
-
-  onButtonClickAdd() {
-
-    this.ShowOthersIcon = !this.ShowOthersIcon;
-    this.hideAddButton = false;
-  }
-  onButtonClickClose() {
-    this.hideAddButton = true;
-    this.ShowOthersIcon = false;
-  }
-
-  async checkAttendanceStatus() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      message: 'Attendance Not Allowed',
-      mode: 'ios',
-      buttons: ['OK']
-
-    });
-
-    await alert.present();
-    return;
   }
 
 }

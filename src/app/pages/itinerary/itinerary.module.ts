@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ItineraryPage } from './itinerary.page';
 import { ItineraryPageRoutingModule } from './itinerary-routing.module';
+import { ItineraryCheckinoutModule } from 'src/app/components/itinerary-checkinout/itinerary-checkinout.module';
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { ItineraryPageRoutingModule } from './itinerary-routing.module';
     CommonModule,
     FormsModule,
     ItineraryPageRoutingModule,
+    ItineraryCheckinoutModule
   ],
   declarations: [ItineraryPage]
 })

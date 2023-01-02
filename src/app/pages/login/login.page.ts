@@ -54,13 +54,13 @@ export class LoginPage implements OnInit {
   selectBranch() {
     let options = [];
     const branchOptions = branches;
-    branchOptions.forEach((element, index) => {      
-        options.push({
-          type: 'radio',
-          label: element,
-          value: element,
-          checked: index === 0 ? true : false
-        });      
+    branchOptions.forEach((element, index) => {
+      options.push({
+        type: 'radio',
+        label: element,
+        value: element,
+        checked: index === 0 ? true : false
+      });
     });
     this.alertController.create({
       header: 'Select Branch',
@@ -71,8 +71,8 @@ export class LoginPage implements OnInit {
           text: 'Done',
           handler: (data: any) => {
             if (data != '') {
-             const url = this.globalService.setBaseURL(data);
-             this.auth.baseURLEvent.next(url);
+              const url = this.globalService.setBaseURL(data);
+              this.auth.baseURLEvent.next(url);
             }
           }
         }
@@ -141,7 +141,7 @@ export class LoginPage implements OnInit {
         localStorage.setItem('active_group', JSON.stringify(result.data));
         this.getHubList(result.data[0]);
       } else {
-       this.globalService.presentToast(result.error);
+        this.globalService.presentToast(result.error);
         return;
       }
     });
@@ -155,7 +155,7 @@ export class LoginPage implements OnInit {
     this.auth.login(request).subscribe(async (result: any) => {
       if (result?.status === true) {
         localStorage.setItem('user', JSON.stringify(result.data));
-        localStorage.setItem('agency_logo', result.data.agency_logo);        
+        localStorage.setItem('agency_logo', result.data.agency_logo);
         this.globalService.appLogoEvent.next(result.data.agency_logo);
         this.loadModal(result.data.hub_list);
         // localStorage.setItem('hubList', JSON.stringify(result.data.hub_list)); // no need
@@ -169,13 +169,13 @@ export class LoginPage implements OnInit {
 
   loadModal(hub_list) {
     let options = [];
-    hub_list.forEach((element, index) => {     
-        options.push({
-          type: 'radio',
-          label: element,
-          value: element,
-          checked: index === 0 ? true : false
-        });
+    hub_list.forEach((element, index) => {
+      options.push({
+        type: 'radio',
+        label: element,
+        value: element,
+        checked: index === 0 ? true : false
+      });
     });
     this.alertController.create({
       header: 'Select Hub',
@@ -189,8 +189,10 @@ export class LoginPage implements OnInit {
             if (data != '') {
               localStorage.setItem("selected_hub", data);
               //set hub in db -api
-             // this.getSaveManagerHub();
+              // this.getSaveManagerHub();
               this.auth.userLoggedIn.next("loggedin");
+              this.getFcmTokenNoty();
+              this.getSaveManagerHub();
               this.navController.navigateRoot(['/']);
             }
           }
@@ -202,37 +204,33 @@ export class LoginPage implements OnInit {
   }
 
 
-  // getFcmTokenNoty() {
-  //   let params: any = {}
-  //   params.driver_id = localStorage.getItem("manager_id");
-  //   params.device = 'android'
-  //   params.fcm_token = localStorage.getItem("FCMTokenKey");
-  //   console.log("params333::::", JSON.stringify(params));
-  //   this.apiServices.getFcmToken(params).subscribe((result: any) => {
-  //     console.log("notification fcm::::", result);
-  //   });
+  getFcmTokenNoty() {
+    let params: any = {}
+    params.driver_id = localStorage.getItem("manager_id");
+    params.device = 'android'
+    params.fcm_token = localStorage.getItem("FCMTokenKey");
+    this.auth.getFcmToken(params).subscribe((result: any) => {
+      console.log("notification fcm::::", result);
+    });
 
-  // }
+  }
 
-  // getSaveManagerHub() {
-  //   let params: any = {}
+  getSaveManagerHub() {
+    let params: any = {}
+    var Users: string = localStorage.getItem("user");
+    params.driver_id = localStorage.getItem("manager_id");
+    params.hub = localStorage.getItem("selected_hub");
+    params.group_id = JSON.parse(Users).order_id;
+    params.nonce = nonce;
+    this.auth.saveManagerHub(params).subscribe(async (result: any) => {
+      if (result.status == false) {
+        const alert = await this.alertController.create({
+          message: 'Hub Not Selected',
+          mode: 'ios',
+        });
+        await alert.present();
+      }
+    });
 
-  //   var Users: string = localStorage.getItem("user");
-  //   params.driver_id = localStorage.getItem("manager_id");
-  //   params.hub = localStorage.getItem("selected_hub");
-  //   params.group_id = JSON.parse(Users).order_id;
-  //   params.nonce = 'KHsD(PF3JzQfT)nm3l^TERO';
-  //   console.log("hub:::", params);
-  //   this.apiServices.saveManagerHub(params).subscribe(async (result: any) => {
-  //     console.log("hub result:::", result);
-  //     if (result.status == false) {
-  //       const alert = await this.alertController.create({
-  //         message: 'Hub Not Selected',
-  //         mode: 'ios',
-  //       });
-  //       await alert.present();
-  //     }
-  //   });
-
-  // }
+  }
 }

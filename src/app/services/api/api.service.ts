@@ -435,20 +435,6 @@ export class ApiService {
     );
   }
 
-
-  getFcmToken(data){
-    return this.http.post<ApiResponse>(getFcmToken,data,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
-
   /***************offline mode********************************/
 
   getUsers(forceRefresh: boolean = false): Observable<any[]> {
@@ -495,19 +481,5 @@ export class ApiService {
     /***************end of offline mode********************************/
 
   //set hub in db -api
-
-  saveManagerHub(data){
-    return this.http.post<ApiResponse>(saveManagerHub,data,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
-
   
 }

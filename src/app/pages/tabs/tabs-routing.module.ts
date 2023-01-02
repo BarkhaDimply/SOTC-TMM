@@ -8,6 +8,11 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
+        path: '',
+        redirectTo: '/tabs/itinerary',
+        pathMatch: 'full'
+      },
+      {
         path: 'itinerary',
         loadChildren: () => import('../itinerary/itinerary.module').then(m => m.ItineraryPageModule)
       },
@@ -27,11 +32,7 @@ const routes: Routes = [
       //   path: 'add-expense',
       //   loadChildren: () => import('../my-expenses/transaction-modal/transaction-modal.module').then(m => m.TransactionModalPageModule)
       // },
-      {
-        path: '',
-        redirectTo: '/tabs/itinerary',
-        pathMatch: 'full'
-      }
+     
     ]
   },
   {

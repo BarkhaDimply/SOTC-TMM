@@ -34,57 +34,32 @@ export class TabsPage implements OnInit {
 
     });
 
-
   }
 
   getDataByTabs() {
-
     this.apiServices.getAllTransctionHistoryByTime().subscribe((result: any) => {
-
-
       Object.entries(result.data).forEach(
         ([key, value]) => {
-
           this.transactionValue.push({ transKey: key, transValue: value });
-
           this.transactionValue.forEach(itms => {
             itms.transValue.forEach(itm => {
-
-
-
               // if(itm.submission_status == 0 && itm.show_transaction == 0 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer' ){
-
               if (itm.submission_status == 2) {
                 this.btnSubstatus = false;
               }
               else if (itm.show_transaction == 0 && itm.submission_status == 1 && itm.category != 'BALANCE ADDED' && itm.category != 'misc_collection' && itm.category != 'tm_transfer') {
-
-
-
                 this.btnSubstatus = false;
-
-
-
               }
-
-
-
             });
-
-
           });
-
-
         });
       // plus button hide function
       this.msgFunc();
-
     });
   }
 
   async msgFunc() {
     if (this.btnSubstatus) {
-
       console.log("sss", this.btnSubstatus);
       localStorage.removeItem('edit_clicked');
       this.router.navigate(['/tabs/my-expenses/transaction-modal']);
@@ -98,7 +73,6 @@ export class TabsPage implements OnInit {
         buttons: ['OK']
 
       });
-
       await alert.present();
     }
   }
@@ -106,8 +80,6 @@ export class TabsPage implements OnInit {
   setOpen() {
     this.getDataByTabs();
     console.log("hlo moto");
-
-
   };
 
 

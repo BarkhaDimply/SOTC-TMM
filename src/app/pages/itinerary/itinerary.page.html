@@ -3,168 +3,72 @@
     <ion-buttons slot="start">
       <ion-menu-button ion-button menuToggle></ion-menu-button>
     </ion-buttons>
-    <app-header></app-header>
   </ion-toolbar>
-
 </ion-header>
-
-
-
 <ion-content [fullscreen]="true">
 
-  <ion-refresher  slot="fixed" pullFactor="0.5" pullMin="50" pullMax="200"  (ionRefresh)="refreshPage()"></ion-refresher>
+  <ion-refresher slot="fixed" pullFactor="0.5" pullMin="50" pullMax="200" (ionRefresh)="refreshPage()"></ion-refresher>
 
 
-        <div class="content">
+  <div class="content">
 
-<!--          &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;show after click add button -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--          <ion-fab slot="fixed" *ngIf="ShowOthersIcon" style="bottom: 223px;right: 10px;position: fixed;">-->
-<!--            <ion-fab-button (click)="refreshPage()" color="warning" style="font-size: 38px;border-radius: 50%;">-->
-<!--              <ion-icon name="refresh-outline"></ion-icon>-->
-<!--            </ion-fab-button>-->
-<!--          </ion-fab>-->
-<!--          &lt;!&ndash;<ion-fab slot="fixed"  *ngIf="ShowOthersIcon" style="bottom: 283px;right: 10px;">-->
-<!--           <ion-fab-button color="primary" title="Change GUID" style="font-size: 38px;border-radius: 50%;">-->
-<!--            <ion-icon name="create-outline"></ion-icon>-->
-<!--           </ion-fab-button>-->
-<!--          </ion-fab>&ndash;&gt;-->
-<!--          <ion-fab slot="fixed"  *ngIf="ShowOthersIcon" style="bottom: 157px;right: 10px;position: fixed;">-->
-<!--            <ion-fab-button (click)="logout()" color="danger" style="font-size: 38px;border-radius: 50%;">-->
-<!--              <ion-icon name="log-out-outline"></ion-icon></ion-fab-button>-->
-<!--          </ion-fab>-->
-<!--          &lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; END &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Agency Name</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <h2>{{ user?.agency_name }}</h2>
+      </ion-card-content>
+    </ion-card>
 
-<!--          <ion-fab slot="fixed" style="bottom: 70px;right: 10px;position: fixed;">-->
-<!--            <ion-fab-button (click)="onButtonClickAdd()" *ngIf="hideAddButton" color="light" style="font-size: 38px;-->
-<!--            border-radius: 50%;"><ion-icon name="add-outline"></ion-icon></ion-fab-button></ion-fab>-->
+    <ng-container *ngFor="let itinerary of itineraries let IDay = index;">
+      <ion-card>
+        <ion-card-header class="pb-0">
+          <ion-card-subtitle>{{itinerary.locationName}} Hotel</ion-card-subtitle>
+          <ion-card-title>
+            <ion-row>
+              <ion-col size="9">
+                <hr />
+              </ion-col>
+              <ion-col size="3">
 
+                <ion-button class="btn-yellow">
+                  <a href="https://maps.google.com/maps?&daddr={{itinerary.hotelLat}},{{itinerary.hotelLong}}"
+                    target="_blank" style="text-decoration: none; color: #fff;">
+                    <ion-icon name="location-outline" style="font-size: 20px"></ion-icon>
+                    <ion-icon style="font-size: 20px;" name="car-outline"></ion-icon>
+                  </a>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <h2>{{itinerary.hotelName}}</h2>
+          <ion-row>
+            <ion-col size="4">Check in</ion-col>
+            <ion-col size="4">: {{itinerary.checkIndate}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="4">Check Out</ion-col>
+            <ion-col size="4">: {{itinerary.checkOutdate}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="9"></ion-col>
+            <ion-col size="3">
+              <a href="tel:{{itinerary.hotelPhone}}">
+                <ion-button class="btn-red"><img src="assets/images/call-phone-white.png" /></ion-button>
+              </a>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
 
-           <ion-fab slot="fixed" style="bottom: 93px;right: 10px;position: fixed;">
-           <ion-fab-button *ngIf="ShowOthersIcon" (click)="onButtonClickClose()" color="dark" style="font-size: 38px;
-           border-radius: 50%;"><ion-icon name="close-outline"></ion-icon></ion-fab-button>
-          </ion-fab>
+      <!-- <div *ngIf="getLocationsLen(itinerary,itinerary.checkIndate) > 0">-->
 
-          <ion-card>
-            <ion-card-header>
-              <ion-card-subtitle>Agency Name</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-              <h2>{{ user?.agency_name }}</h2>
-            </ion-card-content>
-          </ion-card>
-
-          <ng-container *ngFor="let itinerary of user.itinerary let IDay = index;">
-              <ion-card>
-                  <ion-card-header class="pb-0">
-                    <ion-card-subtitle>{{itinerary.locationName}} Hotel</ion-card-subtitle>
-                    <ion-card-title>
-                      <ion-row>
-                        <ion-col size="9">
-                          <hr />
-                        </ion-col>
-                        <ion-col size="3">
-
-                            <ion-button class="btn-yellow">
-                              <a href="https://maps.google.com/maps?&daddr={{itinerary.hotelLat}},{{itinerary.hotelLong}}" target="_blank" style="text-decoration: none;
-                              color: #fff;">
-                              <ion-icon name="location-outline" style="font-size: 20px"></ion-icon>
-                              <ion-icon  style="font-size: 20px;" name="car-outline"></ion-icon></a></ion-button>
-
-
-                        </ion-col>
-                      </ion-row>
-                    </ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                    <h2>{{itinerary.hotelName}}</h2>
-                    <ion-row>
-                      <ion-col size="4">Check in</ion-col>
-                      <ion-col size="4">: {{itinerary.checkIndate}}</ion-col>
-                    </ion-row>
-                    <ion-row>
-                      <ion-col size="4">Check Out</ion-col>
-                      <ion-col size="4">: {{itinerary.checkOutdate}}</ion-col>
-                    </ion-row>
-                    <ion-row>
-                      <ion-col size="9"></ion-col>
-                      <ion-col size="3">
-                        <a href="tel:{{itinerary.hotelPhone}}">
-                        <ion-button class="btn-red"><img src="assets/images/call-phone-white.png" /></ion-button></a>
-                      </ion-col>
-                    </ion-row>
-                  </ion-card-content>
-              </ion-card>
-
-        <!-- <div *ngIf="getLocationsLen(itinerary,itinerary.checkIndate) > 0">-->
-
-
-          <ion-card *ngFor="let data of getbydate let day = index;">
-
-           <div *ngIf="IDay == data.index">
-
-                    <ion-row>
-                      <ion-col size="3">
-                        <div class="day-box">Day {{day+1}}  </div>
-                      </ion-col>
-                      <ion-col size="9">
-                        <!-- {{data | json}} -->
-                        <div class="day-text">
-                        <b>  {{data.date.replaceAll("-","/")}} </b>
-                        </div>
-                      </ion-col>
-                    </ion-row>
-
-                    <ng-container *ngFor="let plc of data.dayplan let plcindex = index;">
-                      <ion-row class="w-100 plc-item-box">
-                        <ion-col size="6" style="padding: 19px;">  {{plcindex+1}} {{ plc.placeName }}  </ion-col>
-                        <ion-col size="3" style="padding-left: 0px;">
-                          <ion-button style="color: #fff;" *ngIf="plc.attendance_status == false" class="btn-attendance-false"
-                          (click)="checkAttendanceStatus()">ATTENDANCE</ion-button>
-                          <ion-button *ngIf="plc.attendance_status == true" [routerLink]="['/tabs/itinerary/code-scanner']"
-                          [queryParams]="{placeId: plc.placeID,day: data.key3+1,locationId:itinerary.locationID,city:itinerary.locationName,place:plc.placeName}"
-                          style="color: #fff;" class="btn-yellow">ATTENDANCE</ion-button>
-                        </ion-col>
-                        <ion-col size="3">
-                          <ion-button class="btn-blue">
-                            <a href="https://maps.google.com/maps?&daddr={{plc.placeLat}},{{plc.placeLong}}"
-                          target="_blank" style="text-decoration: none;color: #fff;">
-                            <ion-icon style="font-size: 20px;" name="location-outline"></ion-icon>
-                             <ion-icon  style="font-size: 20px;" name="car-outline"></ion-icon></a></ion-button>
-                        </ion-col>
-                      </ion-row>
-
-
-                    <!-- <div class="plc-item-box">
-                      <div class="plc-item">
-                        {{plcindex+1}} {{ plc.placeName }}
-
-                      </div>
-                      <ion-row>
-
-                        <ion-col size="6">
-                            <ion-button style="color: #fff;" *ngIf="plc.attendance_status == false" class="btn-attendance-false" (click)="checkAttendanceStatus()">ATTENDANCE</ion-button>
-<ion-button *ngIf="plc.attendance_status == true" [routerLink]="['/tabs/itinerary/code-scanner']"
-[queryParams]="{placeId: plc.placeID,day: data.key3+1,locationId:itinerary.locationID,city:itinerary.locationName,place:plc.placeName}"
-                            style="color: #fff;" class="btn-yellow">ATTENDANCE</ion-button>
-                          </ion-col>
-
-                        s
-                         <ion-col size="6">
-                          <ion-button class="btn-blue">
-                            <a href="https://maps.google.com/maps?&daddr={{plc.placeLat}},{{plc.placeLong}}"
-                          target="_blank" style="text-decoration: none;
-                          color: #fff;">
-                            <ion-icon style="font-size: 20px;" name="location-outline"></ion-icon>
-                             <ion-icon  style="font-size: 20px;" name="car-outline"></ion-icon></a></ion-button>
-                        </ion-col>
-                      </ion-row>
-                    </div> -->
-                    </ng-container>
-
-            </div>
-
-          </ion-card>
-
+      <ng-container *ngFor="let data of getByDayswise(itinerary); let day = index;">
+          <app-itinerary-checkinout [data]="data" [dayIndex]="day" [itinerary]="itinerary"></app-itinerary-checkinout>
       </ng-container>
+    </ng-container>
   </div>
 </ion-content>

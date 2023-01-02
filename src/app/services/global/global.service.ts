@@ -7,7 +7,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { AuthService } from '../auth/auth.service';
+import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { Plugins, Capacitor } from '@capacitor/core';
 
+const { Network } = Plugins;
 @Injectable({
   providedIn: 'root'
 })
@@ -183,4 +186,34 @@ export class GlobalService {
     }
   }
 
+
+
+  async checkPermission() {
+    //return new Promise(async (resolve, reject) => {
+    if (Capacitor.platform !== 'web') {
+      const status = await BarcodeScanner.checkPermission({ force: true });
+      console.log("checkPermission status:::", JSON.stringify(status));
+
+      if (status.granted) {
+        return true;
+      } else if (status.denied) {
+        return false;
+      } else if (status.neverAsked) {
+        const c = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          message: 'Please give permission for camera to use expense module',
+          mode: 'ios',
+          buttons: ['OK']
+
+        });
+        await c.present();
+        if (!c) { return false; }
+      } else if (status.restricted || status.unknown) {
+        return false;
+      } else {
+        BarcodeScanner.checkPermission();
+
+      }
+    }
+  }
 }

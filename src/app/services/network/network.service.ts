@@ -49,7 +49,7 @@ export class NetworkService {
     if (this.status.getValue() === ConnectionStatus.Online) {
       console.log('Network was disconnected :-(');
       console.log('navigator.onLine', navigator.onLine);
-      this.presentLoading();
+    //  this.presentLoading();
       this.updateNetworkStatus(ConnectionStatus.Offline);
     }
   }

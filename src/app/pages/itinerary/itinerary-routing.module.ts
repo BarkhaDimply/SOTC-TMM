@@ -6,7 +6,8 @@ const routes: Routes = [
   {
     path: '',
     component: ItineraryPage,
-  },  {
+  },
+  {
     path: 'code-scanner',
     loadChildren: () => import('./code-scanner/code-scanner.module').then( m => m.CodeScannerPageModule)
   }

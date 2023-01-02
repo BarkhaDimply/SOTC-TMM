@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { loginUrl, loginUrl2, tourManagerActiveGroup } from '../variables';
+import { getFcmToken, loginUrl, loginUrl2, saveManagerHub, tourManagerActiveGroup } from '../variables';
 import { ApiResponse, handleError } from '../utils';
 import { UserModel } from 'src/app/models/user.model';
 
@@ -21,7 +21,7 @@ export class AuthService {
     this.baseURL = localStorage.getItem('baseURL') || '';
     this.baseURLEvent.subscribe(val => {
       if (val !== null) {
-        this.baseURL = val;   
+        this.baseURL = val;
       }
     });
     if (this.isAuthenticated) {
@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   loginManager(data): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(this.baseURL+ loginUrl2 + '?manager_number=' + data.manager_number, { headers: this.jsonheader }).pipe(
+    return this.http.get<ApiResponse>(this.baseURL + loginUrl2 + '?manager_number=' + data.manager_number, { headers: this.jsonheader }).pipe(
       catchError(handleError),
       map((result: ApiResponse) => {
         const listing = new ApiResponse();
@@ -69,17 +69,28 @@ export class AuthService {
   }
 
   apiTourManagerActiveGroup(data): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.baseURL+ tourManagerActiveGroup, data, { headers: this.headers }).pipe(
+    return this.http.post<ApiResponse>(this.baseURL + tourManagerActiveGroup, data, { headers: this.headers }).pipe(
       catchError(handleError)
     );
   }
 
   login(data): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.baseURL+ loginUrl, data, { headers: this.jsonheader }).pipe(
+    return this.http.post<ApiResponse>(this.baseURL + loginUrl, data, { headers: this.jsonheader }).pipe(
       catchError(handleError)
     );
   }
 
+  saveManagerHub(data) {
+    return this.http.post<ApiResponse>(this.baseURL + saveManagerHub, data, { headers: this.jsonheader }).pipe(
+      catchError(handleError),
+    );
+  }
+
+  getFcmToken(data) {
+    return this.http.post<ApiResponse>(this.baseURL + getFcmToken, data, { headers: this.jsonheader }).pipe(
+      catchError(handleError),
+    );
+  }
 
   // logout(data) {
   //   return this.http.post(logoutUrl, data, {headers: this.jsonheader}).pipe(

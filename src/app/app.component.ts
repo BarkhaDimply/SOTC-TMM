@@ -51,7 +51,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
    // this.globalService.getCheckActiveManager();
-    this.agency_logo = localStorage.getItem('agency_logo') || '';
+    this.agency_logo = localStorage.getItem('agency_logo');
     this.globalService.appLogoEvent.subscribe(val => {
       if(val !== null){
         this.agency_logo = val;
@@ -80,7 +80,6 @@ export class AppComponent implements OnInit{
 
   logout() {
     this.auth.getUserStatus.next('0');
-    localStorage.removeItem('user');
-    window.location.reload();
+    localStorage.removeItem('user'); 
   }
 }

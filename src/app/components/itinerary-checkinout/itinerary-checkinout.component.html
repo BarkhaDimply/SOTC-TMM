@@ -1,0 +1,37 @@
+<ion-card>
+  <div>
+    <ion-row>
+      <ion-col size="3">
+        <div class="day-box">Day {{dayIndex+1}} </div>
+      </ion-col>
+      <ion-col size="9">
+        <!-- {{data | json}} -->
+        <div class="day-text">
+          <b> {{data.date.replaceAll("-","/")}} </b>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ng-container *ngFor="let plc of data.dayplan let plcindex = index;">
+      <ion-row class="w-100 plc-item-box">
+        <ion-col size="6" style="padding: 19px;"> {{plcindex+1}} {{ plc.placeName }} </ion-col>
+        <ion-col size="3" style="padding-left: 0px;">
+          <ion-button style="color: #fff;" *ngIf="plc.attendance_status == false" class="btn-attendance-false"
+            (click)="checkAttendanceStatus()">ATTENDANCE</ion-button>
+          <ion-button *ngIf="plc.attendance_status == true" [routerLink]="['/tabs/itinerary/code-scanner']"
+            [queryParams]="{placeId: plc.placeID,day: data.key3+1,locationId: itinerary.locationID, city:itinerary.locationName,place:plc.placeName}"
+            style="color: #fff;" class="btn-yellow">ATTENDANCE</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button class="btn-blue">
+            <a href="https://maps.google.com/maps?&daddr={{plc.placeLat}},{{plc.placeLong}}" target="_blank"
+              style="text-decoration: none;color: #fff;">
+              <ion-icon style="font-size: 20px;" name="location-outline"></ion-icon>
+              <ion-icon style="font-size: 20px;" name="car-outline"></ion-icon>
+            </a>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+  </div>
+</ion-card>
