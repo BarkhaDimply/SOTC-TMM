@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>
+      <div class="">Members List Filter <ion-icon name="close" style="float: right;"  (click)="closeModal()"></ion-icon>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card style="box-shadow: 2px 2px 10px;padding: 15px 10px;">
+    <div class="w-100 d-flex form-group" style="display: inline-block;">
+      <ion-button class="ml-2" *ngFor="let flCode of getFlightCode"
+      [color]="(filterFlightCode === flCode)? 'success':'light'" (click)="getFlightDataBySector(flCode)">
+        <div>{{flCode}}</div>
+      </ion-button>
+      <hr *ngIf="keyOfDateMemeberFilter.length > 0">
+      <ion-button class="ml-2" *ngFor="let flDate of keyOfDateMemeberFilter"
+        [color]="(filterFlightDate === flDate)? 'success':'light'" (click)="getSelectedFlDate(flDate)">
+        <div>{{flDate}}</div>
+      </ion-button>
+      <hr *ngIf="keyOfTimeMemeberFilter.length > 0">
+        <ion-button class="ml-2" *ngFor="let flTime of keyOfTimeMemeberFilter"
+        [color]="(filterFlightTime === flTime)? 'success':'light'" (click)="getSelectedFlTime(flTime)">   
+        <div>{{flTime}}</div>
+        </ion-button>
+      <ion-row class="mt-2 mb-2 ml-2 mr-2"> 
+        <ion-button  class="primary-btn" style="color:#fff;" (click)="filterElementsNew()">Apply Filter
+        </ion-button>
+      </ion-row>
+    </div>
+  </ion-card>
+
+
+</ion-content>

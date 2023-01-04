@@ -6,6 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { MembersListPage } from './members-list.page';
 import { MembersListRoutingModule } from './members-list-routing.module';
 import { SwiperModule } from 'swiper/angular';
+import { MembersListDepatureModule } from 'src/app/components/members-list-depature/members-list-depature.module';
+import { MembersListArrivalModule } from 'src/app/components/members-list-arrival/members-list-arrival.module';
+import { MembersListRoomingModule } from 'src/app/components/members-list-rooming/members-list-rooming.module';
+import { MembersListFilterComponent } from 'src/app/components/members-list-filter/members-list-filter.component';
 
 @NgModule({
   imports: [
@@ -14,8 +18,14 @@ import { SwiperModule } from 'swiper/angular';
     FormsModule,
     RouterModule.forChild([{ path: '', component: MembersListPage }]),
     MembersListRoutingModule,
-    SwiperModule
+    SwiperModule,
+    MembersListDepatureModule,
+    MembersListArrivalModule,
+    MembersListRoomingModule
   ],
-  declarations: [MembersListPage]
+  declarations: [
+    MembersListPage,
+    MembersListFilterComponent
+  ]
 })
 export class MembersListPageModule { }

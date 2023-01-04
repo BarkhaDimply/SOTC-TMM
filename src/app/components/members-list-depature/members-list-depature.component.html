@@ -1,0 +1,65 @@
+
+ <ion-row *ngIf="members_data?.length > 0">
+  <ion-card class="w-100">
+    <ng-container *ngFor="let member of members_data">
+      <ion-item  style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+
+        <div class="ribbon-vip">  
+          <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+        </div>
+
+        <ion-avatar>
+          <img class="img-member-name"  [src]="'https://ui-avatars.com/api/?name='+member.name" />
+        </ion-avatar>
+        <ion-label>{{member.name}}
+          <br>      
+          <p *ngIf="member.family_members.length !== 0">Grouping with {{member.family_members.length}} others</p>
+        </ion-label> 
+
+        <div *ngIf="member.show_status != 'true'" (click)="noShowAlertConfirmtoGroups(member.parent_id,member.name)">
+          <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+        </div>
+        <div *ngIf="member.show_status == 'true'">
+          <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+        </div>&nbsp;
+
+        <a href="tel:{{member.phone}}">
+          <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+      </ion-item>
+
+      <ion-item *ngIf="member.isFamily && member.family_members.length > 0">
+        <ion-list class="w-100">
+
+          <ion-item *ngFor="let familyMembers of member.family_members">
+
+            <ion-col size="2">
+              <ion-avatar>
+                <img class="img-member-name" style="width: 75%;margin-left: 0px;"
+                  [src]="'https://ui-avatars.com/api/?name='+familyMembers.name" />
+              </ion-avatar>
+            </ion-col>
+            <ion-col size="7">
+              <ion-label>{{familyMembers.name}}</ion-label>
+            </ion-col>
+            <ion-col size="2">
+              <div style="margin-left: 11px;" *ngIf="familyMembers.show_status != true"
+                (click)="noShowAlertConfirmtoGroups('','',familyMembers.member_id,familyMembers.name)">
+                <img class="phone-call-icon" src="assets/images/member-list/mark-show.png" />
+              </div>
+              <div style="margin-left: 11px;" *ngIf="familyMembers.show_status == true">
+                <img class="phone-call-icon" src="assets/images/member-list/mark-no-show.png" />
+              </div>
+
+            </ion-col>
+            <ion-col size="1">
+
+            </ion-col>
+
+          </ion-item>
+
+        </ion-list>
+      </ion-item>
+    </ng-container>
+  </ion-card>
+</ion-row>
+

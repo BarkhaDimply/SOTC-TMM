@@ -25,11 +25,12 @@ export class ItineraryPage implements OnInit {
     this.user = this.auth.user;
     this.globalService.checkPermission();
     this.firstLoad();
-    // this.auth.getUserStatus.subscribe(val => {
-    //   if (val !== '0') {
-    //     this.user = this.auth.user;
-    //   }
-    // });
+    this.auth.getUserStatus.subscribe(val => {
+      if (val !== null) {
+        this.user = this.auth.user;
+        this.firstLoad();
+      }
+    });
   }
 
   firstLoad() {

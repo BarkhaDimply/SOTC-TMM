@@ -1,0 +1,32 @@
+<ion-row >
+  <ion-card class="w-100">
+    <ng-container *ngFor="let member of members_data">
+      <ion-item style="padding: 10px 0px;" (click)="isFamilyMembers(member.parent_id)">
+        <div class="ribbon-vip">
+          <div *ngIf="member.vip === true" class="corner-ribbon1">VIP</div>
+        </div>
+        <ion-avatar>
+          <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+member.name" />
+        </ion-avatar>
+        <ion-label>{{member.name}}
+          <br>
+          <p *ngIf="member.family_members.length !== 0">
+            Grouping with {{member.family_members.length}} others
+          </p>
+        </ion-label>
+        <a href="tel:{{member.phone}}">
+          <img class="phone-call-icon" src="assets/images/member-list/phone-call-icon.png" /></a>
+      </ion-item>
+      <ion-item *ngIf="member.isFamily && member.family_members.length > 0">
+        <ion-list class="w-100">
+          <ion-item *ngFor="let familyMembers of member.family_members">
+            <ion-avatar>
+              <img class="img-member-name" [src]="'https://ui-avatars.com/api/?name='+familyMembers.name" />
+            </ion-avatar>
+            <ion-label>{{familyMembers.name}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-item>
+    </ng-container>
+  </ion-card>
+</ion-row>
