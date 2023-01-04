@@ -31,17 +31,6 @@ export class ApiService {
 
    }
 
-  
-  apiGetRooming(data): Observable<ApiResponse> {
-    
-    return this.http.post<ApiResponse>(rooming, data, { headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     } )   
-    );
-  }
-
   getCurrentBalance() {
     // let params = new HttpParams();
     let params:any = {}

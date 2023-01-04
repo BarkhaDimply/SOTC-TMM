@@ -8,8 +8,8 @@ import { catchError, map } from 'rxjs/operators';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { AuthService } from '../auth/auth.service';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 import { Plugins, Capacitor } from '@capacitor/core';
-
 const { Network } = Plugins;
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class GlobalService {
     private toastController: ToastController,
     private auth: AuthService,
     private alertController: AlertController,
-
+  
   ) { }
 
   public setBaseURL(val) {
@@ -215,5 +215,12 @@ export class GlobalService {
 
       }
     }
+  }
+
+  callNow(m: { phone: string; }) {
+    // this.callNumber.callNumber(m.phone, true)
+    //   .then(res => console.log('Launched dialer!', res))
+    //   .catch(err => console.log('Error launching dialer', err));
+    // console.log("phone---",this.callNumber);
   }
 }
