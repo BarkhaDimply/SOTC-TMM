@@ -32,12 +32,9 @@ export class MembersListFilterComponent implements OnInit {
     this.getFlightData();
   }
 
-
-
   public async closeModal(): Promise<void> {
     await this.modalController.dismiss(null, 'cancel');
   }
-
 
   getFlightData() {
     var getFlightCodeV: any = [];
@@ -50,13 +47,10 @@ export class MembersListFilterComponent implements OnInit {
         })
       }
     });
-
     this.getFlightCode = getFlightCodeV.filter((c: any, index: any) => {
       return getFlightCodeV.indexOf(c) === index;
     });
-
   }
-
 
   getFlightDataBySector(_filterFlightCode) {
     this.filterFlightCode = _filterFlightCode;
@@ -99,7 +93,6 @@ export class MembersListFilterComponent implements OnInit {
   getSelectedFlTime(val, index) {
     this.filterFlightTime = val;
     this.members = this.keyOfTimeMemeberFilterArray[index];
-    localStorage.setItem("Flight_time", this.filterFlightTime);
   }
 
   async filterElementsNew() {
