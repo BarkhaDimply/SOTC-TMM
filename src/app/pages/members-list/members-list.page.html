@@ -42,11 +42,11 @@
       <swiper #swiper (slideChange)="onSlideChange($event)" [config]="config" class="common-swiper">
         <!--------------------Depature--------------------------->
         <ng-template swiperSlide>
-          <app-members-list-depature [members_data]="members_data"></app-members-list-depature>
+          <app-members-list-depature [members_data]="airline_members_data"></app-members-list-depature>
         </ng-template>
         <!--------------------Arrival--------------------------->
         <ng-template swiperSlide>
-          <app-members-list-arrival [members_data]="members_data"></app-members-list-arrival>
+          <app-members-list-arrival [members_data]="arival_members_data"></app-members-list-arrival>
         </ng-template>
         <!--------------------Rooming--------------------------->
         <ng-template swiperSlide>

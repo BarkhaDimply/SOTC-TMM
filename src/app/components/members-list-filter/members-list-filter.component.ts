@@ -13,6 +13,7 @@ export class MembersListFilterComponent implements OnInit {
   keyOfDateMemeberFilter: any = [];
   keyOfDateMemeberFilterArray: any = [];
   keyOfTimeMemeberFilter: any = [];
+  keyOfTimeMemeberFilterArray: any = [];
   getFlightCode: any = [];
   members_data;
   activeSegment;
@@ -20,6 +21,7 @@ export class MembersListFilterComponent implements OnInit {
   filterFlightCode;
   filterFlightDate;
   filterFlightTime;
+  members = [];
 
   constructor(private modalController: ModalController,
     private globalService: GlobalService,
@@ -41,8 +43,7 @@ export class MembersListFilterComponent implements OnInit {
     var getFlightCodeV: any = [];
     this.members_data.forEach((element) => {
       if (element.flight != '') {
-        console.log("in:::");
-        var flCode = ""
+        var flCode = "";
         element.flight.forEach(item => {
           flCode = item.dep_code + "-" + item.arr_code
           getFlightCodeV.push(flCode);
@@ -83,25 +84,25 @@ export class MembersListFilterComponent implements OnInit {
   }
 
 
-  getSelectedFlDate(selectedKey) {    
+  getSelectedFlDate(selectedKey) {
     this.filterFlightDate = selectedKey;
     for (const [key, value] of Object.entries(this.keyOfDateMemeberFilterArray)) {
-      if(key == selectedKey){        
-        Object.entries(value).forEach(([key,value]) => {
-          this.keyOfTimeMemeberFilter.push(key) 
+      if (key == selectedKey) {
+        Object.entries(value).forEach(([key, value]) => {
+          this.keyOfTimeMemeberFilter.push(key);
+          this.keyOfTimeMemeberFilterArray.push(value);
         });
       }
     }
   }
 
-  getSelectedFlTime(val) {
+  getSelectedFlTime(val, index) {
     this.filterFlightTime = val;
-    localStorage.setItem("Flight_time",this.filterFlightTime);
+    this.members = this.keyOfTimeMemeberFilterArray[index];
+    localStorage.setItem("Flight_time", this.filterFlightTime);
   }
 
-  async filterElementsNew(){
-    await this.modalController.dismiss({filterFlightCode: this.filterFlightCode, 
-      filterFlightDate: this.filterFlightDate, 
-      filterFlightTime: this.filterFlightTime}, 'selected');
+  async filterElementsNew() {
+    await this.modalController.dismiss({ selectedMembers: this.members }, 'selected');
   }
 }

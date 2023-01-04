@@ -20,8 +20,8 @@
         <div>{{flDate}}</div>
       </ion-button>
       <hr *ngIf="keyOfTimeMemeberFilter.length > 0">
-        <ion-button class="ml-2" *ngFor="let flTime of keyOfTimeMemeberFilter"
-        [color]="(filterFlightTime === flTime)? 'success':'light'" (click)="getSelectedFlTime(flTime)">   
+        <ion-button class="ml-2" *ngFor="let flTime of keyOfTimeMemeberFilter; let timeIndex = index;"
+        [color]="(filterFlightTime === flTime)? 'success':'light'" (click)="getSelectedFlTime(flTime, timeIndex)">   
         <div>{{flTime}}</div>
         </ion-button>
       <ion-row class="mt-2 mb-2 ml-2 mr-2"> 

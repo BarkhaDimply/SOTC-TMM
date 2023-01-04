@@ -32,7 +32,8 @@ export class MembersListPage {
   user: UserModel;
   selectedHub: string;
   totalMembers = 0;
-  members_data = [];
+  airline_members_data = [];
+  arival_members_data = [];
   userFilter = {} as any;
 
   public searchTerm: string = "";
@@ -44,7 +45,8 @@ export class MembersListPage {
   ) {
     this.selectedHub = localStorage.getItem('selected_hub') || '';
     this.user = this.auth.user;
-    this.members_data = this.user.members_data;
+    this.airline_members_data = this.user.members_data;
+    this.arival_members_data = this.user.members_data;
     this.user.members_data.forEach((element: { hub: any; }) => {
       this.totalMembers++;
       if (element.hub === this.selectedHub) {
@@ -107,7 +109,7 @@ export class MembersListPage {
       mode: 'ios',
       id: 'membersListFilter',
       componentProps: {
-        members_data: this.members_data,
+        members_data: this.user.members_data,
         activeSegment: this.activeSegment,
         user: this.user
       }
@@ -117,9 +119,32 @@ export class MembersListPage {
     await this.membersListFilter.onDidDismiss().then(res => {
       if (res.role === 'selected') {
         this.userFilter = res.data;
+        if (this.activeSegment === 'airline') {
+          this.airline_members_data = this.userFilter.selectedMembers.members;
+        } else {
+          this.arival_members_data = this.userFilter.selectedMembers.members;
+        }
       }
     });
     return;
+  }
+
+  filterData() {
+    this.user.members_data.forEach((element) => {
+      var flDate = "";
+      var flTime = "";
+      if (element.flight != '') {
+        element.flight.forEach(item => {
+          if (this.activeSegment == 'arrival_departure') {
+            flDate = new Date(item.arr_date).toDateString().split(' ').slice(1).join(' ');
+            flTime = item.arr_time;
+          } else {
+            flDate = new Date(item.dep_date).toDateString().split(' ').slice(1).join(' ');
+            flTime = item.dep_time;
+          }
+        });
+      }
+    });
   }
 
 
