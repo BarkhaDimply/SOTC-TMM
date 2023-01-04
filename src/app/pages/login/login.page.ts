@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.selectBranch();
   }
-
+  /* step 1 */
   selectBranch() {
     let options = [];
     const branchOptions = branches;
@@ -82,6 +82,7 @@ export class LoginPage implements OnInit {
     });
   }
 
+    /* step 2 */
   demonstateSubmit() {
     this.errorMessage = [];
     this.serverMessage = [];
@@ -131,7 +132,7 @@ export class LoginPage implements OnInit {
       return;
     }
   }
-
+    /* step 3 */
   tourManagerActiveGroup(id) {
     const data = {
       manager_id: id
@@ -147,6 +148,7 @@ export class LoginPage implements OnInit {
     });
   }
 
+    /* step 4 */
   getHubList(data) {
     let request = {
       'login_code': data['tourCode'],
@@ -166,7 +168,7 @@ export class LoginPage implements OnInit {
     });
   }
 
-
+    /* step 5 */
   loadModal(hub_list) {
     let options = [];
     hub_list.forEach((element, index) => {
