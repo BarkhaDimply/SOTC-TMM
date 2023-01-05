@@ -1,19 +1,14 @@
 import { Location } from '@angular/common';
-import { Component, NgZone, ViewChild } from '@angular/core';
-import { AlertController, IonSegment, ModalController } from '@ionic/angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonSegment, ModalController } from '@ionic/angular';
 import { UserModel } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { SwiperOptions } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
-import { ApiService } from 'src/app/services/api/api.service';
 import { GlobalService } from 'src/app/services/global/global.service';
-//import { TripPageModule } from '../trip/trip.module';
-import { empty } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
 import { nonce } from 'src/app/services/utils';
 import { MembersService } from 'src/app/services/members/members.service';
 import { MembersListFilterComponent } from 'src/app/components/members-list-filter/members-list-filter.component';
-
 @Component({
   selector: 'app-members-list',
   templateUrl: 'members-list.page.html',
@@ -63,10 +58,6 @@ export class MembersListPage {
         this.user = this.auth.user;
       }
     });
-  }
-
-  back() {
-    this.location.back();
   }
 
   firstLoad(_airline = true, _arrival = true) {
@@ -124,8 +115,15 @@ export class MembersListPage {
       this.searchFilter = false;
     }
   }
+  filterModal() {
+    if (this.activeSegment == 'rooming') {
 
-  async filterModal() {
+    } else {
+      this.airlineArrivalFilter();
+    }
+  }
+
+  async airlineArrivalFilter() {
     this.membersListFilter = await this.modalController.create({
       component: MembersListFilterComponent,
       backdropDismiss: true,
