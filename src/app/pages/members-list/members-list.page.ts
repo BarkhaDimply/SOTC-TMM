@@ -35,7 +35,9 @@ export class MembersListPage {
   airline_members_data = [];
   arival_members_data = [];
   userFilter = {} as any;
-
+  pageAirline: number = 2;
+  pageArrival: number = 2;
+  
   public searchTerm: string = "";
   constructor(private location: Location,
     private memberService: MembersService,
@@ -45,8 +47,9 @@ export class MembersListPage {
   ) {
     this.selectedHub = localStorage.getItem('selected_hub') || '';
     this.user = this.auth.user;
-    this.airline_members_data = this.user.members_data;
-    this.arival_members_data = this.user.members_data;
+    this.airline_members_data = this.staticPagination(this.user.members_data, 1);
+    this.arival_members_data = this.staticPagination(this.user.members_data, 1);
+
     this.user.members_data.forEach((element: { hub: any; }) => {
       this.totalMembers++;
       if (element.hub === this.selectedHub) {
@@ -148,6 +151,42 @@ export class MembersListPage {
   }
 
 
+  loadData() {
+    if (this.activeSegment == 'arrival_departure') {
+      const arrivalData = this.staticPagination(this.user.members_data, this.pageArrival);
+      arrivalData.forEach(element => {
+        this.arival_members_data.push(element);       
+      });
+      this.pageArrival++;
+    } else {   
+      const airlineData = this.staticPagination(this.user.members_data, this.pageAirline);
+      airlineData.forEach(element => {
+        this.airline_members_data.push(element);       
+      });
+      this.pageAirline++;
+    }
+  }
+
+  staticPagination(data, page = 1) {
+    let start = 0;
+    let end = 20;
+    let size = 20;
+    if (page == 1) {
+      start = 0;
+      end = 20;
+    } else {
+      start = ((page - 1) * size) + 1;
+      end = start + end - 1;
+    }
+    return data.slice(start, end);
+  }
+
+  loadMorePosts(event) {
+    this.loadData();
+    event.target.complete();
+  }
+
+
   rooming() {
 
     var d = JSON.parse(localStorage.getItem('active_group'));
@@ -222,6 +261,7 @@ export class MembersListPage {
     });
 
   }
+
 }
 
 
