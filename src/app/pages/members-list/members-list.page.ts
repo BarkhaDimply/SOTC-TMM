@@ -37,7 +37,7 @@ export class MembersListPage {
   userFilter = {} as any;
   pageAirline: number = 2;
   pageArrival: number = 2;
-  
+
   public searchTerm: string = "";
   constructor(private location: Location,
     private memberService: MembersService,
@@ -155,13 +155,13 @@ export class MembersListPage {
     if (this.activeSegment == 'arrival_departure') {
       const arrivalData = this.staticPagination(this.user.members_data, this.pageArrival);
       arrivalData.forEach(element => {
-        this.arival_members_data.push(element);       
+        this.arival_members_data.push(element);
       });
       this.pageArrival++;
-    } else {   
+    } else {
       const airlineData = this.staticPagination(this.user.members_data, this.pageAirline);
       airlineData.forEach(element => {
-        this.airline_members_data.push(element);       
+        this.airline_members_data.push(element);
       });
       this.pageAirline++;
     }
@@ -198,22 +198,13 @@ export class MembersListPage {
     };
 
     this.memberService.apiGetRooming(data).subscribe((result: any) => {
-
-      let totalDataRoomData = [];
-      let dataStoreSecond = [];
       var newRoomary = []
-
-      if (result.status == 'fail') {
-        this.roomLength = 0;
-      }
-
       Object?.entries(result["data"])?.forEach(
         ([key1, value]) => {
           var roomVal: any = value
           for (const [key, value] of Object.entries(roomVal.rooms)) {
 
             var newRoomValue: any = value;
-            // console.log("newRoomValue::::", newRoomValue);
             var paxDetails = [];
 
             newRoomValue.forEach(el => {
@@ -231,15 +222,8 @@ export class MembersListPage {
             newRoomary.push(newRoomValue)
           }
         });
-      this.newRoonData = newRoomary
 
-      dataStoreSecond = Object.values(newRoomary);
-      this.totalDataRoom = newRoomary
-
-      // this.totalDataRoom=JSON.parse(JSON.stringify(dataStoreSecond))
-      this.totalDataRoom = dataStoreSecond
-      this.roomLength = this.totalDataRoom.length;
-
+      this.totalDataRoom = newRoomary;
       var roomCategory: any = [];
       var hotelName: any = [];
       this.totalDataRoom.forEach(item => {
@@ -249,14 +233,13 @@ export class MembersListPage {
         })
       });
 
-      localStorage.setItem("listOfRooming", JSON.stringify(this.totalDataRoom));
-      this.getRoomCategory = roomCategory.filter((c: any, index: any) => {
-        return roomCategory.indexOf(c) === index;
-      });
-      this.getHotelNames = hotelName.filter((c: any, index: any) => {
-        return hotelName.indexOf(c) === index;
-      });
-      this.getRoomingData = result["data"];
+      // this.getRoomCategory = roomCategory.filter((c: any, index: any) => {
+      //   return roomCategory.indexOf(c) === index;
+      // });
+      // this.getHotelNames = hotelName.filter((c: any, index: any) => {
+      //   return hotelName.indexOf(c) === index;
+      // });
+      // this.getRoomingData = result["data"];
 
     });
 
