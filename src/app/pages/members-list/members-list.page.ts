@@ -35,8 +35,9 @@ export class MembersListPage {
   airline_members_data = [];
   arival_members_data = [];
   userFilter = {} as any;
-  pageAirline: number = 2;
-  pageArrival: number = 2;
+  pageAirline: number;
+  pageArrival: number;
+  searchFilter = false;
 
   public searchTerm: string = "";
   constructor(private location: Location,
@@ -47,15 +48,13 @@ export class MembersListPage {
   ) {
     this.selectedHub = localStorage.getItem('selected_hub') || '';
     this.user = this.auth.user;
-    this.airline_members_data = this.staticPagination(this.user.members_data, 1);
-    this.arival_members_data = this.staticPagination(this.user.members_data, 1);
-
     this.user.members_data.forEach((element: { hub: any; }) => {
       this.totalMembers++;
       if (element.hub === this.selectedHub) {
         element['isFamily'] = false;
       }
     });
+    this.firstLoad();
   }
 
   ngOnInit() {
@@ -70,18 +69,32 @@ export class MembersListPage {
     this.location.back();
   }
 
+  firstLoad(_airline = true, _arrival = true) {
+    this.searchTerm = '';
+    if (_airline === true) {
+      this.pageAirline = 2;
+      this.airline_members_data = this.staticPagination(this.user.members_data, 1);
+    }
+    if (_arrival === true) {
+      this.pageArrival = 2;
+      this.arival_members_data = this.staticPagination(this.user.members_data, 1);
+    }
+  }
 
   segmentChanged(event: { target: { value: string; }; }) {
     if (event.target.value === 'airline') {
       this.activeSegment = 'airline';
       this.swiper.swiperRef.slideTo(0);
+      this.resetFilter();
     } else if (event.target.value === 'arrival_departure') {
       this.activeSegment = 'arrival_departure';
       this.swiper.swiperRef.slideTo(1);
+      this.resetFilter();
     } else if (event.target.value === 'rooming') {
       this.activeSegment = 'rooming';
       this.rooming();
       this.swiper.swiperRef.slideTo(2);
+      this.resetFilter();
     }
   }
 
@@ -89,21 +102,28 @@ export class MembersListPage {
     if (event[0].activeIndex === 0) {
       this.activeSegment = 'airline';
       this.segment.value = 'airline';
+      this.resetFilter();
     }
     if (event[0].activeIndex === 1) {
       this.activeSegment = 'arrival_departure';
       this.segment.value = 'arrival_departure';
+      this.resetFilter();
     }
     if (event[0].activeIndex === 2) {
       this.activeSegment = 'rooming';
       this.segment.value = 'rooming';
+      this.resetFilter();
     }
   }
 
-  async presentAlert(msg: any) {
-    this.globalServices.presentToast(msg);
+  resetFilter() {
+    this.firstLoad();
+    if (this.activeSegment == 'rooming') {
+      this.searchFilter = true;
+    } else {
+      this.searchFilter = false;
+    }
   }
-
 
   async filterModal() {
     this.membersListFilter = await this.modalController.create({
@@ -151,7 +171,7 @@ export class MembersListPage {
   }
 
 
-  loadData() {
+  loadPagination() {
     if (this.activeSegment == 'arrival_departure') {
       const arrivalData = this.staticPagination(this.user.members_data, this.pageArrival);
       arrivalData.forEach(element => {
@@ -182,13 +202,33 @@ export class MembersListPage {
   }
 
   loadMorePosts(event) {
-    this.loadData();
+    if (this.searchTerm === '') {
+      this.loadPagination();
+    }
     event.target.complete();
   }
 
+  setFilteredItems(ev: any) {
+    if (this.activeSegment == 'arrival_departure') {
+      if (this.searchTerm == "") {
+        this.firstLoad(false, true);
+      } else {
+        this.arival_members_data = this.user.members_data.filter(item => {
+          return item.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1;
+        });
+      }
+    } else {
+      if (this.searchTerm == "") {
+        this.firstLoad(true, false);
+      } else {
+        this.airline_members_data = this.user.members_data.filter(item => {
+          return item.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1;
+        });
+      }
+    }
+  }
 
   rooming() {
-
     var d = JSON.parse(localStorage.getItem('active_group'));
     const data = {
       group_id: d[0]["id"],
@@ -198,12 +238,11 @@ export class MembersListPage {
     };
 
     this.memberService.apiGetRooming(data).subscribe((result: any) => {
-      var newRoomary = []
+      var newRoomary = [];
       Object?.entries(result["data"])?.forEach(
         ([key1, value]) => {
           var roomVal: any = value
           for (const [key, value] of Object.entries(roomVal.rooms)) {
-
             var newRoomValue: any = value;
             var paxDetails = [];
 
