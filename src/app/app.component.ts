@@ -8,10 +8,10 @@ import {Location} from "@angular/common";
 //import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { FcmService } from 'src/app/services/fcm/fcm.service';
 
-import { NetworkService, ConnectionStatus } from './services/network/network.service';
+// import { NetworkService, ConnectionStatus } from './services/network/network.service';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { OfflineManagerService } from './services/offlineManager/offline-manager.service';
+// import { OfflineManagerService } from './services/offlineManager/offline-manager.service';
 import { GlobalService } from './services/global/global.service';
 
 
@@ -40,8 +40,8 @@ export class AppComponent implements OnInit{
    // private splashScreen: SplashScreen,
    // private statusBar: StatusBar,
     private fcmService: FcmService,
-    private offlineManager: OfflineManagerService,
-    private networkService: NetworkService,
+    // private offlineManager: OfflineManagerService,
+    // private networkService: NetworkService,
     private globalService: GlobalService
 
   ) {
@@ -67,14 +67,14 @@ export class AppComponent implements OnInit{
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      this.fcmService.initPush();
-    });
-    this.networkService.onNetworkChange().subscribe((status: ConnectionStatus) => {
-      if (status == ConnectionStatus.Online) {
-        this.offlineManager.checkForEvents().subscribe();
-      }
-    });
+    // this.platform.ready().then(() => {
+    //   this.fcmService.initPush();
+    // });
+    // this.networkService.onNetworkChange().subscribe((status: ConnectionStatus) => {
+    //   if (status == ConnectionStatus.Online) {
+    //     this.offlineManager.checkForEvents().subscribe();
+    //   }
+    // });
     
   }
 

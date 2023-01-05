@@ -11,5 +11,10 @@
 			"defaultSound": true,
 			"presentationOptions":["badge","sound","alert"]
 	 	}
-	}
+	},
+	"cordova": {
+		"preferences": {
+		  "DisableDeploy": "true"
+		}
+	  }
 }

@@ -9,8 +9,7 @@ import { currencyExchange, rooming, showCurrentBalance,getCategories, getAllTour
          transactionHistory, transactionFetch, deleteTranscationHistory, updateNoShowStatus,historyNotification, tourManagerActiveGroup, sendSubmission, sendPolling, getPollingResponse, getPollingBroadcaste, getfetchstock, getAttendanceListData, getAttendanceById, updatestockData, tmStatusUpdate, getAttendancePresent, getTransactionDeatilsByTime, getRejectedTransactionDeatilsByTime, getFlightDataBySector, getFcmToken, saveManagerHub
 } from '../variables';
 
-import { OfflineManagerService } from '../offlineManager/offline-manager.service';
-import { NetworkService, ConnectionStatus } from '../network/network.service';
+
 import { Storage } from '@ionic/storage';
 
 const API_STORAGE_KEY = 'AIzaSyATuK2tzjGc_y1Gn6XLwR5T-nCX3DeYRHE';
@@ -26,8 +25,7 @@ export class ApiService {
   [x: string]: any;
 
   constructor(private http: HttpClient,private auth: AuthService, private globalService: GlobalService,
-     private networkService: NetworkService, 
-     private storage: Storage, private offlineManager: OfflineManagerService) {
+     ) {
 
    }
 
@@ -411,52 +409,39 @@ export class ApiService {
    
   }
 
-  getFlightDataBySector(data){
-    return this.http.post<ApiResponse>(getFlightDataBySector,data,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
-
   /***************offline mode********************************/
 
-  getUsers(forceRefresh: boolean = false): Observable<any[]> {
-    if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline || !forceRefresh) {
-      // Return the cached data from Storage
-      return from(this.getLocalData('users'));
-    } else {
-      // Just to get some "random" data
-      let page = Math.floor(Math.random() * Math.floor(6));
+  // getUsers(forceRefresh: boolean = false): Observable<any[]> {
+  //   if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline || !forceRefresh) {
+  //     // Return the cached data from Storage
+  //     return from(this.getLocalData('users'));
+  //   } else {
+  //     // Just to get some "random" data
+  //     let page = Math.floor(Math.random() * Math.floor(6));
 
-      // Return real API data and store it locally
-      return this.http.get(`${API_URL}/users?per_page=2&page=${page}`).pipe(
-        map(res => res['data']),
-        tap(res => {
-          this.setLocalData('users', res);
-        })
-      )
-    }
-  }
+  //     // Return real API data and store it locally
+  //     return this.http.get(`${API_URL}/users?per_page=2&page=${page}`).pipe(
+  //       map(res => res['data']),
+  //       tap(res => {
+  //         this.setLocalData('users', res);
+  //       })
+  //     )
+  //   }
+  // }
 
-  updateUser(user, data): Observable<any> {
-    let url = `${API_URL}/users/${user}`;
-    if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline) {
-      return from(this.offlineManager.storeRequest(url, 'PUT', data));
-    } else {
-      return this.http.put(url, data).pipe(
-        catchError(err => {
-          this.offlineManager.storeRequest(url, 'PUT', data);
-          throw new Error(err);
-        })
-      );
-    }
-  }
+  // updateUser(user, data): Observable<any> {
+  //   let url = `${API_URL}/users/${user}`;
+  //   if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline) {
+  //     return from(this.offlineManager.storeRequest(url, 'PUT', data));
+  //   } else {
+  //     return this.http.put(url, data).pipe(
+  //       catchError(err => {
+  //         this.offlineManager.storeRequest(url, 'PUT', data);
+  //         throw new Error(err);
+  //       })
+  //     );
+  //   }
+  // }
 
   // Save result of API requests
   private setLocalData(key, data) {

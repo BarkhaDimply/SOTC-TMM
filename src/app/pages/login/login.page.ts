@@ -50,6 +50,7 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.selectBranch();
   }
+  
   /* step 1 */
   selectBranch() {
     let options = [];

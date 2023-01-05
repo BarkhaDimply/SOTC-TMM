@@ -15,5 +15,10 @@
 				"alert"
 			]
 		}
+	},
+	"cordova": {
+		"preferences": {
+			"DisableDeploy": "true"
+		}
 	}
 }
