@@ -29,26 +29,6 @@ export class ApiService {
 
    }
 
-  getCurrentBalance() {
-    // let params = new HttpParams();
-    let params:any = {}
-    var Users:string = localStorage.getItem("user")
-    params.group_id =  JSON.parse(Users).order_id
-    params.driver_id = localStorage.getItem("manager_id")
-
-    return this.http.post<ApiResponse>(showCurrentBalance,params,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     } ),
-      map((result: ApiResponse) => {
-       const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
-
   postCurrencyExchange(data) {
     return this.http.post<ApiResponse>(currencyExchange,data,{ headers: this.auth.jsonheader }).pipe(
       catchError(handleError => {
@@ -128,41 +108,6 @@ export class ApiService {
     );
   }
 
-  getAllTransctionHistoryByTime(){
-    let params:any = {}
-    var Users:string = localStorage.getItem("user");
-    params.group_id =  JSON.parse(Users).order_id
-    params.driver_id = localStorage.getItem("manager_id");
-    return this.http.post<ApiResponse>(getTransactionDeatilsByTime,params,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
-
-  getRejectedTransctionHistoryByTime(){
-    let params:any = {}
-    var Users:string = localStorage.getItem("user");
-    params.group_id =  JSON.parse(Users).order_id
-    params.driver_id = localStorage.getItem("manager_id");
-    return this.http.post<ApiResponse>(getRejectedTransactionDeatilsByTime,params,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
 
   getCurrencyCodes(){
     let Url:string = "https://openexchangerates.org/api/currencies.json"

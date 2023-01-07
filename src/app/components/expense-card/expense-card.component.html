@@ -1,0 +1,42 @@
+<ion-card>
+  <ion-card-content>
+    <ion-row>
+      <ion-col size="6" style="text-align: left">Expenses Details</ion-col>
+      <ion-col size="6" style="text-align: right"><img src="assets/images/myexpence_red.png" style="width: 30px" />
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row *ngIf="VisibleSect">
+      <div class="w-100" style="font-size: 20px;text-align: center;">
+        <span>Card Amount: <b> {{showBalance.balance_card}} {{showBalance.currency_name}} </b>
+        </span>
+        <br>
+        <span *ngIf="showBalance.last_card_transaction_type == 'credit'" style="color:#696565;font-size:16px;">Last
+          Transaction:<b> +
+            {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}</b> </span>
+        <span *ngIf="showBalance.last_card_transaction_type == 'debit'" style="color:#696565;font-size:16px;">Last
+          Transaction:<b> - {{showBalance.last_card_transaction_amount}} {{showBalance.currency_name}}</b> </span>
+      </div>
+    </ion-row>
+    <ion-row *ngIf="!VisibleSect">
+      <div class="w-100" style="font-size: 20px;text-align: center;">
+        <span>Cash Amount: <b> {{showBalance.balance_cash}} {{showBalance.currency_name}}</b></span>
+
+        <br>
+        <span *ngIf="showBalance.last_cash_transaction_type == 'credit'" style="color:#696565;font-size:16px;">Last
+          Transaction:<b> +
+            {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}</b> </span>
+        <span *ngIf="showBalance.last_cash_transaction_type == 'debit'" style="color:#696565;font-size:16px;">Last
+          Transaction:<b> - {{showBalance.last_cash_transaction_amount}} {{showBalance.currency_name}}</b> </span>
+      </div>
+    </ion-row>
+    <ion-row>
+      <div class="w-100" style="font-size: 18px;text-align: center;margin-top: 8%;">
+        <span (click)="visibleSec()" style="padding: 10px;background-color:#00539F;color:#fff;
+    border-radius: 20px;">{{VisibleSect == true ? 'View Cash Balance':'View Card Balance'}}</span>
+      </div>
+    </ion-row>
+
+  </ion-card-content>
+</ion-card>

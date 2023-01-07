@@ -1,0 +1,69 @@
+<ion-card style="margin-top: 0px;padding-bottom: 5rem">
+  <div *ngIf="history.transValue.length > 0">
+    <div style="padding: 10px 0px 0px 10px;font-size: 16px;font-weight: 600;">
+      <span style="margin-top: 10px;">{{history.transKey}}</span>
+    </div>
+    <hr>
+    <div class="d-flex" *ngFor="let historyDetails of history.transValue">
+      <div class="w-100 showSelecthide"
+        [ngStyle]="{'background-color':historyDetails.refId == 0 ? '2px solid #ff000061' : '#d8d1d1'}"
+        *ngIf="historyDetails.show_transaction == 0">
+        <ion-row>
+          <ion-col size="2" style="padding-top: 10px;"> <img src="assets/images/money.png" style="width: 40px">
+          </ion-col>
+
+          <ion-col size="6">
+            <p class="text-bal" *ngIf="historyDetails.category != 'tm_transfer' && historyDetails.category != 'atm_cross_currency' && historyDetails.category != 'atm_same_currency'
+                && historyDetails.category != 'misc_collection'">{{historyDetails.category}}</p>
+            <p class="text-bal" *ngIf="historyDetails.category == 'tm_transfer'">TM Transfer</p>
+            <p class="text-bal" *ngIf="historyDetails.category == 'misc_collection'">Misc Collection</p>
+            <p class="text-bal" *ngIf="historyDetails.category == 'atm_same_currency'">ATM Same Currency</p>
+            <p class="text-bal" *ngIf="historyDetails.category == 'atm_cross_currency'">ATM Cross Currency</p>
+
+            <p style="font-size: 14px;color: #696565;"
+              *ngIf="historyDetails.transaction_type == 2 && historyDetails.transaction_by == 1">Received on
+              Card </p>
+            <p style="font-size: 14px;color: #696565;"
+              *ngIf="historyDetails.transaction_type == 2 && historyDetails.transaction_by == 2">Received on
+              Cash </p>
+            <p style="font-size: 14px;color: #696565;"
+              *ngIf="historyDetails.transaction_type == 1 && historyDetails.transaction_by == 1">Payment By Card
+            </p>
+            <p style="font-size: 14px;color: #696565;"
+              *ngIf="historyDetails.transaction_type == 1 && historyDetails.transaction_by == 2">Payment By Cash
+            </p>
+
+          </ion-col>
+
+          <ion-col size="4" style="text-align: right;">
+            <div *ngIf="historyDetails.show_transaction == 0  && historyDetails.submission_status == 0 &&
+                historyDetails.category != 'BALANCE ADDED' &&  historyDetails.category != 'misc_collection' &&
+                historyDetails.category != 'tm_transfer'" style="padding-bottom:5px;">
+              <ion-icon name="create-outline" (click)="editTransaction(historyDetails)" style=" color: #075d0d;
+                  font-size: 28px;"></ion-icon>
+              <ion-icon (click)="deleteTRansactionHistory(historyDetails)" name="trash-outline"
+                style="color: orange;font-size: 28px;"></ion-icon>
+            </div>
+
+            <div *ngIf="historyDetails.category == 'misc_collection' && historyDetails.submission_level != 1"
+              style="padding-bottom:5px;">
+              <ion-icon name="create-outline" (click)="editTransaction(historyDetails)" style=" color: #075d0d;
+                  font-size: 28px;"></ion-icon>
+              <ion-icon (click)="deleteTRansactionHistory(historyDetails)" name="trash-outline"
+                style="color: orange;font-size: 28px;"></ion-icon>
+            </div>
+
+            <p class="text-amt-debit" *ngIf="historyDetails.transaction_type == 1">
+              -{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></p>
+            <p class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  3 ">
+              -{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></p>
+            <p class="text-amt-debit" *ngIf="historyDetails.transaction_type ==  4">
+              -{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></p>
+            <p class="text-amt" *ngIf="historyDetails.transaction_type == 2">
+              +{{historyDetails.transaction_amount}} <b>{{historyDetails.currency}}</b></p>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+</ion-card>

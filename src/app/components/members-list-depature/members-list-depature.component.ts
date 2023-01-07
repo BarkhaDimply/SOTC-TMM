@@ -14,7 +14,6 @@ export class MembersListDepatureComponent implements OnInit {
 
 
   isFamilyMembers(parentId: any) {
-   
     this.members_data.forEach(item => {  
       item['isFamily'] = false;
       if (parentId == item.parent_id) { 

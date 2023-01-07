@@ -1,0 +1,73 @@
+<ion-card>
+  <div style="width: 100%;display: inline-flex;"
+    *ngIf="history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection' ">
+  </div>
+
+  <div class="d-flex" *ngFor="let historyDetails of history.transValue">
+
+    <ion-card class="w-100" [ngStyle]="{'background-color':historyDetails.refId == 0 ? '#f9e9e9' : 'rgb(220 247 220)'}"
+      style="margin:0.5rem;border:2px solid gray" *ngIf=" historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
+  historyDetails.category != 'tm_transfer'">
+
+      <div style="border-bottom: 1px solid grey;">
+
+        <ion-row style="padding:4px;">
+          <ion-col size="6" style="font-size: 18px;">{{history.transKey}}</ion-col>
+          <ion-col size="6">
+            <div style="color: #00539F;text-align: right;font-size: 18px;"
+              (click)="editReviewTransaction(historyDetails)"
+              [routerLink]="'/notification/review-feedback/review-transaction-details'">View</div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="mt-3" (click)="editReviewTransaction(historyDetails)"
+        [routerLink]="'/notification/review-feedback/review-transaction-details'">
+        <ion-row>
+          <ion-col style="text-align: center;" size="12" class="text-bal" *ngIf="historyDetails.category != 'tm_transfer' && historyDetails.category != 'atm_cross_currency' && historyDetails.category != 'atm_same_currency'
+            && historyDetails.category != 'misc_collection'">{{historyDetails.category}}</ion-col>
+          <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
+            *ngIf="historyDetails.category == 'tm_transfer'">TM Transfer</ion-col>
+          <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
+            *ngIf="historyDetails.category == 'misc_collection'">Misc Collection</ion-col>
+          <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
+            *ngIf="historyDetails.category == 'atm_same_currency'">ATM Same Currency</ion-col>
+          <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
+            *ngIf="historyDetails.category == 'atm_cross_currency'">ATM Cross Currency</ion-col>
+        </ion-row>
+
+        <ion-row style="padding: 5px">
+          <ion-col size="12" style="display:flex;">
+            <ion-col size="4">
+              <h4 style="font-weight: 600">Card Tx </h4>
+            </ion-col>
+            <ion-col size="8">
+              <span style="font-size: 15px;color: red;padding: 6.5px;" *ngIf="historyDetails.debit_transaction_by == 1">
+                -{{historyDetails.debit}} {{historyDetails.debitCurrency}}
+              </span>
+              <span style="font-size: 15px;color: #1d7c21;padding: 6.5px;"
+                *ngIf="historyDetails.credit_transaction_by == 1">
+                +{{historyDetails.credit}} {{historyDetails.creditCurrency}}
+              </span>
+            </ion-col>
+          </ion-col>
+
+          <ion-col size="12" style="display:flex">
+            <ion-col size="4">
+              <h4 style="font-weight: 600">Cash Tx</h4>
+            </ion-col>
+            <ion-col size="8">
+              <span style="font-size: 15px;color:#1d7c21;padding: 6.5px;"
+                *ngIf="historyDetails.credit_transaction_by == 2">
+                +{{historyDetails.credit}} {{historyDetails.creditCurrency}} </span>
+
+              <span style="font-size: 15px;color: red;padding: 6.5px;" *ngIf="historyDetails.debit_transaction_by == 2">
+                -{{historyDetails.debit}} {{historyDetails.debitCurrency}}
+              </span>
+            </ion-col>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-card>
+  </div>
+</ion-card>
