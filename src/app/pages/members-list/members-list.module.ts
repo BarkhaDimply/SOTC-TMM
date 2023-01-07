@@ -10,6 +10,7 @@ import { MembersListDepatureModule } from 'src/app/components/members-list-depat
 import { MembersListArrivalModule } from 'src/app/components/members-list-arrival/members-list-arrival.module';
 import { MembersListRoomingModule } from 'src/app/components/members-list-rooming/members-list-rooming.module';
 import { MembersListFilterComponent } from 'src/app/components/members-list-filter/members-list-filter.component';
+import { MembersListRoomingFilterComponent } from 'src/app/components/members-list-rooming-filter/members-list-rooming-filter.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { MembersListFilterComponent } from 'src/app/components/members-list-filt
   ],
   declarations: [
     MembersListPage,
-    MembersListFilterComponent
+    MembersListFilterComponent,
+    MembersListRoomingFilterComponent
   ]
 })
 export class MembersListPageModule { }

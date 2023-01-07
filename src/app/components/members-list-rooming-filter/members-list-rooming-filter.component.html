@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>
+      <div class="">Rooming Filter <ion-icon name="close" style="float: right;"  (click)="closeModal()"></ion-icon>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+  <label><b>Location Name</b></label>
+  <div class="row">
+    <div class="d-flex">
+      <div class="form-control mt-2 ml-2" *ngFor="let member of itinerary"
+        style="background-color: #eceaea;padding: 10px 20px;border-radius: 22px;" (click)="getHotelLocationName(member.locationName,member.locationID)"
+        [ngStyle]="{'background-color':getHoltelLocation === member.locationName? '#ebef09' : '#eceaea'}">
+        {{member.locationName}}
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showLocationDiv==true">
+
+    <hr>
+    <label><b>Hotel List</b></label>
+    <div class="row">
+      <div class="d-flex">
+
+        <div class="form-control mt-2 ml-2" *ngFor="let roomNameFilter of getHotelNameFilter"
+          (click)="getHotelNameFil($event)"
+          style="background-color: #eceaea;padding: 10px 20px;border-radius: 22px;"
+          [ngStyle]="{'background-color':getHoltelName === roomNameFilter? '#ebef09' : '#eceaea'}">
+          <div class="d-flex">{{roomNameFilter}}</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showsharingDiv==true">
+    <hr>
+
+    <label><b>Sharing</b></label>
+    <div class="row">
+      <div class="d-flex w-50">
+        <div class="form-control mt-2 ml-1" *ngFor="let roomNameFilterCat of getRoomCat">
+          <div (click)="getRoomCategoryName($event)"
+            style="background-color: #eceaea;padding:8px 13px;border-radius: 22px;"
+            [ngStyle]="{'background-color':getselectedRoomCategory === roomNameFilterCat? '#ebef09' : '#eceaea'}">
+            <div class="d-flex">{{roomNameFilterCat}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -9,6 +9,7 @@ import { GlobalService } from 'src/app/services/global/global.service';
 import { nonce } from 'src/app/services/utils';
 import { MembersService } from 'src/app/services/members/members.service';
 import { MembersListFilterComponent } from 'src/app/components/members-list-filter/members-list-filter.component';
+import { MembersListRoomingFilterComponent } from 'src/app/components/members-list-rooming-filter/members-list-rooming-filter.component';
 @Component({
   selector: 'app-members-list',
   templateUrl: 'members-list.page.html',
@@ -33,6 +34,8 @@ export class MembersListPage {
   pageAirline: number;
   pageArrival: number;
   searchFilter = false;
+  roomingData = [];
+  totalDataRoom = [];
 
   public searchTerm: string = "";
   constructor(private location: Location,
@@ -70,6 +73,7 @@ export class MembersListPage {
       this.pageArrival = 2;
       this.arival_members_data = this.staticPagination(this.user.members_data, 1);
     }
+    this.roomingData = this.totalDataRoom;
   }
 
   segmentChanged(event: { target: { value: string; }; }) {
@@ -117,10 +121,34 @@ export class MembersListPage {
   }
   filterModal() {
     if (this.activeSegment == 'rooming') {
-
+      this.roomingFilter();
     } else {
       this.airlineArrivalFilter();
     }
+  }
+
+  async roomingFilter()
+  {    
+    this.membersListFilter = await this.modalController.create({
+      component: MembersListRoomingFilterComponent,
+      backdropDismiss: true,
+      mode: 'ios',
+      id: 'membersListFilter',
+      componentProps: {
+        itinerary: this.user.itinerary,
+        activeSegment: this.activeSegment,
+        user: this.user,
+        totalDataRoom: this.totalDataRoom
+      }
+    });
+    await this.membersListFilter.present();
+
+    await this.membersListFilter.onDidDismiss().then(res => {
+      if (res.role === 'selected') {
+        this.roomingData = res.data.roomsData;
+      }
+    });
+    return;
   }
 
   async airlineArrivalFilter() {
@@ -260,15 +288,16 @@ export class MembersListPage {
           }
         });
 
+      this.roomingData = newRoomary;
       this.totalDataRoom = newRoomary;
-      var roomCategory: any = [];
-      var hotelName: any = [];
-      this.totalDataRoom.forEach(item => {
-        item.forEach(itemCat => {
-          roomCategory.push(itemCat.room_cat)
-          hotelName.push(itemCat.hotel_name)
-        })
-      });
+      // var roomCategory: any = [];
+      // var hotelName: any = [];
+      // this.totalDataRoom.forEach(item => {
+      //   item.forEach(itemCat => {
+      //     roomCategory.push(itemCat.room_cat)
+      //     hotelName.push(itemCat.hotel_name)
+      //   })
+      // });
 
       // this.getRoomCategory = roomCategory.filter((c: any, index: any) => {
       //   return roomCategory.indexOf(c) === index;
