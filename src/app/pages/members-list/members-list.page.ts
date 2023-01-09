@@ -67,11 +67,11 @@ export class MembersListPage {
     this.searchTerm = '';
     if (_airline === true) {
       this.pageAirline = 2;
-      this.airline_members_data = this.staticPagination(this.user.members_data, 1);
+      this.airline_members_data = this.globalServices.staticPagination(this.user.members_data, 1);
     }
     if (_arrival === true) {
       this.pageArrival = 2;
-      this.arival_members_data = this.staticPagination(this.user.members_data, 1);
+      this.arival_members_data = this.globalServices.staticPagination(this.user.members_data, 1);
     }
     this.roomingData = this.totalDataRoom;
   }
@@ -199,33 +199,19 @@ export class MembersListPage {
 
   loadPagination() {
     if (this.activeSegment == 'arrival_departure') {
-      const arrivalData = this.staticPagination(this.user.members_data, this.pageArrival);
+      const arrivalData = this.globalServices.staticPagination(this.user.members_data, this.pageArrival);
       arrivalData.forEach(element => {
         this.arival_members_data.push(element);
       });
       this.pageArrival++;
     } else {
-      const airlineData = this.staticPagination(this.user.members_data, this.pageAirline);
+      const airlineData = this.globalServices.staticPagination(this.user.members_data, this.pageAirline);
       airlineData.forEach(element => {
         this.airline_members_data.push(element);
       });
       this.pageAirline++;
     }
-  }
-
-  staticPagination(data, page = 1) {
-    let start = 0;
-    let end = 20;
-    let size = 20;
-    if (page == 1) {
-      start = 0;
-      end = 20;
-    } else {
-      start = ((page - 1) * size) + 1;
-      end = start + end - 1;
-    }
-    return data.slice(start, end);
-  }
+  }  
 
   loadMorePosts(event) {
     if (this.searchTerm === '') {

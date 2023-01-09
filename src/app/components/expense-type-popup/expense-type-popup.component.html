@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>
+      <div class="">Select Expense Type <ion-icon name="close" style="float: right;" (click)="closeModal()"></ion-icon>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="background: #fff;height:100%;">
+
+    <ion-row><b class="head-b">Expense Tracking</b></ion-row>
+
+    <ion-row class=" row-exp">
+      <ion-col size="6" style="text-align: center" (click)="route('record-transaction')">
+        <img src="assets/images/money.png" class="font-size-exp"><br>
+        <p>Cash Transaction</p>
+      </ion-col>
+      <ion-col size="6" style="text-align: center" (click)="route('cross-currency-by-card')">
+        <img src="assets/images/credit-card.png" class="font-size-exp"><br>
+        <p>Payment by card</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row><b class="head-b">Withdrawal</b></ion-row>
+
+    <ion-row class=" row-exp">
+      <ion-col size="6" style="text-align: center" (click)="route('atm-withdrawalsame-currency')">
+        <img src="assets/images/atm-machine.png" class="font-size-exp"><br>
+        <p>ATM Withdrawal Same Currency</p>
+      </ion-col>
+      <ion-col size="6" style="text-align: center" (click)="route('atm-withdrawal-cross-currency')">
+        <img src="assets/images/cross currency atm.png" class="font-size-exp"><br>
+        <p>ATM Withdrawal Cross Currency</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <b class="head-b">Exchanges </b>
+    </ion-row>
+    <ion-row class=" row-exp">
+      <ion-col size="6" style="text-align: center" (click)="route('currency-exchange')">
+        <img src="assets/images/exchange.png" class="font-size-exp"><br>
+        <p>Currency Exchange</p>
+      </ion-col>
+
+      <ion-col size="6" style="text-align: center" (click)="route('tm-transfer')">
+        <img src="assets/images/wallet.png" class="font-size-exp"><br>
+        <p>TM Transfer</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <b class="head-b">Collection</b>
+    </ion-row>
+    <ion-row class=" row-exp">
+      <ion-col size="6" style="text-align: center" (click)="route('misc-collection')">
+        <img src="assets/images/Collection.png" class="font-size-exp">
+        <!-- <ion-icon name="cash-outline" class="font-size-exp"></ion-icon>--> <br>
+        <p>Misc. Collection</p>
+      </ion-col>
+    </ion-row>
+  </div>
+
+</ion-content>

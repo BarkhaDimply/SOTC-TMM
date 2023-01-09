@@ -12,10 +12,10 @@ const routes: Routes = [
   //   path: 'currency-exchange',
   //   loadChildren: () => import('./currency-exchange/currency-exchange.module').then( m => m.CurrencyExchangePageModule)
   // },
-  // {
-  //   path: 'record-transaction',
-  //   loadChildren: () => import('./record-transaction/record-transaction.module').then( m => m.RecordTransactionPageModule)
-  // },
+  {
+    path: 'record-transaction',
+    loadChildren: () => import('./record-transaction/record-transaction.module').then( m => m.RecordTransactionPageModule)
+  },
   // {
   //   path: 'atm-withdrawalsame-currency',
   //   loadChildren: () => import('./atm-withdrawalsame-currency/atm-withdrawalsame-currency.module').then( m => m.AtmWithdrawalsameCurrencyPageModule)

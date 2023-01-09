@@ -1,0 +1,32 @@
+ion-accordion {
+    margin: 0 auto;
+  }
+  
+  ion-accordion.accordion-expanding,
+  ion-accordion.accordion-expanded {
+    width: calc(100% - 32px);
+    margin: 16px auto;
+  }
+
+  ion-card{
+    padding: 10px;
+  }
+  .error-message{
+    font-size: 11px;
+    color: red;
+  }
+
+  .cross_pic_choose {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border-width: 0 !important;
+    position: absolute;
+    margin-left: -22px;
+    margin-top: 3px;
+  }
+  ion-select{
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin: 10px 0px;
+  }

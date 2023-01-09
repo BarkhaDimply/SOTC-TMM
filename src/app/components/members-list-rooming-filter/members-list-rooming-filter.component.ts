@@ -116,6 +116,9 @@ export class MembersListRoomingFilterComponent implements OnInit {
           }
         }
       });
-     await this.modalController.dismiss({ roomsData: this.returnRoomsData }, 'selected');
+  }
+
+  async applyFilter(){
+    await this.modalController.dismiss({ roomsData: this.returnRoomsData }, 'selected');
   }
 }

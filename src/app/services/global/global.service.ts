@@ -120,7 +120,6 @@ export class GlobalService {
 
   async takePhoto() {
     let imageUrl = '';
-    const errorMessage = [];
     const permission = await Camera.checkPermissions();
 
     if (permission.photos !== 'granted') {
@@ -134,11 +133,11 @@ export class GlobalService {
     });
 
     imageUrl = image.dataUrl;
-    const selectedFile = await fetch(imageUrl).then(r => r.blob());
+    //const selectedFile = await fetch(imageUrl).then(r => r.blob());
+    const selectedFile = '';
 
-    return { selectedFile, imageUrl, errorMessage };
+    return {selectedFile, imageUrl};
   }
-
 
   calculateImageSize(base64String) {
     let padding;
@@ -215,6 +214,20 @@ export class GlobalService {
 
       }
     }
+  }
+
+  staticPagination(data, page = 1) {
+    let start = 0;
+    let end = 20;
+    let size = 20;
+    if (page == 1) {
+      start = 0;
+      end = 20;
+    } else {
+      start = ((page - 1) * size) + 1;
+      end = start + end - 1;
+    }
+    return data.slice(start, end);
   }
 
   callNow(m: { phone: string; }) {

@@ -3,9 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { Location } from '@angular/common';
-import { Platform, AlertController, IonRouterOutlet } from '@ionic/angular';
+import { Platform, AlertController, IonRouterOutlet, ModalController } from '@ionic/angular';
 
 import { ApiService } from 'src/app/services/api/api.service';
+import { ExpenseTypePopupComponent } from 'src/app/components/expense-type-popup/expense-type-popup.component';
+
+
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
@@ -18,7 +21,7 @@ export class TabsPage implements OnInit {
   transactionValue: any = [];
   btnSubstatus = true;
 
-  constructor(private globalService: GlobalService, private auth: AuthService, private router: Router, private location: Location,
+  constructor(private globalService: GlobalService, private auth: AuthService, private router: Router, private modalController: ModalController,
     private platform: Platform,
     private alertController: AlertController, private apiServices: ApiService, private actRoute: ActivatedRoute,) { }
 
@@ -34,6 +37,24 @@ export class TabsPage implements OnInit {
 
     });
 
+  }
+
+
+  async setOpen() {
+    let expenseType = await this.modalController.create({
+      component: ExpenseTypePopupComponent,
+      backdropDismiss: true,
+      mode: 'ios',
+      id: 'membersListFilter'
+    });
+    await expenseType.present();
+
+    await expenseType.onDidDismiss().then(res => {
+      if (res.role === 'selected') {
+
+      }
+    });
+    return;
   }
 
   getDataByTabs() {
@@ -77,10 +98,10 @@ export class TabsPage implements OnInit {
     }
   }
 
-  setOpen() {
-    this.getDataByTabs();
-    console.log("hlo moto");
-  };
+  // setOpen() {
+  //   this.getDataByTabs();
+  //   console.log("hlo moto");
+  // };
 
 
 }

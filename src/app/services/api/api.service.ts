@@ -57,20 +57,7 @@ export class ApiService {
     );
   }
 
-  getCategoriesFromServer(){
-    return this.http.get<ApiResponse>(getCategories,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-      
-    );
-  }
+
 
   getTourManager(){
     let params:any = {}

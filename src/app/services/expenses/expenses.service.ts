@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { ApiResponse, handleError } from '../utils';
-import { getRejectedTransactionDeatilsByTime, getTransactionDeatilsByTime, showCurrentBalance } from '../variables';
+import { getCategories, getRejectedTransactionDeatilsByTime, getTransactionDeatilsByTime, showCurrentBalance } from '../variables';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,12 @@ export class ExpensesService {
 
   getRejectedTransctionHistoryByTime(data) {
     return this.http.post<ApiResponse>(this.baseURL + getRejectedTransactionDeatilsByTime, data, { headers: this.auth.jsonheader }).pipe(
+      catchError(handleError)
+    );
+  }
+
+  getCategoriesFromServer() {
+    return this.http.get<ApiResponse>(this.baseURL + getCategories, { headers: this.auth.jsonheader }).pipe(
       catchError(handleError)
     );
   }
