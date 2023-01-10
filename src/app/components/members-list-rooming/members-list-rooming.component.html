@@ -29,7 +29,7 @@
             <b>{{rms[0].check_out}}</b></ion-card-content>
         </div>
 
-        <ng-container *ngFor="let pax of rms[0].paxDetails">
+        <ng-container *ngFor="let pax of rms">
           <ion-item>
             <ion-icon (click)="presentAlert(pax.special_remark);" name="information-circle-outline"
               style="font-size: 28px;"></ion-icon>

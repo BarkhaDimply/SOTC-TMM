@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-expenses-all',
@@ -7,8 +7,12 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ExpensesAllComponent implements OnInit {
   @Input() history;
+  @Output() transactionEvent = new EventEmitter<any>();
   constructor() { }
 
   ngOnInit() {}
 
+  editTransaction(details){
+    this.transactionEvent.emit(details);
+  }
 }

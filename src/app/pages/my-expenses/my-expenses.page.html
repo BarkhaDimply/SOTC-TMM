@@ -34,7 +34,7 @@
     <swiper #swiper (slideChange)="onSlideChange($event)" [config]="config" class="common-swiper">
       <ng-template swiperSlide>
         <ng-container *ngFor="let history of transctionHistory">
-          <app-expenses-all [history]="history"></app-expenses-all>
+          <app-expenses-all [history]="history" (transactionEvent)="editTransaction($event)"></app-expenses-all>
         </ng-container>
       </ng-template>
       <ng-template swiperSlide>

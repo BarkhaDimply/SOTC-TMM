@@ -236,4 +236,5 @@ export class GlobalService {
     //   .catch(err => console.log('Error launching dialer', err));
     // console.log("phone---",this.callNumber);
   }
+  
 }

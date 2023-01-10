@@ -58,7 +58,7 @@
         <div size="4">
           <label>Select Category </label>
           <div class="form-group">           
-            <ion-select (ionChange)="selectedCategory($event)" formControlName="category_id"  interface="action-sheet">
+            <ion-select (ionChange)="selectedCategory($event.target.value)" formControlName="category_id"  interface="action-sheet">
               <ion-select-option value="">--Select--</ion-select-option>
               <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.category}}</ion-select-option>
             </ion-select>
@@ -75,7 +75,7 @@
         <div size="4">
           <div class="form-group" *ngIf="categories?.length != 0">
             <label>Select Sub Category</label>           
-            <ion-select (ionChange)="selectedSubcatgory($event)" formControlName="sub_category"  interface="action-sheet">
+            <ion-select formControlName="sub_category"  interface="action-sheet">
               <ion-select-option value="">--Select--</ion-select-option>
               <ion-select-option *ngFor="let subcategory of subcategories" [value]="subcategory.id">{{subcategory.category}}</ion-select-option>
             </ion-select>

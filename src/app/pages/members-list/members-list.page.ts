@@ -253,7 +253,7 @@ export class MembersListPage {
       var newRoomary = [];
       Object?.entries(result["data"])?.forEach(
         ([key1, value]) => {
-          var roomVal: any = value
+          var roomVal: any = value;
           for (const [key, value] of Object.entries(roomVal.rooms)) {
             var newRoomValue: any = value;
             var paxDetails = [];

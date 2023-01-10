@@ -29,19 +29,6 @@ export class ApiService {
 
    }
 
-  postCurrencyExchange(data) {
-    return this.http.post<ApiResponse>(currencyExchange,data,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
 
   postPollingData(data) {
     return this.http.post<ApiResponse>(sendPolling,data,{ headers: this.auth.jsonheader }).pipe(
@@ -109,22 +96,6 @@ export class ApiService {
         return listing;
       })
       
-    );
-  }
-
-  editTRansctionAPI(transId:any){
-    let params:any = {}
-   params.transaction_id = transId;
-    return this.http.post<ApiResponse>(transactionFetch,params,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
     );
   }
 

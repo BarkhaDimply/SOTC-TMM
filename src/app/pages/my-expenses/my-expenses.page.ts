@@ -51,6 +51,7 @@ export class MyExpensesPage implements OnInit {
   constructor(
     private auth: AuthService,
     private expenseService: ExpensesService,
+    private navCtrl: NavController
   ) {
     this.user = this.auth.user;
     this.manager_name = localStorage.getItem("manager_name") || '';
@@ -150,6 +151,62 @@ export class MyExpensesPage implements OnInit {
   checkHistryDetail(historyDetails) {
     return ((historyDetails.submission_status == 0 || historyDetails.submission_status == 3) && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED'
       && historyDetails.category != 'misc_collection' && historyDetails.category != 'tm_transfer';
+  }
+
+
+  editTransaction(details: any) {
+    this.expenseService.editTRansctionAPI(details.id).subscribe((result: any) => {
+      if (result.data.type == 'Exchange') {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/currency-exchange'], navigationExtras);
+      } else if (result.data.type == 'misc_collection') {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/misc-collection'], navigationExtras);
+      } else if (result.data.type == 'own_money') {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/add-own-money'], navigationExtras);
+      } else if (result.data.type == 'cross_currency_by_card') {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/cross-currency-by-card'], navigationExtras);
+      } else if (result.data.type == 'atm_cross_currency') {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/atm-withdrawal-cross-currency'], navigationExtras);
+      } else if (result.data.type == 'atm_same_currency') {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/atm-withdrawalsame-currency'], navigationExtras);
+      } else {
+        let navigationExtras: NavigationExtras = {
+          state: {
+            details: result.data,
+          }
+        };
+        this.navCtrl.navigateForward(['/tabs/my-expenses/record-transaction'], navigationExtras);
+      }
+    });
   }
 }
 

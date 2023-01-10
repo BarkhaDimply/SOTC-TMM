@@ -95,24 +95,12 @@ export class MembersListRoomingFilterComponent implements OnInit {
 
     Object.entries(this.getRoomingDataNew).forEach(
       ([key1, value]) => {
-        if(this.getHoltelName.trim() == key1.trim()){  
+        if(this.getHoltelName.trim() == key1.trim()){
           var roomValD: any = value;
           for (const [key, value] of Object.entries(roomValD.rooms)) {
-            var paxDetails = [];
-            var newRoomValue: any = value;
-            newRoomValue.forEach(el => {   
-              if(el.room_cat == this.getselectedRoomCategory && key == el.roomno){   
-                var paxObj = {
-                  name: el.name,
-                  room_cat: el.room_cat,
-                  special_remark: el.special_remark,
-                  meal_pref: el.meal_pref
-                }   
-                paxDetails.push(paxObj);
-                el.paxDetails = paxDetails;
-                this.returnRoomsData.push(Array(el));
-              }
-            }); 
+            if(value[0].room_cat == this.getselectedRoomCategory && key == value[0].roomno){
+              this.returnRoomsData.push(value);
+            }
           }
         }
       });
