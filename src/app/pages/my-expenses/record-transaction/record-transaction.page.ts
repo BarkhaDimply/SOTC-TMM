@@ -64,7 +64,7 @@ export class RecordTransactionPage implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
     /*******************edit transacrtion***********************/
 
@@ -88,8 +88,6 @@ export class RecordTransactionPage implements OnInit {
 
           this.apiService.getCategoriesFromServer().subscribe((result: any) => {
             this.getAllCatergories = result.categories;
-
-            
 
             this.getAllCatergories.forEach(element => {
               this.Category_id = element.id;
@@ -123,12 +121,44 @@ export class RecordTransactionPage implements OnInit {
       this.expenseData.forEach(element => {
         if(element.balance_cash > 0){
           this.showCurrency.push(element.currency_name);
-
-
-          //console.log("curr333",this.showCurrency);
+        
         }
       });
     }
+
+    if(this.showCurrency == ''){
+
+      const alert = await this.alertController.create({
+        cssClass: '',
+       // header: 'Delete Transaction!',
+        message: 'You have no wallet balance. You want to add balance',
+        mode: 'ios',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            id: 'cancel-button',
+    
+            handler: (blah) => {
+              console.log('Confirm Cancel: blah');
+            }
+          }, {
+            text: 'Yes',
+            id: 'confirm-button',
+            handler: () => {
+              console.log('Confirm Okay');
+              return this.router.navigate(['/tabs/my-expenses/add-own-money']);
+            }
+          }
+        ]
+      });
+    
+      await alert.present();
+      
+    }
+    
+ 
 
 
     // if (this.expenseData) {
@@ -151,8 +181,12 @@ export class RecordTransactionPage implements OnInit {
     this.hideSubCat = false;
 
     this.selected_category_id = parseInt(ev.target.value);
+
+
+    console.log("aaaa cat::::",this.selected_category_id);
+
     //this.subCategory = "";
-    this.getAllCatergories.forEach(element => {
+    this.getAllCatergories.forEach(element => { console.log("aaaa element::::",element);
       if (this.selected_category_id == element.id) {
         if (element.sub_category.length > 0) {
           this.subCategory = element.sub_category;
@@ -358,14 +392,11 @@ export class RecordTransactionPage implements OnInit {
     //   params.image_type = false;
     // }
 
-    console.log("params:::: ",params);
-
     localStorage.setItem("addRecordTransaction",params);
 
-    
-
-
     this.apiService.postCurrencyExchange(params).subscribe(async (result: any) => {
+
+      console.log("result:::: ",result.message);
 
 
       if (result.status == 'true') {
@@ -381,8 +412,37 @@ export class RecordTransactionPage implements OnInit {
 
         return this.router.navigate(['/tabs/my-expenses']);
 
-
       } else {
+
+        if(result.message == "You don't have sufficient Balance. Would you like to add more?"){
+          const alert = await this.alertController.create({
+            cssClass: '',
+            message: result.message,
+            mode: 'ios',
+            buttons: [
+              {
+                text: 'Cancel',
+                role: 'cancel',
+                cssClass: 'secondary',
+                id: 'cancel-button',
+        
+                handler: (blah) => {
+                  console.log('Confirm Cancel: blah');
+                }
+              }, {
+                text: 'Yes',
+                id: 'confirm-button',
+                handler: () => {
+                  console.log('Confirm Okay');
+                  return this.router.navigate(['/tabs/my-expenses/add-own-money']);
+                }
+              }
+            ]
+
+          });
+            await alert.present();
+            return;
+      }else{
         const alert = await this.alertController.create({
           cssClass: '',
           message: result.message,
@@ -392,7 +452,10 @@ export class RecordTransactionPage implements OnInit {
         });
 
         await alert.present();
-        return;
+        return false;
+      }
+
+      
       }
 
     })

@@ -43,7 +43,11 @@ const routes: Routes = [
   {
     path: 'transaction-modal',
     loadChildren: () => import('./transaction-modal/transaction-modal.module').then( m => m.TransactionModalPageModule)
+  },  {
+    path: 'add-own-money',
+    loadChildren: () => import('./add-own-money/add-own-money.module').then( m => m.AddOwnMoneyPageModule)
   },
+
 
 
 

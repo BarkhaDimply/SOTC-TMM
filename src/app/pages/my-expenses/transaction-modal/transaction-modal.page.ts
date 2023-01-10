@@ -37,6 +37,10 @@ export class TransactionModalPage implements OnInit {
     if(key ==='misc-collection'){
       this.router.navigate(['/tabs/my-expenses/misc-collection']);
     }
+    if(key ==='add-own-money'){
+      this.router.navigate(['/tabs/my-expenses/add-own-money']);
+    }
+
 
   };
   back() {

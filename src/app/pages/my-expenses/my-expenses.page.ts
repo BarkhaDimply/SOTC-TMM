@@ -124,6 +124,8 @@ export class MyExpensesPage implements OnInit{
         this.getNotiKey = this.router.getCurrentNavigation().extras.state.details;
         
       }
+      console.log("getNotiKey:::::",this.getNotiKey);
+
 
       if(this.getNotiKey == '28'){  console.log("28");
         this.activeSegment = "allTrans";
@@ -360,7 +362,7 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
   localStorage.setItem("edit_clicked", 'yes');
 
 
-  console.log("edit mode:::",result.data.type);
+
 
   if(result.data.type == 'Exchange' ) {
     let navigationExtras: NavigationExtras = {
@@ -380,7 +382,16 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
     };
    this.navCtrl.navigateForward(['/tabs/my-expenses/misc-collection'], navigationExtras);
 
-  } else if(result.data.type == 'cross_currency_by_card' ) {
+  } else if(result.data.type == 'own_money') {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        details:result.data,
+       
+      } 
+    };
+   this.navCtrl.navigateForward(['/tabs/my-expenses/add-own-money'], navigationExtras);
+    
+  }else if(result.data.type == 'cross_currency_by_card' ) {
     let navigationExtras: NavigationExtras = {
       state: {
         details:result.data,
@@ -514,14 +525,9 @@ verifyEvent(id:any) {
 
 async addTransactionHistory(){
 
-  //this.getAllTrasactionId = (JSON.parse(localStorage.getItem("selectedTrasactionIds")));
-
   this.getAllTrasactionId = (JSON.parse(localStorage.getItem("listOfAllTransaction")));
 
-  console.log("get all trans:::::",this.getAllTrasactionId);
-
   var transValue:any=[];
-
 
   this.getAllTrasactionId.forEach(async items => {
     items.transValue.forEach(async item =>{
@@ -534,22 +540,8 @@ async addTransactionHistory(){
       }
 
     });
-    // && item.submission_status == 0 && item.show_transaction == 0
 
   });
-
-  // if(transValue.length == 0){
-  
-  //   const alert = await this.alertController.create({
-  //     cssClass: '',
-  //     message: 'No transaction found to submit',
-  //     mode: 'ios',
-  //     buttons: ['OK']
-
-  //   });
-
-  //   await alert.present();return;
-  // }
 
   let params:any = {}
   var Users:string = localStorage.getItem("user")
@@ -557,10 +549,8 @@ async addTransactionHistory(){
   params.manager_id = localStorage.getItem("manager_id");
   params.transaction_ids = JSON.stringify(transValue);
 
-
-
   const alert = await this.alertController.create({
-    //header: 'Mark as "NO SHOW"?',
+
     message: '<strong>Are you sure you want to submit your transactions for approval?</strong>',
     mode: 'ios',
     buttons: [
@@ -577,7 +567,7 @@ async addTransactionHistory(){
         handler: () => {
          
           this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
-            // this.globalService.dismissLoading();
+     
              if(result.status == false){
          
                const alert = await this.alertController.create({
@@ -593,18 +583,18 @@ async addTransactionHistory(){
               if(result.status == true) {
          
          
-               const alert = await this.alertController.create({
-                 cssClass: '',
-                 message: 'Transaction Submit',
-                 mode: 'ios',
-                buttons: ['OK']
+              //  const alert = await this.alertController.create({
+              //    cssClass: '',
+              //    message: 'Transaction Submit',
+              //    mode: 'ios',
+              //   buttons: ['OK']
          
-               });
+              //  });
          
-               await alert.present();
-              this.refressfunc();
+              // await alert.present();
+              //this.refressfunc();
 
-              return this.router.navigate(['/tabs/itinerary']);
+             // return this.router.navigate(['/tabs/itinerary']);
                }
            });
 
@@ -733,7 +723,7 @@ getRejectedTransactions(){
         console.log("getId rejc::::",getId);
 
         //var pushGetId = getId
-        //transValue.push(id_new, getId)
+        //transValue.push(id_new, getId)d
         transValue.push( getId)
 
         console.log("transValue rejc::::",transValue);
@@ -849,6 +839,130 @@ refreshPage(){
     
 
 }
+
+/**********************test function for submit**************************************/
+async addTransactionHistoryReviewTest(){
+
+  const alert = await this.alertController.create({
+ 
+     message: '<strong>Are you sure you want to submit your transactions for approval?</strong>',
+     mode: 'ios',
+     buttons: [
+       {
+         text: 'Cancel',
+         role: 'cancel',
+         cssClass: 'secondary',
+         handler: (blah) => {
+           console.log('Confirm Cancel: blah',blah);
+           
+         }
+       }, {
+         text: 'Confirm',
+         handler: () => {
+       
+         this.getAllTrasactionId = (JSON.parse(localStorage.getItem("listOfAllTransaction")));
+ 
+         var transValue:any=[];
+ 
+         this.getAllTrasactionId.forEach(async items => {
+          items.transValue.forEach(async item =>{
+            this.btnSubstatus = item.submission_status;
+ 
+          if((item.submission_status == 0 || item.submission_status == 3) && item.show_transaction == 0 && item.category != 'BALANCE ADDED' && item.category != 'tm_transfer'
+          && item.category != 'own_money' && item.category != 'misc_collection'){
+
+            const getNewId = item.id
+            console.log("get all ids",item.id);
+
+            if(getNewId != ''){
+              transValue.push(getNewId);
+              this.hideSubmitButton=false;
+            }else{
+ 
+              this.rejectedTransctionHistory.forEach(items => {
+      
+                items.transValue.forEach(async item =>{
+
+                  console.log("get rrr ids 111111 item",item);
+      
+                  item.id.forEach(async getId =>{
+
+                    console.log("get rejc ids",getId);
+
+                    transValue.push(getNewId,getId);
+                    this.hideSubmitButton=false;
+                  
+                  });
+                  
+                });
+              });
+            }
+
+       
+           }
+ 
+         });
+ 
+         });
+ 
+         let params:any = {}
+         var Users:string = localStorage.getItem("user")
+         params.group_id =  JSON.parse(Users).order_id
+         params.manager_id = localStorage.getItem("manager_id");
+         params.transaction_ids = JSON.stringify(transValue);
+
+         console.log("get rrr ids transaction_ids params",params);
+         
+         if(params != ''){
+          
+            this.apiServices.postSendSubmission(params).subscribe(async (result:any) =>{
+             
+              if(result.status == true) {
+                const alert = await this.alertController.create({
+                cssClass: '',
+                message: 'Submitted Successfully',
+                mode: 'ios',
+                buttons: ['OK']
+           
+                });
+           
+               
+                this.refressfunc();
+                return this.router.navigate(['/tabs/itinerary']);
+           
+              
+              }else{
+              
+               const alert = await this.alertController.create({
+               cssClass: '',
+               message: result.message,
+               mode: 'ios',
+               buttons: ['OK']
+           
+               });
+           
+               await alert.present();
+               return;
+           
+              }
+             
+             
+          });
+         
+        }   
+ 
+         }
+       }
+     ]
+   });
+ 
+   await alert.present();
+ 
+ }
+
+
+
+
 
 
 }

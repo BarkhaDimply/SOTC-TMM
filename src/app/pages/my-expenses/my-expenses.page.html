@@ -242,9 +242,10 @@
 
                     <ion-col size="6">
                       <p class="text-bal" *ngIf="historyDetails.category != 'tm_transfer' && historyDetails.category != 'atm_cross_currency' && historyDetails.category != 'atm_same_currency'
-                        && historyDetails.category != 'misc_collection'">{{historyDetails.category}}</p>
+                        && historyDetails.category != 'misc_collection' && historyDetails.category != 'own_money' ">{{historyDetails.category}}</p>
                       <p class="text-bal" *ngIf="historyDetails.category == 'tm_transfer'">TM Transfer</p>
                       <p class="text-bal" *ngIf="historyDetails.category == 'misc_collection'">Misc Collection</p>
+                      <p class="text-bal" *ngIf="historyDetails.category == 'own_money'">Own Money</p>
                       <p class="text-bal" *ngIf="historyDetails.category == 'atm_same_currency'">ATM Same Currency</p>
                       <p class="text-bal" *ngIf="historyDetails.category == 'atm_cross_currency'">ATM Cross Currency</p>
 
@@ -265,7 +266,7 @@
 
                     <ion-col size="4" style="text-align: right;">
                       <div *ngIf="historyDetails.show_transaction == 0  && historyDetails.submission_status == 0 &&
-                        historyDetails.category != 'BALANCE ADDED' &&  historyDetails.category != 'misc_collection' &&
+                        historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
                         historyDetails.category != 'tm_transfer'" style="padding-bottom:5px;">
                         <ion-icon name="create-outline" (click)="editTransaction(historyDetails)" style=" color: #075d0d;
                           font-size: 28px;"></ion-icon>
@@ -273,7 +274,7 @@
                           style="color: orange;font-size: 28px;"></ion-icon>
                       </div>
 
-                      <div *ngIf="historyDetails.category == 'misc_collection' && historyDetails.submission_level != 1"
+                      <div *ngIf="historyDetails.category == 'own_money' && historyDetails.category == 'misc_collection' && historyDetails.submission_level != 1"
                         style="padding-bottom:5px;">
                         <ion-icon name="create-outline" (click)="editTransaction(historyDetails)" style=" color: #075d0d;
                           font-size: 28px;"></ion-icon>
@@ -392,7 +393,8 @@
                     <ion-card class="w-100"
                     *ngIf="historyDetailsAll.submission_level == 0 && historyDetailsAll.show_transaction != 1
                     && historyDetailsAll.submission_status != 4 && historyDetailsAll.show_transaction != 3
-                    && historyDetailsAll.category != 'BALANCE ADDED' && historyDetailsAll.category != 'misc_collection' &&
+                    && historyDetailsAll.category != 'BALANCE ADDED' &&  historyDetailsAll.category != 'own_money' &&
+                     historyDetailsAll.category != 'misc_collection' &&
                     historyDetailsAll.category != 'tm_transfer'"
                               [ngStyle]="{'background-color':historyDetailsAll.refId == 0 ? '#f9e9e9' : 'rgb(220 247 220)'}"
                               style="margin:0.5rem;border:2px solid gray">
@@ -422,7 +424,8 @@
 
                           <ion-col style="text-align: center;" size="12" class="text-bal" 
                           *ngIf="historyDetailsAll.category != 'tm_transfer' && historyDetailsAll.category != 'atm_cross_currency' && historyDetailsAll.category != 'atm_same_currency'
-                                && historyDetailsAll.category != 'misc_collection'">{{historyDetailsAll.category}}</ion-col>
+                                && historyDetailsAll.category != 'misc_collection' && historyDetailsAll.category != 'own_money'
+                                ">{{historyDetailsAll.category}}</ion-col>
                           <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
                                   *ngIf="historyDetailsAll.category == 'tm_transfer'">TM Transfer</ion-col>
                           <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
@@ -431,7 +434,8 @@
                                   *ngIf="historyDetailsAll.category == 'atm_same_currency'">ATM Same Currency</ion-col>
                           <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
                                   *ngIf="historyDetailsAll.category == 'atm_cross_currency'">ATM Cross Currency</ion-col>
-
+                          <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
+                                  *ngIf="historyDetailsAll.category == 'own_money'">Own Money</ion-col>
                         </ion-row>
 
 
@@ -459,7 +463,8 @@
             <div *ngFor="let history of rejectedTransctionHistory"> 
 
                 <div style="width: 100%;display: inline-flex;"
-                  *ngIf="history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection' ">
+                  *ngIf="history.category != 'tm_transfer' && history.category != 'BALANCE ADDED' && history.category != 'misc_collection'
+                  && history.category != 'own_money' ">
                 </div>
 
                 <div class="d-flex" *ngFor="let historyDetails of history.transValue">
@@ -467,7 +472,7 @@
                 <ion-card class="w-100"
                           [ngStyle]="{'background-color':historyDetails.refId == 0 ? '#f9e9e9' : 'rgb(220 247 220)'}"
                           style="margin:0.5rem;border:2px solid gray" *ngIf=" historyDetails.category != 'BALANCE ADDED' && historyDetails.category != 'misc_collection' &&
-                  historyDetails.category != 'tm_transfer'">
+                  historyDetails.category != 'tm_transfer' && historyDetails.category != 'own_money' ">
 
                   <div style="border-bottom: 1px solid grey;">
 
@@ -490,11 +495,13 @@
                     <ion-row>
 
                       <ion-col style="text-align: center;" size="12" class="text-bal" *ngIf="historyDetails.category != 'tm_transfer' && historyDetails.category != 'atm_cross_currency' && historyDetails.category != 'atm_same_currency'
-                            && historyDetails.category != 'misc_collection'">{{historyDetails.category}}</ion-col>
+                            && historyDetails.category != 'misc_collection' && historyDetails.category != 'own_money'">{{historyDetails.category}}</ion-col>
                       <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
                               *ngIf="historyDetails.category == 'tm_transfer'">TM Transfer</ion-col>
                       <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
                               *ngIf="historyDetails.category == 'misc_collection'">Misc Collection</ion-col>
+                              <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
+                              *ngIf="historyDetails.category == 'own_money'">Own Money</ion-col>
                       <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
                               *ngIf="historyDetails.category == 'atm_same_currency'">ATM Same Currency</ion-col>
                       <ion-col style="width:100%;text-align: center;" size="12" class="text-bal"
@@ -574,34 +581,38 @@
            <!-----------------------------end of commnt code use single submit--------------------------------------->
           </ion-card>
 
-        
-          
-
-
       </ng-template>
     </swiper>
+    <div  >
 
       <div *ngFor="let history of transctionHistory">
-        <div *ngFor="let historyDetails of history.transValue">
+        <div *ngFor="let historyDetails of history.transValue" >
 
-          <ion-fab class="mr-3" slot="fixed" style="bottom: 20px;position: fixed;right: 3px;">
+        
+            <!-- <ion-button class="primary-btn" style="color:#fff;width: 372px;position: fixed;"
+             (click)="addCurrencyExcahnge()">Submit</ion-button> -->
+
+             <ion-fab class="mr-3 ml-3" slot="fixed" style="border-radius:5px;bottom:0rem;position: fixed;right: 5px;left:5px;background-color: #00539F;">
+              <div *ngIf="((historyDetails.submission_status == 0 || historyDetails.submission_status == 3 ) && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED'
+              && historyDetails.category != 'misc_collection' && historyDetails.category != 'own_money' && historyDetails.category != 'tm_transfer'" 
+              style="font-size: 16px; --box-shadow:none;color: #fff;text-align: center;padding: 15px;font-weight: 600 !important;"
+              (click)="addTransactionHistoryReviewTest()">Submit
+             </div>
+            </ion-fab>
+        
+
+          <!-- <ion-fab class="mr-3" slot="fixed" style="bottom: 20px;position: fixed;right: 3px;">
 
             <ion-fab-button *ngIf="((historyDetails.submission_status == 0 || historyDetails.submission_status == 3 ) && historyDetails.show_transaction == 0) && historyDetails.category != 'BALANCE ADDED'
                               && historyDetails.category != 'misc_collection' && historyDetails.category != 'tm_transfer'" style="font-size: 14px; --box-shadow:none;"
-                              (click)="addTransactionHistoryReview()">Submit
+                              (click)="addTransactionHistoryReviewTest()">Submit
             </ion-fab-button>
 
-          </ion-fab>
+          </ion-fab> -->
           
         </div>
       </div>
-
-
- 
-
-
-   
-
+    </div>
 
   </div>
 

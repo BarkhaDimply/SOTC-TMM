@@ -27,7 +27,7 @@
 <!--                <option *ngFor="let cardCurrency of showCardCurrency" [ngValue]="cardCurrency" class="place-holder">{{cardCurrency}}</option>-->
 <!--              </select>-->
               <select class="form-control"  (change)="getOutgoingCurrency($event.target.value)">
-                <option class="place-holder" *ngIf="outgoing_selected_currency != 0" [ngValue]="outgoing_selected_currency" selected >{{outgoing_selected_currency}}</option>
+                <!-- <option class="place-holder" *ngIf="outgoing_selected_currency != 0" [ngValue]="outgoing_selected_currency" selected >{{outgoing_selected_currency}}</option> -->
 
                 <option class="place-holder"  *ngFor="let cashCurrency of showCardCurrency"
                         [ngValue]="cashCurrency">{{cashCurrency}}</option>

@@ -231,11 +231,26 @@ export class CustomerEngagementPage implements OnInit {
 
     if (ev == 'single') {
       this.getValueChange = 'single';
+      this.expire_time = '';
+      this.addquestion = '';
+      this.question = '';
+      this.getquestion = [];
+
     }else if (ev == 'multiple') {
       this.getValueChange = 'multiple';
+      this.expire_time = '';
+      this.addquestion = '';
+      this.question = '';
+      this.getquestion = [];
+   
+
     }else if (ev == 'opt-in') {
       this.getValueChange = 'opt-in';
-
+      this.expire_time = '';
+      this.addquestion = '';
+      this.question = '';
+      this.getquestion = [];
+  
   }
 
    

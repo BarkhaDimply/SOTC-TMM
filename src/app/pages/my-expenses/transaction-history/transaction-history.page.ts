@@ -133,6 +133,15 @@ this.apiServices.editTRansctionAPI(details.id).subscribe((result:any) => {
     };
    this.navCtrl.navigateForward(['/tabs/my-expenses/misc-collection'], navigationExtras);
     
+  }else if(details.category == 'own_money') {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        details:result.data,
+       
+      } 
+    };
+   this.navCtrl.navigateForward(['/tabs/my-expenses/add-own-money'], navigationExtras);
+    
   } else if(details.category == 'cross_currency_by_card') {
     let navigationExtras: NavigationExtras = {
       state: {
