@@ -111,7 +111,7 @@ export class RecordTransactionPage implements OnInit {
   setEditData() {
     if (this.router.getCurrentNavigation().extras.state) {
       this.info = this.router.getCurrentNavigation().extras.state.details;
-      this.mode === 'edit';
+      this.mode = 'edit';
       console.log(this.info);
     };
   }
@@ -179,7 +179,7 @@ export class RecordTransactionPage implements OnInit {
       request.image_type = true;
     } else {
       if (this.imgPath != '') {
-        request.image = this.imgPath
+        request.image = this.imgPath;
         request.image_type = true;
       } else {
         request.image = this.info?.debit_image;
