@@ -45,25 +45,6 @@ export class ApiService {
   }
 
 
-
-  getTourManager(){
-    let params:any = {}
-    var Users:string = localStorage.getItem("user");
-    params.group_id =  JSON.parse(Users).order_id
-    params.driver_id = localStorage.getItem("manager_id");
-    return this.http.post<ApiResponse>(getAllTourManager,params,{ headers: this.auth.jsonheader }).pipe(
-      catchError(handleError => {
-        this.globalService.dismissLoading();
-        return throwError(handleError);
-     }),
-      map((result: ApiResponse) => {
-        const listing = new ApiResponse();
-        Object.assign(listing, result);        
-        return listing;
-      })
-    );
-  }
-
   getAllTransctionHistory(){
     let params:any = {}
     var Users:string = localStorage.getItem("user");

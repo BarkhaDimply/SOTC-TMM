@@ -32,10 +32,10 @@ const routes: Routes = [
   //   path: 'misc-collection',
   //   loadChildren: () => import('./misc-collection/misc-collection.module').then( m => m.MiscCollectionPageModule)
   // },
-  // {
-  //   path: 'tm-transfer',
-  //   loadChildren: () => import('./tm-transfer/tm-transfer.module').then( m => m.TmTransferPageModule)
-  // },
+  {
+    path: 'tm-transfer',
+    loadChildren: () => import('./tm-transfer/tm-transfer.module').then( m => m.TmTransferPageModule)
+  },
   // {
   //   path: 'transaction-history',
   //   loadChildren: () => import('./transaction-history/transaction-history.module').then( m => m.TransactionHistoryPageModule)

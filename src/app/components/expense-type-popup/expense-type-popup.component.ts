@@ -36,9 +36,9 @@ export class ExpenseTypePopupComponent implements OnInit {
     if (key === 'currency-exchange') {
       this.router.navigate(['/tabs/my-expenses/currency-exchange']);
     }
-    // if (key === 'tm-transfer') {
-    //   this.router.navigate(['/tabs/my-expenses/tm-transfer']);
-    // }
+    if (key === 'tm-transfer') {
+      this.router.navigate(['/tabs/my-expenses/tm-transfer']);
+    }
     // if (key === 'misc-collection') {
     //   this.router.navigate(['/tabs/my-expenses/misc-collection']);
     // }

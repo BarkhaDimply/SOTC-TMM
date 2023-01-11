@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { ApiResponse, handleError } from '../utils';
-import { currencyExchange, getCategories, getRejectedTransactionDeatilsByTime, getTransactionDeatilsByTime, showCurrentBalance, transactionFetch } from '../variables';
+import { currencyExchange, getAllTourManager, getCategories, getRejectedTransactionDeatilsByTime, getTransactionDeatilsByTime, showCurrentBalance, transactionFetch } from '../variables';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +57,13 @@ export class ExpensesService {
   editTRansctionAPI(transId: any) {
     let params: any = {};
     params.transaction_id = transId;
-    return this.http.post<ApiResponse>(this.baseURL+ transactionFetch, params, { headers: this.auth.jsonheader }).pipe(
+    return this.http.post<ApiResponse>(this.baseURL + transactionFetch, params, { headers: this.auth.jsonheader }).pipe(
+      catchError(handleError)
+    );
+  }
+
+  getTourManager(params) {
+    return this.http.post<ApiResponse>(this.baseURL + getAllTourManager, params, { headers: this.auth.jsonheader }).pipe(
       catchError(handleError)
     );
   }
