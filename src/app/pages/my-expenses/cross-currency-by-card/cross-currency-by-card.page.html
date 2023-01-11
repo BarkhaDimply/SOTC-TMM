@@ -1,0 +1,189 @@
+<ion-header>
+  <ion-toolbar>
+
+
+    <div class="vertical-center-header" (click)="back()">
+      <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Payment by Card
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <form (ngSubmit)="submitPost()" [formGroup]="form">
+    <div class="content">
+      <ion-card>
+        <ion-row>
+          <ion-col>
+            <label>Amt Paid</label>
+            <div class="form-group">
+              <input type="number" formControlName="transaction_amount" class="form-control" placeholder="" />
+              <ng-container *ngFor="let validation of validationMessages.transaction_amount">
+                <div
+                  *ngIf="form.get('transaction_amount').hasError(validation.type) && (form.get('transaction_amount').dirty || form.get('transaction_amount').touched)"
+                  class="error-message">
+                  <span>{{ validation.message}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <label>Currency</label>
+            <div class="form-group">
+              <ion-select (ionChange)="selectCurrencyDropdown($event.target.value)" formControlName="currency"
+                interface="action-sheet">
+                <ion-select-option *ngIf="selectedCurrency != 0" [value]="selectedCurrency">{{selectedCurrency}}
+                </ion-select-option>
+                <ion-select-option *ngFor="let cashCurrency of showCurrency" [value]="cashCurrency">{{cashCurrency}}
+                </ion-select-option>
+              </ion-select>
+              <ng-container *ngFor="let validation of validationMessages.currency">
+                <div
+                  *ngIf="form.get('currency').hasError(validation.type) && (form.get('currency').dirty || form.get('currency').touched)"
+                  class="error-message">
+                  <span>{{ validation.message}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <label>Handover Type</label>
+            <div class="form-group">
+              <input type="text" value="Cash" formControlName="transaction_from" placeholder="Card">
+              <ng-container *ngFor="let validation of validationMessages.transaction_from">
+                <div
+                  *ngIf="form.get('transaction_from').hasError(validation.type) && (form.get('transaction_from').dirty || form.get('transaction_from').touched)"
+                  class="error-message">
+                  <span>{{ validation.message}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <div size="4">
+          <label>Select Category </label>
+          <div class="form-group">
+            <ion-select (ionChange)="selectedCategory($event.target.value)" formControlName="category_id"
+              interface="action-sheet">
+              <ion-select-option value="">--Select--</ion-select-option>
+              <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.category}}
+              </ion-select-option>
+            </ion-select>
+            <ng-container *ngFor="let validation of validationMessages.category_id">
+              <div
+                *ngIf="form.get('category_id').hasError(validation.type) && (form.get('category_id').dirty || form.get('category_id').touched)"
+                class="error-message">
+                <span>{{ validation.message}}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div size="4">
+          <div class="form-group" *ngIf="categories?.length != 0">
+            <label>Select Sub Category</label>
+            <ion-select formControlName="sub_category" interface="action-sheet">
+              <ion-select-option value="">--Select--</ion-select-option>
+              <ion-select-option *ngFor="let subcategory of subcategories" [value]="subcategory.id">
+                {{subcategory.category}}</ion-select-option>
+            </ion-select>
+            <ng-container *ngFor="let validation of validationMessages.sub_category">
+              <div
+                *ngIf="form.get('sub_category').hasError(validation.type) && (form.get('sub_category').dirty || form.get('sub_category').touched)"
+                class="error-message">
+                <span>{{ validation.message}}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <ion-row>
+          <ion-col style="color:rgb(69, 75, 243);text-align: left;"> *Note: Amount to include all Transaction fees.
+          </ion-col>
+        </ion-row>
+        <hr>
+        <ion-row>
+          <ion-col size="6">
+            <label>Amt Paid</label>
+            <div class="form-group">
+              <input type="number" formControlName="exchange_amount_receive" class="form-control" placeholder="" />
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <label>Currency</label>
+            <div class="form-group">
+              <ion-select formControlName="exchange_currency" interface="action-sheet">
+                <ion-select-option value="">--Select--</ion-select-option>
+                <ion-select-option *ngFor="let cardCurrency of showrecivedCashCurrency" [value]="cardCurrency">
+                  {{cardCurrency}}</ion-select-option>
+              </ion-select>             
+            </div>
+          </ion-col>
+        </ion-row>
+        <div *ngIf="exchangeText" style="text-align: center;font-weight: bolder;font-size: 18px;">{{exchangeText}}</div>
+
+        <div *ngIf="autoCalculateVlaue" style="text-align: center;font-weight: bolder;font-size: 18px;">
+          1 {{outgoing_selected_currency}} = {{autoCalculateVlaue}} {{amtRecived_selected_currency}}</div>
+        <ion-row class="mb-2 ml-2 mr-2">
+          <ion-button class="primary-btn" style="color:#fff;" (click)="autoCalculateCurrency()">Auto Calculate</ion-button>
+        </ion-row>
+      </ion-card>
+      <ion-card>
+        <ion-row>
+          <ion-col>
+            <div class="form-group mt-2 mb-2">
+              <div class="d-flex">
+                <ion-button *ngIf="!imgPath" class="primary-btn add-file mr-20" style="color:#fff;width: 191px;"
+                  (click)="takePhoto()">
+                  <ion-icon name="add-outline" style="font-size: xx-large;"></ion-icon> Add Receipt File
+                </ion-button>
+              </div>
+              <div style="text-align: center;" *ngIf="imgPath">
+                <img [src]="imgPath" />
+                <ion-icon name="trash-outline" class="cross_pic_choose" (click)="removeImage()"></ion-icon>
+              </div>
+
+              <div style="text-align: center;" *ngIf="debit_image">
+                <img [src]="'https://tcgateway.travelexic.com/'+debit_image">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Date:</label>
+              <input type="date" formControlName="date_of_transaction" [max]="todayDateTime" class="form-control"
+                placeholder="Date" />
+              <ng-container *ngFor="let validation of validationMessages.date_of_transaction">
+                <div
+                  *ngIf="form.get('date_of_transaction').hasError(validation.type) && (form.get('date_of_transaction').dirty || form.get('date_of_transaction').touched)"
+                  class="error-message">
+                  <span>{{ validation.message}}</span>
+                </div>
+              </ng-container>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+              <ng-container *ngFor="let validation of validationMessages.description">
+                <div
+                  *ngIf="form.get('description').hasError(validation.type) && (form.get('description').dirty || form.get('description').touched)"
+                  class="error-message">
+                  <span>{{ validation.message}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mb-2 ml-2 mr-2">
+          <ion-button class="primary-btn" style="color:#fff;" type="submit">done</ion-button>
+        </ion-row>
+      </ion-card>
+    </div>
+  </form>
+
+</ion-content>

@@ -1,19 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global/global.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-
+import { Router } from '@angular/router';
+import { currency } from 'src/app/services/utils';
 @Component({
-  selector: 'app-record-transaction',
-  templateUrl: './record-transaction.page.html',
-  styleUrls: ['./record-transaction.page.scss'],
+  selector: 'app-cross-currency-by-card',
+  templateUrl: './cross-currency-by-card.page.html',
+  styleUrls: ['./cross-currency-by-card.page.scss'],
 })
-
-export class RecordTransactionPage implements OnInit {
+export class CrossCurrencyByCardPage implements OnInit {
   selectedCurrency: string = "";
   form: FormGroup;
   imgPath;
@@ -25,8 +23,18 @@ export class RecordTransactionPage implements OnInit {
   mode: string = 'create';
   request = {} as any;
   user: any;
-  handoverType = 'Cash';
+  handoverType = 'Card';
   info: any;
+
+  showrecivedCashCurrency = [];
+  amtRecived_selected_currency = "";
+  outgoingAmt;
+  amtRecived_vendor;
+  outgoing_selected_currency;
+  autoCalculateVlaue;
+
+  exchangeText = "";
+
   validationMessages = {
     transaction_amount: [
       { type: 'required', message: 'Amount is required!' },
@@ -48,14 +56,14 @@ export class RecordTransactionPage implements OnInit {
       { type: 'required', message: 'Description is required!' },
     ],
     date_of_transaction: [
-      { type: 'required', message: 'Description is required!' },
+      { type: 'required', message: 'Date is required!' },
     ]
   };
 
   constructor(
     private expenseService: ExpensesService,
     private auth: AuthService,
-    private location: Location, 
+    private location: Location,
     private datePipe: DatePipe,
     private router: Router,
     private globalService: GlobalService) {
@@ -87,13 +95,15 @@ export class RecordTransactionPage implements OnInit {
       description: new FormControl(
         '', Validators.required
       ),
-      transaction_type: new FormControl('Debit', null),
+      transaction_type: new FormControl('cross_currency_by_card', null),
       group_id: new FormControl(this.user.order_id, null),
       driver_id: new FormControl(driver_id, null),
       driver_name: new FormControl(driver_name, null),
       date_of_transaction: new FormControl(
         '', Validators.required
       ),
+      exchange_amount_receive: new FormControl('', null),
+      exchange_currency: new FormControl('', null),
     });
   }
 
@@ -106,6 +116,10 @@ export class RecordTransactionPage implements OnInit {
     this.loadCategories();
     this.loadExpenses();
     this.setEditData();
+
+    for (const [key] of Object.entries(currency)) {
+      this.showrecivedCashCurrency.push(key);
+    }
   }
 
   setEditData() {
@@ -124,6 +138,7 @@ export class RecordTransactionPage implements OnInit {
     this.form.get("sub_category").setValue(this.info?.sub_category);
     this.form.get("description").setValue(this.info?.description);
     this.form.get("date_of_transaction").setValue(this.info?.date);
+    this.exchangeText = this.info?.row;
   }
 
   loadExpenses() {
@@ -189,6 +204,10 @@ export class RecordTransactionPage implements OnInit {
       request.mode = "edit";
     }
 
+    request.exchange_amount_receive = this.amtRecived_vendor;
+    request.exchange_currency = this.amtRecived_selected_currency;
+    request.roe = 1 + this.outgoing_selected_currency + ' = ' + this.autoCalculateVlaue + this.amtRecived_selected_currency;
+
     this.expenseService.postCurrencyExchange(request).subscribe(async (result: any) => {
       if (result.status == 'true') {
         this.globalService.presentToast('Transaction Successful');
@@ -203,7 +222,36 @@ export class RecordTransactionPage implements OnInit {
     this.imgPath = "";
   }
 
-  back(){
+  back() {
     this.location.back();
   }
+
+  async autoCalculateCurrency() {
+    this.outgoingAmt = this.form.get('transaction_amount').value;
+    this.amtRecived_vendor = this.form.get('exchange_amount_receive').value;
+    this.amtRecived_selected_currency = this.form.get('exchange_currency').value;
+    this.outgoing_selected_currency = this.form.get('currency').value;
+
+    if (this.outgoingAmt == "") {
+      this.globalService.presentToast('Please input amount deducted');
+      return;
+    }
+    if (this.amtRecived_vendor == "") {
+      this.globalService.presentToast('Please input amount paid');
+      return;
+    }
+    if (this.amtRecived_selected_currency == "") {
+      this.globalService.presentToast('Please select Received currency from dropdown');
+      return
+    }
+    if (this.outgoing_selected_currency == "") {
+      this.globalService.presentToast('Please select Outgoing currency from dropdown');
+      return
+    }
+    var paidAmount = parseFloat(this.outgoingAmt);
+    var recivedAmount = parseFloat(this.amtRecived_vendor);
+    let autoCalVal = recivedAmount / paidAmount;
+    this.autoCalculateVlaue = autoCalVal.toFixed(4);
+  }
+
 }

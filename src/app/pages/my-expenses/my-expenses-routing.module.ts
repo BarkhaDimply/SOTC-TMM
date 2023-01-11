@@ -16,14 +16,18 @@ const routes: Routes = [
     path: 'record-transaction',
     loadChildren: () => import('./record-transaction/record-transaction.module').then( m => m.RecordTransactionPageModule)
   },
-  // {
-  //   path: 'atm-withdrawalsame-currency',
-  //   loadChildren: () => import('./atm-withdrawalsame-currency/atm-withdrawalsame-currency.module').then( m => m.AtmWithdrawalsameCurrencyPageModule)
-  // },
-  // {
-  //   path: 'atm-withdrawal-cross-currency',
-  //   loadChildren: () => import('./atm-withdrawal-cross-currency/atm-withdrawal-cross-currency.module').then( m => m.AtmWithdrawalCrossCurrencyPageModule)
-  // },
+  {
+    path: 'atm-withdrawalsame-currency',
+    loadChildren: () => import('./atm-withdrawalsame-currency/atm-withdrawalsame-currency.module').then( m => m.AtmWithdrawalsameCurrencyPageModule)
+  },
+  {
+    path: 'cross-currency-by-card',
+    loadChildren: () => import('./cross-currency-by-card/cross-currency-by-card.module').then( m => m.CrossCurrencyByCardPageModule)
+  },
+  {
+    path: 'atm-withdrawal-cross-currency',
+    loadChildren: () => import('./atm-withdrawal-cross-currency/atm-withdrawal-cross-currency.module').then( m => m.AtmWithdrawalCrossCurrencyPageModule)
+  },
   // {
   //   path: 'misc-collection',
   //   loadChildren: () => import('./misc-collection/misc-collection.module').then( m => m.MiscCollectionPageModule)
@@ -33,20 +37,9 @@ const routes: Routes = [
   //   loadChildren: () => import('./tm-transfer/tm-transfer.module').then( m => m.TmTransferPageModule)
   // },
   // {
-  //   path: 'cross-currency-by-card',
-  //   loadChildren: () => import('./cross-currency-by-card/cross-currency-by-card.module').then( m => m.CrossCurrencyByCardPageModule)
-  // },
-  // {
   //   path: 'transaction-history',
   //   loadChildren: () => import('./transaction-history/transaction-history.module').then( m => m.TransactionHistoryPageModule)
   // },
-  // {
-  //   path: 'transaction-modal',
-  //   loadChildren: () => import('./transaction-modal/transaction-modal.module').then( m => m.TransactionModalPageModule)
-  // },
-
-
-
 ];
 
 

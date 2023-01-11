@@ -22,17 +22,17 @@ export class ExpenseTypePopupComponent implements OnInit {
 
     this.closeModal();
     if (key === 'record-transaction') {
-      this.router.navigate(['/tabs/my-expenses/record-transaction']);    
+      this.router.navigate(['/tabs/my-expenses/record-transaction']);
     }
-    // if (key === 'cross-currency-by-card') {
-    //   this.router.navigate(['/tabs/my-expenses/cross-currency-by-card']);
-    // }
-    // if (key === 'atm-withdrawalsame-currency') {
-    //   this.router.navigate(['/tabs/my-expenses/atm-withdrawalsame-currency']);
-    // }
-    // if (key === 'atm-withdrawal-cross-currency') {
-    //   this.router.navigate(['/tabs/my-expenses/atm-withdrawal-cross-currency']);
-    // }
+    if (key === 'cross-currency-by-card') {
+      this.router.navigate(['/tabs/my-expenses/cross-currency-by-card']);
+    }
+    if (key === 'atm-withdrawalsame-currency') {
+      this.router.navigate(['/tabs/my-expenses/atm-withdrawalsame-currency']);
+    }
+    if (key === 'atm-withdrawal-cross-currency') {
+      this.router.navigate(['/tabs/my-expenses/atm-withdrawal-cross-currency']);
+    }
     // if (key === 'currency-exchange') {
     //   this.router.navigate(['/tabs/my-expenses/currency-exchange']);
     // }

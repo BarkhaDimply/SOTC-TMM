@@ -1,19 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/services/global/global.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-
 @Component({
-  selector: 'app-record-transaction',
-  templateUrl: './record-transaction.page.html',
-  styleUrls: ['./record-transaction.page.scss'],
+  selector: 'app-atm-withdrawalsame-currency',
+  templateUrl: './atm-withdrawalsame-currency.page.html',
+  styleUrls: ['./atm-withdrawalsame-currency.page.scss'],
 })
-
-export class RecordTransactionPage implements OnInit {
+export class AtmWithdrawalsameCurrencyPage implements OnInit {
   selectedCurrency: string = "";
   form: FormGroup;
   imgPath;
@@ -25,7 +22,7 @@ export class RecordTransactionPage implements OnInit {
   mode: string = 'create';
   request = {} as any;
   user: any;
-  handoverType = 'Cash';
+  handoverType = 'Card';
   info: any;
   validationMessages = {
     transaction_amount: [
@@ -38,11 +35,11 @@ export class RecordTransactionPage implements OnInit {
     transaction_from: [
       { type: 'required', message: 'Type is required!' },
     ],
-    category_id: [
-      { type: 'required', message: 'Category is required!' },
+    exchange_amount_receive: [
+      { type: 'required', message: 'Amount Receive is required!' },
     ],
-    sub_category: [
-      { type: 'required', message: 'Subcategory is required!' },
+    atm_withdrawl_fees: [
+      { type: 'required', message: 'ATM Withdrawal Fees is required!' },
     ],
     description: [
       { type: 'required', message: 'Description is required!' },
@@ -55,7 +52,7 @@ export class RecordTransactionPage implements OnInit {
   constructor(
     private expenseService: ExpensesService,
     private auth: AuthService,
-    private location: Location, 
+    private location: Location,
     private datePipe: DatePipe,
     private router: Router,
     private globalService: GlobalService) {
@@ -78,16 +75,16 @@ export class RecordTransactionPage implements OnInit {
       transaction_from: new FormControl(
         this.handoverType, Validators.required
       ),
-      category_id: new FormControl(
+      exchange_amount_receive: new FormControl(
         '', Validators.required
       ),
-      sub_category: new FormControl(
+      atm_withdrawl_fees: new FormControl(
         '', Validators.required
       ),
       description: new FormControl(
         '', Validators.required
       ),
-      transaction_type: new FormControl('Debit', null),
+      transaction_type: new FormControl('atm_same_currency', null),
       group_id: new FormControl(this.user.order_id, null),
       driver_id: new FormControl(driver_id, null),
       driver_name: new FormControl(driver_name, null),
@@ -103,7 +100,6 @@ export class RecordTransactionPage implements OnInit {
 
     let dateVar = new Date();
     this.todayDateTime = this.datePipe.transform(dateVar, 'YYYY-MM-dd');
-    this.loadCategories();
     this.loadExpenses();
     this.setEditData();
   }
@@ -113,17 +109,17 @@ export class RecordTransactionPage implements OnInit {
       this.info = this.router.getCurrentNavigation().extras.state.details;
       this.mode = 'edit';
       console.log(this.info);
+      this.setValueSomeDelay();
     };
   }
 
   setValueSomeDelay() {
-    this.selectedCategory(this.info?.category);
     this.form.get("transaction_amount").setValue(this.info?.debit);
     this.form.get("currency").setValue(this.info?.debitCurrency);
-    this.form.get("category_id").setValue(this.info?.category);
-    this.form.get("sub_category").setValue(this.info?.sub_category);
     this.form.get("description").setValue(this.info?.description);
     this.form.get("date_of_transaction").setValue(this.info?.date);
+    this.form.get("exchange_amount_receive").setValue(this.info?.credit);
+    this.form.get("atm_withdrawl_fees").setValue(this.info?.fees);
   }
 
   loadExpenses() {
@@ -136,13 +132,6 @@ export class RecordTransactionPage implements OnInit {
     });
   }
 
-  loadCategories() {
-    this.expenseService.getCategoriesFromServer().subscribe((result: any) => {
-      this.categories = result.categories;
-      this.setValueSomeDelay();
-    });
-  }
-
   async takePhoto() {
     this.imgPath = '';
     this.globalService.takePhoto().then(result => {
@@ -152,16 +141,6 @@ export class RecordTransactionPage implements OnInit {
 
   selectCurrencyDropdown(name: any): void {
     this.selectedCurrency = name;
-  }
-
-  selectedCategory(value): void {
-    this.categories.forEach(element => {
-      if (value == element.id) {
-        if (element.sub_category.length > 0) {
-          this.subcategories = element.sub_category;
-        }
-      }
-    });
   }
 
   submitPost() {
@@ -189,6 +168,8 @@ export class RecordTransactionPage implements OnInit {
       request.mode = "edit";
     }
 
+    request.exchange_currency = request.currency;
+
     this.expenseService.postCurrencyExchange(request).subscribe(async (result: any) => {
       if (result.status == 'true') {
         this.globalService.presentToast('Transaction Successful');
@@ -203,7 +184,7 @@ export class RecordTransactionPage implements OnInit {
     this.imgPath = "";
   }
 
-  back(){
+  back() {
     this.location.back();
   }
 }
