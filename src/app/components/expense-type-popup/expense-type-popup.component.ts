@@ -33,9 +33,9 @@ export class ExpenseTypePopupComponent implements OnInit {
     if (key === 'atm-withdrawal-cross-currency') {
       this.router.navigate(['/tabs/my-expenses/atm-withdrawal-cross-currency']);
     }
-    // if (key === 'currency-exchange') {
-    //   this.router.navigate(['/tabs/my-expenses/currency-exchange']);
-    // }
+    if (key === 'currency-exchange') {
+      this.router.navigate(['/tabs/my-expenses/currency-exchange']);
+    }
     // if (key === 'tm-transfer') {
     //   this.router.navigate(['/tabs/my-expenses/tm-transfer']);
     // }

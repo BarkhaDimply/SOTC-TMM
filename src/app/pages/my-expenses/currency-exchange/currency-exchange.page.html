@@ -2,15 +2,15 @@
   <ion-toolbar>
 
 
-    <div class="vertical-center-header" (click)="back()">
-      <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Payment by Card
-    </div>
+      <div class="vertical-center-header" (click)="back()">
+        <ion-icon class="back-arrow" src="assets/icon/arrow-left.svg"></ion-icon> Currency Exchange
+      </div>
+
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
   <form (ngSubmit)="submitPost()" [formGroup]="form">
     <div class="content">
       <ion-card>
@@ -27,7 +27,7 @@
                 </div>
               </ng-container>
             </div>
-          </ion-col>      
+          </ion-col>
           <ion-col size="4">
             <label>Currency</label>
             <div class="form-group">
@@ -46,7 +46,7 @@
                 </div>
               </ng-container>
             </div>
-          </ion-col>    
+          </ion-col>
           <ion-col size="4">
             <label>Handover Type</label>
             <div class="form-group">
@@ -61,84 +61,58 @@
             </div>
           </ion-col>
         </ion-row>
-        <div size="4">
-          <label>Select Category </label>
-          <div class="form-group">
-            <ion-select (ionChange)="selectedCategory($event.target.value)" formControlName="category_id"
-              interface="action-sheet">
-              <ion-select-option value="">--Select--</ion-select-option>
-              <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.category}}
-              </ion-select-option>
-            </ion-select>
-            <ng-container *ngFor="let validation of validationMessages.category_id">
-              <div
-                *ngIf="form.get('category_id').hasError(validation.type) && (form.get('category_id').dirty || form.get('category_id').touched)"
-                class="error-message">
-                <span>{{ validation.message}}</span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-
-        <div size="4">
-          <div class="form-group" *ngIf="categories?.length != 0">
-            <label>Select Sub Category</label>
-            <ion-select formControlName="sub_category" interface="action-sheet">
-              <ion-select-option value="">--Select--</ion-select-option>
-              <ion-select-option *ngFor="let subcategory of subcategories" [value]="subcategory.id">
-                {{subcategory.category}}</ion-select-option>
-            </ion-select>
-            <ng-container *ngFor="let validation of validationMessages.sub_category">
-              <div *ngIf="form.get('sub_category').hasError(validation.type) && (form.get('sub_category').dirty || form.get('sub_category').touched)"
-                class="error-message">
-                <span>{{ validation.message}}</span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-
         <ion-row>
           <ion-col style="color:rgb(69, 75, 243);text-align: left;"> *Note: Amount to include all Transaction fees.
           </ion-col>
         </ion-row>
         <hr>
         <ion-row>
-          <ion-col size="6">
-            <label>Amt Paid</label>
+          <ion-col size="4">
+            <label>Amt Received</label>
             <div class="form-group">
-              <input type="number" formControlName="exchange_amount_receive" class="form-control" placeholder="" />
-              <ng-container *ngFor="let validation of validationMessages.exchange_amount_receive">
-                <div *ngIf="form.get('exchange_amount_receive').hasError(validation.type) && (form.get('exchange_amount_receive').dirty || form.get('exchange_amount_receive').touched)"
+              <input type="number" formControlName="credit" class="form-control" placeholder="" />
+              <ng-container *ngFor="let validation of validationMessages.credit">
+                <div
+                  *ngIf="form.get('credit').hasError(validation.type) && (form.get('credit').dirty || form.get('credit').touched)"
                   class="error-message">
                   <span>{{ validation.message}}</span>
                 </div>
               </ng-container>
             </div>
           </ion-col>
-          <ion-col size="6">
+          <ion-col size="4">
             <label>Currency</label>
             <div class="form-group">
-              <ion-select formControlName="exchange_currency" interface="action-sheet">
+              <ion-select formControlName="creditCurrency" interface="action-sheet">
                 <ion-select-option value="">--Select--</ion-select-option>
                 <ion-select-option *ngFor="let cardCurrency of showrecivedCashCurrency" [value]="cardCurrency">
                   {{cardCurrency}}</ion-select-option>
-              </ion-select>  
-              <ng-container *ngFor="let validation of validationMessages.exchange_currency">
-                <div *ngIf="form.get('exchange_currency').hasError(validation.type) && (form.get('exchange_currency').dirty || form.get('exchange_currency').touched)"
+              </ion-select>
+              <ng-container *ngFor="let validation of validationMessages.creditCurrency">
+                <div
+                  *ngIf="form.get('creditCurrency').hasError(validation.type) && (form.get('creditCurrency').dirty || form.get('creditCurrency').touched)"
                   class="error-message">
                   <span>{{ validation.message}}</span>
                 </div>
-              </ng-container>           
+              </ng-container>
+            </div>
+          </ion-col>
+          <ion-col size="4">
+            <label>Handover Type</label>
+            <div class="form-group">
+              <input type="text"  placeholder="Cash"  disabled>
             </div>
           </ion-col>
         </ion-row>
         <div *ngIf="exchangeText" style="text-align: center;font-weight: bolder;font-size: 18px;">{{exchangeText}}</div>
 
         <div *ngIf="autoCalculateVlaue" style="text-align: center;font-weight: bolder;font-size: 18px;">
-          1 {{outgoing_selected_currency}} = {{autoCalculateVlaue}} {{amtRecived_selected_currency}}</div>
+          1 {{amtPaidCrossCurrency}} = {{autoCalculateVlaue}} {{amtRecivedCrossCurrency}}</div>
         <ion-row class="mb-2 ml-2 mr-2">
-          <ion-button class="primary-btn" style="color:#fff;" (click)="autoCalculateCurrency()">Auto Calculate</ion-button>
+          <ion-button class="primary-btn" style="color:#fff;" (click)="autoCalculateCurrency()">Auto Calculate
+          </ion-button>
         </ion-row>
+
       </ion-card>
       <ion-card>
         <ion-row>
@@ -191,5 +165,4 @@
       </ion-card>
     </div>
   </form>
-
 </ion-content>

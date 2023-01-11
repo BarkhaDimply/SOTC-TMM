@@ -52,6 +52,7 @@ export class AtmWithdrawalCrossCurrencyPage implements OnInit {
     ],
     credit: [
       { type: 'required', message: 'Receiving Amount is required!' },
+      { type: 'pattern', message: 'Enter valid amount!' },
     ],
     creditCurrency: [
       { type: 'required', message: 'Receiving current is required!' },
@@ -91,7 +92,7 @@ export class AtmWithdrawalCrossCurrencyPage implements OnInit {
         this.handoverType, Validators.required
       ),
       credit: new FormControl(
-        '', Validators.required
+        '', [Validators.required, Validators.pattern("^[0-9]*$")]
       ),
       creditCurrency: new FormControl(
         '', Validators.required

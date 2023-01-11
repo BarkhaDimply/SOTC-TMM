@@ -4,14 +4,15 @@ import { DatePipe, Location } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Router } from '@angular/router';
 import { currency } from 'src/app/services/utils';
+import { Router } from '@angular/router';
+
 @Component({
-  selector: 'app-cross-currency-by-card',
-  templateUrl: './cross-currency-by-card.page.html',
-  styleUrls: ['./cross-currency-by-card.page.scss'],
+  selector: 'app-currency-exchange',
+  templateUrl: './currency-exchange.page.html',
+  styleUrls: ['./currency-exchange.page.scss'],
 })
-export class CrossCurrencyByCardPage implements OnInit {
+export class CurrencyExchangePage implements OnInit {
   selectedCurrency: string = "";
   form: FormGroup;
   imgPath;
@@ -23,14 +24,14 @@ export class CrossCurrencyByCardPage implements OnInit {
   mode: string = 'create';
   request = {} as any;
   user: any;
-  handoverType = 'Card';
+  handoverType = 'Cash';
   info: any;
 
   showrecivedCashCurrency = [];
-  amtRecived_selected_currency = "";
-  outgoingAmt;
-  amtRecived_vendor;
-  outgoing_selected_currency;
+  amtRecivedCrossCurrency = "";
+  paidAmount;
+  recivedAmount;
+  amtPaidCrossCurrency;
   autoCalculateVlaue;
 
   exchangeText = "";
@@ -46,11 +47,12 @@ export class CrossCurrencyByCardPage implements OnInit {
     transaction_from: [
       { type: 'required', message: 'Type is required!' },
     ],
-    category_id: [
-      { type: 'required', message: 'Category is required!' },
+    credit: [
+      { type: 'required', message: 'Receiving Amount is required!' },
+      { type: 'pattern', message: 'Enter valid amount!' },
     ],
-    sub_category: [
-      { type: 'required', message: 'Subcategory is required!' },
+    creditCurrency: [
+      { type: 'required', message: 'Receiving current is required!' },
     ],
     description: [
       { type: 'required', message: 'Description is required!' },
@@ -86,24 +88,22 @@ export class CrossCurrencyByCardPage implements OnInit {
       transaction_from: new FormControl(
         this.handoverType, Validators.required
       ),
-      category_id: new FormControl(
-        '', Validators.required
+      credit: new FormControl(
+        '', [Validators.required, Validators.pattern("^[0-9]*$")]
       ),
-      sub_category: new FormControl(
+      creditCurrency: new FormControl(
         '', Validators.required
       ),
       description: new FormControl(
         '', Validators.required
       ),
-      transaction_type: new FormControl('cross_currency_by_card', null),
+      transaction_type: new FormControl('Exchange', null),
       group_id: new FormControl(this.user.order_id, null),
       driver_id: new FormControl(driver_id, null),
       driver_name: new FormControl(driver_name, null),
       date_of_transaction: new FormControl(
         '', Validators.required
       ),
-      exchange_amount_receive: new FormControl('', Validators.required),
-      exchange_currency: new FormControl('', Validators.required),
     });
   }
 
@@ -113,7 +113,6 @@ export class CrossCurrencyByCardPage implements OnInit {
 
     let dateVar = new Date();
     this.todayDateTime = this.datePipe.transform(dateVar, 'YYYY-MM-dd');
-    this.loadCategories();
     this.loadExpenses();
     this.setEditData();
 
@@ -127,18 +126,18 @@ export class CrossCurrencyByCardPage implements OnInit {
       this.info = this.router.getCurrentNavigation().extras.state.details;
       this.mode = 'edit';
       console.log(this.info);
+      this.setValueSomeDelay();
     };
   }
 
   setValueSomeDelay() {
-    this.selectedCategory(this.info?.category);
     this.form.get("transaction_amount").setValue(this.info?.debit);
     this.form.get("currency").setValue(this.info?.debitCurrency);
-    this.form.get("category_id").setValue(this.info?.category);
-    this.form.get("sub_category").setValue(this.info?.sub_category);
     this.form.get("description").setValue(this.info?.description);
     this.form.get("date_of_transaction").setValue(this.info?.date);
-    this.exchangeText = this.info?.row;
+    this.form.get("credit").setValue(this.info?.credit);
+    this.form.get("creditCurrency").setValue(this.info?.creditCurrency);
+    this.exchangeText = this.info?.row;;
   }
 
   loadExpenses() {
@@ -151,13 +150,6 @@ export class CrossCurrencyByCardPage implements OnInit {
     });
   }
 
-  loadCategories() {
-    this.expenseService.getCategoriesFromServer().subscribe((result: any) => {
-      this.categories = result.categories;
-      this.setValueSomeDelay();
-    });
-  }
-
   async takePhoto() {
     this.imgPath = '';
     this.globalService.takePhoto().then(result => {
@@ -167,16 +159,6 @@ export class CrossCurrencyByCardPage implements OnInit {
 
   selectCurrencyDropdown(name: any): void {
     this.selectedCurrency = name;
-  }
-
-  selectedCategory(value): void {
-    this.categories.forEach(element => {
-      if (value == element.id) {
-        if (element.sub_category.length > 0) {
-          this.subcategories = element.sub_category;
-        }
-      }
-    });
   }
 
   submitPost() {
@@ -203,10 +185,9 @@ export class CrossCurrencyByCardPage implements OnInit {
       request.token = this.info?.token;
       request.mode = "edit";
     }
-
-    request.exchange_amount_receive = this.amtRecived_vendor;
-    request.exchange_currency = this.amtRecived_selected_currency;
-    request.roe = 1 + this.outgoing_selected_currency + ' = ' + this.autoCalculateVlaue + this.amtRecived_selected_currency;
+    request.roe = 1 + this.amtPaidCrossCurrency+' = ' + this.autoCalculateVlaue+ this.amtRecivedCrossCurrency;
+    request.exchange_amount_receive = request.credit;
+    request.exchange_currency = request.creditCurrency;
 
     this.expenseService.postCurrencyExchange(request).subscribe(async (result: any) => {
       if (result.status == 'true') {
@@ -226,30 +207,35 @@ export class CrossCurrencyByCardPage implements OnInit {
     this.location.back();
   }
 
-  async autoCalculateCurrency() {
-    this.outgoingAmt = this.form.get('transaction_amount').value;
-    this.amtRecived_vendor = this.form.get('exchange_amount_receive').value;
-    this.amtRecived_selected_currency = this.form.get('exchange_currency').value;
-    this.outgoing_selected_currency = this.form.get('currency').value;
 
-    if (this.outgoingAmt == "") {
+  async autoCalculateCurrency() {
+    this.paidAmount = this.form.get('transaction_amount').value;
+    this.recivedAmount = this.form.get('credit').value;
+    this.amtRecivedCrossCurrency = this.form.get('creditCurrency').value;
+    this.amtPaidCrossCurrency = this.form.get('currency').value;
+
+    if (this.paidAmount == "") {
       this.globalService.presentToast('Please input amount deducted');
       return;
     }
-    if (this.amtRecived_vendor == "") {
+    if (this.recivedAmount == "") {
       this.globalService.presentToast('Please input amount paid');
       return;
     }
-    if (this.amtRecived_selected_currency == "") {
+    if (this.amtRecivedCrossCurrency == "") {
       this.globalService.presentToast('Please select Received currency from dropdown');
       return
     }
-    if (this.outgoing_selected_currency == "") {
+    if (this.amtPaidCrossCurrency == "") {
       this.globalService.presentToast('Please select Outgoing currency from dropdown');
       return
     }
-    var paidAmount = parseFloat(this.outgoingAmt);
-    var recivedAmount = parseFloat(this.amtRecived_vendor);
+    if (this.amtRecivedCrossCurrency == this.amtPaidCrossCurrency) {
+      this.globalService.presentToast('Please choose different currency');
+      return false;
+    }
+    var paidAmount = parseFloat(this.paidAmount);
+    var recivedAmount = parseFloat(this.recivedAmount);
     let autoCalVal = recivedAmount / paidAmount;
     this.autoCalculateVlaue = autoCalVal.toFixed(4);
   }

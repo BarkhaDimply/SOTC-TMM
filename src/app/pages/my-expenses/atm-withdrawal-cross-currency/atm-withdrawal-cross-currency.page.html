@@ -106,7 +106,7 @@
         <div *ngIf="exchangeText" style="text-align: center;font-weight: bolder;font-size: 18px;">{{exchangeText}}</div>
 
         <div *ngIf="autoCalculateVlaue" style="text-align: center;font-weight: bolder;font-size: 18px;">
-          1 {{outgoing_selected_currency}} = {{autoCalculateVlaue}} {{amtRecived_selected_currency}}</div>
+          1 {{amtPaidCrossCurrency}} = {{autoCalculateVlaue}} {{amtRecivedCrossCurrency}}</div>
         <ion-row class="mb-2 ml-2 mr-2">
           <ion-button class="primary-btn" style="color:#fff;" (click)="autoCalculateCurrency()">Auto Calculate
           </ion-button>
